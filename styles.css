@@ -1263,3 +1263,98 @@ body.theme-white .clip-mark { background: #fef3c7; padding: 0 2px; border-radius
 body.theme-paper {
   /* defaults already paper */
 }
+
+/* =========================================================
+   Sidebar: nav-group (collapsible)
+   ========================================================= */
+.nav-group { margin: 0; }
+.nav-group-toggle {
+  display: flex; align-items: center; cursor: pointer; user-select: none;
+}
+.nav-group-toggle .nav-arrow {
+  width: 12px; height: 12px; margin-left: auto; color: var(--muted);
+  transition: transform 200ms; flex-shrink: 0;
+}
+.nav-group.open > .nav-group-toggle .nav-arrow { transform: rotate(90deg); }
+.nav-group-items {
+  display: none; padding-left: 16px;
+}
+.nav-group.open > .nav-group-items { display: block; }
+.nav-item.sub { font-size: 0.88rem; padding: 5px 12px; }
+.nav-item.sub span:first-child { color: var(--ink-3); }
+
+/* =========================================================
+   Highlight marks
+   ========================================================= */
+mark.hl-mark {
+  background: oklch(0.92 0.18 90 / 0.6);
+  color: inherit; padding: 0 1px; border-radius: 2px;
+}
+
+/* =========================================================
+   Memo card inline
+   ========================================================= */
+.memo-overlay {
+  position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 499;
+}
+.memo-card-inline {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 20px; width: min(380px, 88vw); box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+}
+.mc-header {
+  font-family: 'Noto Serif KR', serif; font-weight: 800; font-size: 1rem; margin-bottom: 12px;
+}
+.mc-quote {
+  font-size: 0.85rem; color: var(--ink-3); border-left: 2px solid var(--accent);
+  padding-left: 10px; margin-bottom: 14px; line-height: 1.5;
+}
+.mc-input {
+  width: 100%; min-height: 80px; padding: 10px 12px; border: 1px solid var(--rule);
+  border-radius: 8px; font-size: 0.9rem; resize: vertical; background: var(--paper);
+  color: var(--ink); font-family: inherit; line-height: 1.6;
+}
+.mc-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+.mc-actions button {
+  padding: 8px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+}
+.mc-cancel { border: 1px solid var(--rule); background: var(--card); }
+.mc-save { background: var(--ink); color: var(--paper); }
+
+/* =========================================================
+   Drawer tabs
+   ========================================================= */
+.cd-tabs {
+  display: flex; gap: 0; border-bottom: 1px solid var(--rule); padding: 0 24px;
+}
+.cd-tab {
+  padding: 10px 16px; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+  border-bottom: 2px solid transparent; cursor: pointer; transition: all 120ms;
+}
+.cd-tab.active { color: var(--ink); border-bottom-color: var(--accent); }
+.cd-tab:hover { color: var(--ink); }
+.memo-note-wrap { margin-top: 8px; }
+.memo-note {
+  width: 100%; min-height: 48px; padding: 8px 10px; border: 1px solid var(--rule);
+  border-radius: 6px; font-size: 0.85rem; resize: vertical; background: var(--paper-2);
+  color: var(--ink); font-family: inherit; line-height: 1.5;
+}
+
+/* =========================================================
+   Clip popover iOS fix (below selection)
+   ========================================================= */
+.clip-popover.pop-below::after {
+  bottom: auto; top: -5px;
+}
+
+/* =========================================================
+   Sync UI
+   ========================================================= */
+.sync-ui { margin-top: 8px; }
+.sync-token-input {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 6px;
+  font-size: 0.85rem; background: var(--card); color: var(--ink); margin-bottom: 8px;
+}
+.sync-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.sync-status { font-size: 0.72rem; margin-left: 4px; }
+.sync-status.synced { color: green; }
+.sync-status.error { color: red; }
