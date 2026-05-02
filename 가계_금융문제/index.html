@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>가계/금융문제 — 논술 요약</title>
+<meta name="theme-color" content="#f4ede0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="논술 리더">
+<link rel="manifest" href="../manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<style>
+/* ── 인라인 편집 ── */
+.row-title:hover, .ia-title:hover, .ia-section-h:hover, .ia-para-title:hover {
+  cursor: text; background: color-mix(in oklab, var(--accent-soft) 50%, transparent);
+  border-radius: 4px; transition: background 150ms;
+}
+[contenteditable="true"] { outline: 2px solid var(--accent) !important; border-radius: 4px; padding: 4px 8px; background: var(--card); }
+
+/* ── 접기/펼치기 ── */
+.inline-article { display: none !important; }
+.row.expanded + .inline-article { display: block !important; animation: ia-in 200ms ease-out; }
+@keyframes ia-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── 본문 기본 ── */
+.article-content { word-break: keep-all; text-wrap: pretty; }
+.article-content p {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  margin-bottom: 1.35em; word-break: keep-all;
+}
+.article-content p:last-child { margin-bottom: 0; }
+.article-content ul { padding-left: 1.5em; margin: 0.8em 0; }
+.article-content ul li {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  margin-bottom: 0.5em; word-break: keep-all;
+}
+.article-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1.2em 0; }
+.article-content table th { background: var(--paper-2); padding: 10px 14px; font-weight: 700; text-align: left; border-bottom: 2px solid var(--rule); }
+.article-content table td { padding: 10px 14px; border-bottom: 1px solid var(--rule-2); vertical-align: top; line-height: 1.7; }
+
+/* ── 빈 소제목 숨김 ── */
+.ia-section-h:empty, .ia-para-title:empty, .ia-sub-title:empty, .ia-tag-title:empty { display: none; }
+
+/* ── 소제목 계층: section-h(H2) > para-title(H3) > sub-title(①) > tag-title([태그]) ── */
+.ia-section-h {
+  font-family: 'Noto Serif KR',serif; font-size: 1.3rem; font-weight: 900;
+  letter-spacing: -0.8px; line-height: 1.3;
+  margin: 48px 0 18px !important; padding: 0 0 10px;
+  border-bottom: 2px solid var(--accent); color: var(--ink);
+}
+.ia-section-h::before { content: ''; width: 28px; height: 2px; background: var(--accent); }
+.ia-para-title, h3.ia-para-title {
+  font-family: 'Noto Serif KR',serif !important; font-size: 1.18rem !important; font-weight: 800 !important;
+  letter-spacing: -0.5px; line-height: 1.35;
+  margin: 36px 0 14px !important; padding-left: 14px;
+  border-left: 4px solid var(--accent); color: var(--ink);
+}
+.ia-sub-title {
+  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 700;
+  margin: 28px 0 10px; color: var(--ink); line-height: 1.4;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.ia-sub-title .sub-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; background: var(--accent); color: var(--paper);
+  border-radius: 50%; font-size: 0.82rem; font-weight: 800; flex-shrink: 0;
+  font-family: 'Pretendard',sans-serif;
+}
+.ia-tag-title {
+  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 800;
+  margin: 24px 0 10px; color: var(--ink); line-height: 1.4;
+  display: flex; align-items: center; gap: 10px; letter-spacing: -0.3px;
+}
+.tag-label {
+  display: inline-block; padding: 4px 12px;
+  background: var(--accent); color: var(--paper); border-radius: 4px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 1.5px;
+  font-family: 'Pretendard',sans-serif; white-space: nowrap; flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+/* ── 용어박스 (grid) ── */
+.term-box {
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 16px;
+  padding: 14px 18px 14px 20px; margin: 14px 0;
+  background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+  border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
+  align-items: baseline;
+}
+.term-name { font-size: 0.9rem; font-weight: 800; color: var(--ink); letter-spacing: -0.3px; white-space: nowrap; }
+.term-def { font-size: 0.9rem; color: var(--ink-3); line-height: 1.75; }
+
+/* ── Q&A ── */
+.qa-q {
+  font-family: 'Noto Serif KR',serif; font-size: 1.05rem; font-weight: 700;
+  line-height: 1.55; color: var(--ink);
+  border-top: 2px solid var(--ink); padding: 20px 0 14px 44px;
+  margin-top: 36px; position: relative;
+}
+.qa-q::before {
+  content: 'Q'; position: absolute; left: 0; top: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--ink); color: var(--paper);
+  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
+  font-family: 'Pretendard',sans-serif;
+}
+.qa-a {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  padding: 14px 0 14px 44px; border-bottom: 1px solid var(--rule);
+  margin-bottom: 20px; position: relative; word-break: keep-all;
+}
+.qa-a::before {
+  content: 'A'; position: absolute; left: 0; top: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--accent); color: var(--paper);
+  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
+  font-family: 'Pretendard',sans-serif;
+}
+
+/* ── 설정 패널 ── */
+.settings-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 300; display: none; }
+.settings-overlay.open { display: block; }
+.settings-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; z-index: 301; width: min(400px, 90vw); box-shadow: var(--shadow-2); }
+.settings-panel h3 { font-family: 'Noto Serif KR',serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; }
+.setting-row { margin-bottom: 16px; }
+.setting-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+.setting-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.setting-btn { padding: 6px 14px; border-radius: var(--r-pill); border: 1px solid var(--rule); font-size: 0.82rem; cursor: pointer; transition: all 120ms; background: var(--card); }
+.setting-btn:hover { background: var(--paper-2); }
+.setting-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ── 클립 FAB ── */
+.clips-fab { position: fixed; right: 22px; bottom: 22px; z-index: 90; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 10px 16px 10px 12px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.18); display: none; align-items: center; gap: 8px; }
+.clips-fab.show { display: inline-flex; }
+.clips-fab:hover { transform: translateY(-2px); }
+.clips-fab .num { background: var(--accent); color: white; border-radius: 999px; padding: 2px 8px; font-size: 0.74rem; }
+@media (max-width: 880px) { .clips-fab { bottom: 76px; right: 14px; } }
+
+/* ── 클립 드로어 ── */
+.clips-drawer-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 200; display: none; }
+.clips-drawer-overlay.open { display: block; }
+.clips-drawer { position: fixed; top: 0; right: 0; width: min(440px, 100vw); height: 100vh; background: var(--paper); z-index: 201; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(0,0,0,0.18); transform: translateX(100%); transition: transform 240ms cubic-bezier(.2,.7,.2,1); }
+.clips-drawer.open { transform: translateX(0); }
+.cd-head { padding: 22px 24px 16px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; gap: 12px; }
+.cd-head h2 { font-family: 'Noto Serif KR',serif; font-size: 1.4rem; font-weight: 800; }
+.cd-head .cd-count { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+.cd-list { overflow-y: auto; flex: 1; padding: 10px 0 80px; }
+.cd-empty { padding: 60px 24px; text-align: center; color: var(--muted); }
+.clip-item { padding: 16px 24px; border-bottom: 1px solid var(--rule-2); }
+.clip-item .ci-text { font-family: 'Noto Serif KR',serif; font-size: 0.95rem; line-height: 1.7; border-left: 2px solid var(--accent); padding-left: 12px; margin-top: 8px; }
+.clip-item .ci-tools { display: flex; gap: 8px; margin-top: 10px; }
+.clip-item .ci-tools button { font-size: 0.72rem; color: var(--muted); padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--rule); background: var(--card); }
+.clip-item .ci-tools button:hover { background: var(--paper-2); color: var(--ink); }
+
+/* ── 클립 팝오버 ── */
+.clip-popover { position: absolute; z-index: 300; background: var(--ink); color: var(--paper); border-radius: 8px; padding: 6px; display: flex; gap: 4px; box-shadow: 0 8px 28px rgba(0,0,0,0.25); transform: translate(-50%,-100%); margin-top: -8px; }
+.clip-popover::after { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px; background: var(--ink); }
+.clip-popover button { background: transparent; color: var(--paper); font-size: 0.78rem; padding: 6px 12px; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; white-space: nowrap; }
+.clip-popover button:hover { background: rgba(255,255,255,0.12); }
+mark.clip-mark { background: oklch(0.92 0.1 85 / 0.7); color: inherit; padding: 0 1px; border-radius: 2px; }
+</style>
+</head>
+<body data-fs="m" class="density-magazine theme-white mode-magazine">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">논술 리더</div>
+      <div class="sub">Essay Reader</div>
+    </div>
+    <div class="nav-list">
+      <a href="../index.html" class="nav-item"><span>← 전체 카테고리</span></a>
+      <a href="../bookmarks.html" class="nav-item"><span>📌 내 북마크</span></a>
+    </div>
+    <div class="nav-list">
+      <div class="nav-section-title">카테고리</div>
+      <a href="../ESG/index.html" class="nav-item"><span>🌱 ESG</span><span class="count">20</span></a><a href="../가계_고령문제/index.html" class="nav-item"><span>📄 가계/고령문제</span><span class="count">10</span></a><a href="../가계_금융문제/index.html" class="nav-item active"><span>📄 가계/금융문제</span><span class="count">3</span></a><a href="../가계_인력문제/index.html" class="nav-item"><span>📄 가계/인력문제</span><span class="count">9</span></a><a href="../공급망/index.html" class="nav-item"><span>📄 공급망</span><span class="count">12</span></a><a href="../글로벌_관세_통상_국제/index.html" class="nav-item"><span>📄 글로벌/관세_통상_국제</span><span class="count">18</span></a><a href="../글로벌_외화/index.html" class="nav-item"><span>📄 글로벌/외화</span><span class="count">17</span></a><a href="../금융업/index.html" class="nav-item"><span>📄 금융업</span><span class="count">31</span></a><a href="../디지털_기타/index.html" class="nav-item"><span>📄 디지털/기타</span><span class="count">5</span></a><a href="../디지털_코인/index.html" class="nav-item"><span>📄 디지털/코인</span><span class="count">19</span></a><a href="../벤처_창업_스케일업/index.html" class="nav-item"><span>📄 벤처/창업_스케일업</span><span class="count">16</span></a><a href="../벤처_투자_모험자본/index.html" class="nav-item"><span>📄 벤처/투자_모험자본</span><span class="count">25</span></a><a href="../부동산/index.html" class="nav-item"><span>📄 부동산</span><span class="count">4</span></a><a href="../산업_과제_산업_과제/index.html" class="nav-item"><span>📄 산업 과제/산업 과제</span><span class="count">18</span></a><a href="../산업_과제_생산적금융/index.html" class="nav-item"><span>📄 산업 과제/생산적금융</span><span class="count">17</span></a><a href="../산업별_AI_AI_도입/index.html" class="nav-item"><span>📄 산업별/AI/AI 도입</span><span class="count">13</span></a><a href="../산업별_AI_일자리/index.html" class="nav-item"><span>📄 산업별/AI/일자리</span><span class="count">7</span></a><a href="../산업별_AI_도입/index.html" class="nav-item"><span>📄 산업별/AI/도입</span><span class="count">7</span></a><a href="../산업별_가전_스마트폰_디스플레이/index.html" class="nav-item"><span>📄 산업별/가전_스마트폰_디스플레이</span><span class="count">6</span></a><a href="../산업별_건설_제조_기계_철강/index.html" class="nav-item"><span>📄 산업별/건설_제조_기계_철강</span><span class="count">10</span></a><a href="../산업별_로봇/index.html" class="nav-item"><span>📄 산업별/로봇</span><span class="count">4</span></a><a href="../산업별_바이오_헬스/index.html" class="nav-item"><span>📄 산업별/바이오_헬스</span><span class="count">10</span></a><a href="../산업별_반도체/index.html" class="nav-item"><span>📄 산업별/반도체</span><span class="count">9</span></a><a href="../산업별_방산/index.html" class="nav-item"><span>📄 산업별/방산</span><span class="count">5</span></a><a href="../산업별_섬유패션산업/index.html" class="nav-item"><span>📄 산업별/섬유패션산업</span><span class="count">6</span></a><a href="../산업별_우주/index.html" class="nav-item"><span>📄 산업별/우주</span><span class="count">4</span></a><a href="../산업별_원전/index.html" class="nav-item"><span>📄 산업별/원전</span><span class="count">6</span></a><a href="../산업별_유통_서비스_컨텐츠/index.html" class="nav-item"><span>📄 산업별/유통_서비스_컨텐츠</span><span class="count">11</span></a><a href="../산업별_이차전지/index.html" class="nav-item"><span>📄 산업별/이차전지</span><span class="count">10</span></a><a href="../산업별_자동차/index.html" class="nav-item"><span>📄 산업별/자동차</span><span class="count">9</span></a><a href="../산업별_조선_해운/index.html" class="nav-item"><span>📄 산업별/조선_해운</span><span class="count">13</span></a><a href="../산업별_항공/index.html" class="nav-item"><span>📄 산업별/항공</span><span class="count">2</span></a><a href="../산업별_화학_에너지/index.html" class="nav-item"><span>📄 산업별/화학_에너지</span><span class="count">15</span></a><a href="../시사/index.html" class="nav-item"><span>📄 시사</span><span class="count">27</span></a><a href="../자본시장_국장/index.html" class="nav-item"><span>📄 자본시장/국장</span><span class="count">25</span></a><a href="../자본시장_채권/index.html" class="nav-item"><span>📄 자본시장/채권</span><span class="count">5</span></a><a href="../정책금융_소상공인/index.html" class="nav-item"><span>📄 정책금융/소상공인</span><span class="count">6</span></a><a href="../정책금융_정책금융개선/index.html" class="nav-item"><span>📄 정책금융/정책금융개선</span><span class="count">5</span></a><a href="../정책금융_중소기업/index.html" class="nav-item"><span>📄 정책금융/중소기업</span><span class="count">12</span></a><a href="../중동이슈/index.html" class="nav-item"><span>📄 중동이슈</span><span class="count">28</span></a><a href="../지역균형/index.html" class="nav-item"><span>📄 지역균형</span><span class="count">10</span></a>
+    </div>
+  </aside>
+  <div class="content">
+    <div class="topbar">
+      <div class="search">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" placeholder="제목·내용 검색…" id="searchInput">
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="densityBtn" title="보기 방식"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 10h18M3 14h18M3 18h18"/></svg></button>
+        <button class="icon-btn" id="fsBtn" title="글자 크기"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></button>
+        <button class="icon-btn" id="settingsBtn" title="설정"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      </div>
+      <span id="filterCount" style="font-size:0.78rem;color:var(--muted)">3편</span>
+    </div>
+    <header class="page-head">
+      <div class="eyebrow">📄 논술 요약</div>
+      <h2>가계/금융문제</h2>
+      <div class="ph-sub">3편의 요약 보고서</div>
+    </header>
+    <div class="timeline">
+      <div class="card-row" data-text="가계부채의 구조적 변화와 지속가능한 거시건전성 관리 방안 현재 한국의 gdp 대비 가계부채 비율은 90%를 상회하며 bis 기준 세계 5위라는 높은 수준을 기록하고 있습니다. 2003년에서 2023년 사이 가계부채 비율은 33.8%p 상승했는데, 이 중 무려 **28.6%p가 &#x27;기대수명 증가&#x27;, 4.0%p가 &#x27;인구구조 변화&#x27;**로 설명됩니다. 이는 작금의 가계부채 팽창이 단순한 경기 부양 정책의 실패나 개인의 도" style="display:contents">
+<div class="row" id="row-0">
+  <div class="row-body">
+    <h3 class="row-title">가계부채의 구조적 변화와 지속가능한 거시건전성 관리 방안</h3>
+    <p class="row-excerpt">현재 한국의 GDP 대비 가계부채 비율은 90%를 상회하며 BIS 기준 세계 5위라는 높은 수준을 기록하고 있습니다. 2003년에서 2023년 사이 가계부채 비율은 33.8%p 상승했는데, 이 중 무려 **28.6%p가 &#x27;기대수명 증가&#x27;, 4.0%p가 &#x27;인구구조 변화&#x27;</p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="가계부채의 구조적 변화와 지속가능한 거시건전성 관리 방안"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 가계/금융문제</div>
+  <h2 class="ia-title">가계부채의 구조적 변화와 지속가능한 거시건전성 관리 방안</h2>
+  <div class="article-content">
+    <div class="ia-section-h">가계부채의 구조적 변화와 지속가능한 거시건전성 관리 방안</div>
+<div class="ia-section-h">현황 및 문제의식 : 가계부채의 구조적 팽창과 기존 정책의 한계</div>
+<p class="ia-para-body">현재 한국의 GDP 대비 가계부채 비율은 90%를 상회하며 BIS 기준 세계 5위라는 높은 수준을 기록하고 있습니다. 2003년에서 2023년 사이 가계부채 비율은 33.8%p 상승했는데, 이 중 무려 <strong>28.6%p가 &#x27;기대수명 증가&#x27;, 4.0%p가 &#x27;인구구조 변화&#x27;</strong>로 설명됩니다. 이는 작금의 가계부채 팽창이 단순한 경기 부양 정책의 실패나 개인의 도덕적 해이가 아닌, <strong>장수 사회로 진입함에 따른 자산축적 패러다임 변화라는 구조적 필연성</strong>에 기인함을 시사합니다.</p>
+<p class="ia-para-body">그러나 현재 금융당국은 가계부채 증가율을 &#x27;연간 경상성장률 전망치&#x27;에 단순 연동하는 이른바 양출제입(量出制入) 방식의 한계에 봉착해 있습니다. 잦은 경제 전망치 수정은 정책의 예측 불확실성을 키워 시장 혼란을 야기하며, 호황기에는 대출을 늘리고 불황기에는 신용을 억제하는 경기순응적(Procyclical) 특성으로 인해 오히려 거시경제의 변동성을 증폭시키는 치명적인 문제점을 안고 있습니다.</p>
+<div class="term-box"><span class="term-name">경기순응성</span><span class="term-def">경제 호황기에는 신용이 과도하게 팽창하고 불황기에는 급격히 축소되어, 실물 경제의 진폭을 오히려 벼랑 끝으로 내모는 금융의 특성</span></div>
+<div class="ia-section-h">핵심 해결방안 : 지속 가능한 &#x27;정교한 관리 체계&#x27;로의 패러다임 전환</div>
+<p class="ia-para-body">단기적 총량 억제가 아닌, 인구구조 변화를 수용하면서도 거시경제의 안정을 도모하기 위해서는 아래 두 가지 차원의 제도적 혁신이 필수적입니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> 중기(3년 단위) 추세성장률 기반의 가계부채 관리 도입 (자동안정장치 확보)</h4>
+<p class="ia-para-body">변동성이 큰 연간 지표 대신, <strong>3년 단위의 &#x27;중기 추세성장률&#x27;을 평균 목표로 설정</strong>하는 방안입니다. 이를 통해 빈번한 정책 변경으로 인한 시장 충격을 방지하고, 경제 불황이나 호황에 흔들리지 않는 굳건한 신용공급 기준을 세울 수 있습니다. 결과적으로 금융기관과 가계 모두 장기적인 관점에서 정교한 신용 계획을 수립할 수 있는 강력한 자동안정장치로 기능하게 됩니다.</p>
+<div class="term-box"><span class="term-name">자동안정장치</span><span class="term-def">경제 상황의 변동에 따라 제도 자체가 팽창과 위축을 자동 조절하여, 별도의 인위적 조치 없이도 경기 변동폭을 완화하는 시스템</span></div>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> &#x27;거시건전성 부담금&#x27; 제도의 도입 (외부효과 내부화 및 형평성 제고)</h4>
+<p class="ia-para-body">DSR(총부채원리금상환비율) 등 일률적인 총량규제의 사각지대를 보완하기 위해, <strong>개인의 대출금액이 일정 수준을 초과할 경우 누진적으로 부담금을 부과</strong>하는 제도입니다. 과도한 차입이 금융시스템 전체의 불안정을 초래하는 &#x27;부정적 외부효과&#x27;를 차입자 본인의 비용으로 귀속(내부화)시키는 경제학적 해법입니다. 특히 서민이나 실수요자가 아닌 &#x27;고액 대출자&#x27;를 타겟팅함으로써 금융의 세대 간, 계층 간 형평성을 크게 높일 수 있습니다.</p>
+<div class="ia-section-h">요약 및 향후 전망, 산업은행의 역할</div>
+<p class="ia-para-body">가계부채 관리는 더 이상 &quot;대출 총량을 어떻게 줄일 것인가&quot;의 단순 억제책에 머물러서는 안 됩니다. 부채 증가는 장수 사회의 구조적 산물이며, 향후 고령화가 심화되어 임계점을 지나면 부채는 자연스러운 감소(De-leveraging) 국면에 진입할 것입니다. 따라서 현재의 핵심은 그 전환기까지 <strong>경제가 감당할 수 있는 수준(중기 추세성장률) 내에서 부채의 질을 관리하고 경기 변동성을 통제하는 것</strong>입니다.</p>
+<p class="ia-para-body">이 과정에서 <strong>산업은행은 기업금융 중심의 국책은행임에도 불구하고 거시경제의 안전판으로서 주도적인 역할</strong>을 해야 합니다. 가계부채 부실이 기업자금 조달 시장이나 자본시장으로 전이(Spill-over)되지 않도록 시장안정화 펀드 등 선제적 유동성 공급망을 견고히 다져야 합니다. 또한, 주택금융공사 등 유관 정책금융기관과의 공조를 통해 실수요 청년층의 건전한 자산형성을 지원하는 혁신적인 구조화 금융상품을 간접 지원하며 금융안정과 세대 간 포용성을 동시에 끌어내야 합니다.</p>
+<div class="ia-section-h">[내 생각 / 추가 인사이트 / 정책적 방향성 / 제언]</div>
+<div class="term-box"><span class="term-name">💡 **제언 1</span><span class="term-def">거시건전성 부담금 재원을 활용한 &#x27;청년·취약계층 자산형성 사다리 펀드&#x27; 조성**</span></div>
+<p class="ia-para-body">원문에서 제시한 &#x27;거시건전성 부담금&#x27;을 단순 국고 귀속이나 은행의 손실흡수능력 확충에만 쓰지 않고, 이를 특정 목적 기금화하는 방안을 제안합니다. 고액/다주택 대출자로부터 거둔 재원을 활용해 고령화 및 자산 가격 상승으로 내 집 마련이 어려워진 청년층의 디딤돌 대출 금리를 보전해주거나 보증 재원으로 쓴다면, 부채 증가의 근본 원인인 &#x27;세대 간 불균형&#x27;을 해소하는 가장 현실적인 사다리가 될 것입니다.</p>
+<div class="term-box"><span class="term-name">💡 **제언 2</span><span class="term-def">&#x27;중기 추세성장률&#x27; 연동을 위한 금융권 공동 스트레스 테스트 정례화 및 인센티브 차등 부여**</span></div>
+<p class="ia-para-body">3년 단위의 중기 목표를 흔들림 없이 추진하려면, 3년간 발생할 수 있는 매크로 충격에 대한 은행들의 대비가 필수입니다. 금융당국 및 국책은행이 주도하여 금리·환율 등 복합 위기 상황을 가정한 &#x27;가계부채 특화 스트레스 테스트&#x27;를 정례화해야 합니다. 테스트 결과, 자본건전성이 우수하고 중기 대출 목표를 잘 준수하는 시중은행에게는 정책자금 취급 시 가점을 주거나 예금보험료율을 우대하는 등의 실질적 인센티브 구조를 결합해야 제도의 실행력이 확보될 것입니다.</p>
+<div class="ia-section-h">실전 면접 예상 꼬리질문 &amp; 답변 2선</div>
+<div class="ia-section-h">Q1. 거시건전성 부담금을 개인에게 부과하게 되면, 결국 은행들이 대출 금리를 전반적으로 올려서 서민들에게 비용이 전가되지 않을까요?</div>
+<p class="ia-para-body"><strong>A1.</strong> &quot;좋은 지적입니다. 조세 귀착의 문제처럼 비용이 전가될 위험이 분명 있습니다. 따라서 제도의 설계가 핵심입니다. 대상을 &#x27;모든 대출자&#x27;가 아닌 &#x27;DSR 한도에 육박하는 고액 대출자&#x27;나 &#x27;다주택을 위한 과도한 레버리지 차입자&#x27;로 명확히 한정해야 합니다. 오히려 징수된 부담금을 재원으로 취약계층의 정책 대출 금리를 낮추는 데 활용한다면, 비용 전가를 막고 금융의 포용성을 한층 강화할 수 있을 것이라 생각합니다.&quot;</p>
+<div class="qa-q">가계부채 증가의 주원인이 &#x27;고령화에 따른 구조적 요인&#x27;이라는 분석이 흥미롭습니다. 그렇다면 시간이 지나 고령화가 정점을 찍고 자연 감소할 때까지, 정부나 금융당국이 어느 정도 방관해도 된다는 뜻인가요?</div>
+<p class="ia-para-body"><strong>A2.</strong> &quot;결코 방관해도 된다는 의미가 아닙니다. 부채가 자연 감소 국면에 접어들기 전까지의 &#x27;전환기 리스크&#x27;가 매우 치명적일 수 있기 때문입니다. 만약 청장년층이 짊어진 막대한 부채가 자산가치 하락이나 금리 충격과 맞물리면 거시경제 전체의 위기로 번질 수 있습니다. 즉, 구조적 요인이라 할지라도 실물경제가 감당할 수 있도록 &#x27;중기 추세성장률&#x27;이라는 방파제를 세워, 시스템 붕괴 없이 연착륙(Soft-landing)을 유도하는 적극적이고 정교한 관리가 반드시 필요한 시점입니다.&quot;</p>
+  </div>
+</div>
+</div><div class="card-row" data-text="초고령사회 진입에 따른 자본시장 패러다임 전환과 가계 자산구조 개편 전략 한국은 2025년 초고령사회 진입을 앞두고 있으며, 2050년에는 고령층(65세 이상) 비중이 40%를 돌파할 것으로 전망된다. 이러한 인구 구조의 변화는 단순한 사회 현상을 넘어 국가 자본시장의 근본적인 지각변동을 야기한다." style="display:contents">
+<div class="row" id="row-1">
+  <div class="row-body">
+    <h3 class="row-title">초고령사회 진입에 따른 자본시장 패러다임 전환과 가계 자산구조 개편 전략</h3>
+    <p class="row-excerpt">한국은 2025년 초고령사회 진입을 앞두고 있으며, 2050년에는 고령층(65세 이상) 비중이 40%를 돌파할 것으로 전망된다. 이러한 인구 구조의 변화는 단순한 사회 현상을 넘어 국가 자본시장의 근본적인 지각변동을 야기한다.</p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="초고령사회 진입에 따른 자본시장 패러다임 전환과 가계 자산구조 개편 전략"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 가계/금융문제</div>
+  <h2 class="ia-title">초고령사회 진입에 따른 자본시장 패러다임 전환과 가계 자산구조 개편 전략</h2>
+  <div class="article-content">
+    <p class="ia-para-body"><em>*</em></p>
+<div class="ia-section-h">초고령사회 진입에 따른 자본시장 패러다임 전환과 가계 자산구조 개편 전략</div>
+<div class="ia-section-h">현황 및 문제의식 : 고령화로 인한 자본시장 활력 저하</div>
+<p class="ia-para-body">한국은 2025년 초고령사회 진입을 앞두고 있으며, 2050년에는 고령층(65세 이상) 비중이 40%를 돌파할 것으로 전망된다. 이러한 인구 구조의 변화는 단순한 사회 현상을 넘어 국가 자본시장의 근본적인 지각변동을 야기한다.</p>
+<p class="ia-para-body">현재 고령층의 자산 규모는 지속적으로 증가하고 있으나, 자산 포트폴리오의 구조적 비효율성이 국가 경제의 뇌관으로 작용하고 있다. 전체 자산의 60% 이상이 부동산 등 실물자산에 묶여 있으며, 불과 22% 수준인 금융자산마저 대부분 저수익 예·적금 형태로 방치되어 있다. 이는 고령층 특유의 &#x27;저소비·고저축&#x27; 성향과 맞물려 시중 자금의 경직성을 심화시키고 있다. 자본시장 관점에서 이는 모험자본의 고갈과 혁신기업으로의 자금 공급 단절을 의미하며, 결과적으로 국가 경제의 성장 동력을 훼손하는 중대한 리스크다.</p>
+<div class="ia-section-h">핵심 해결방안 : 자산 유동화와 고령친화적 금융 생태계 구축</div>
+<p class="ia-para-body">고령층의 묶인 자산을 자본시장으로 이끌어내어 개인의 노후 안정과 국가 경제의 자본 형성을 동시에 달성하기 위해서는 다음의 전략적 접근이 필수적이다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> 부동산 자산의 선제적 유동화</h4>
+<p class="ia-para-body">대부분의 부가 집중된 부동산 자산을 유동화하여 현금흐름을 창출하는 것이 최우선 과제다. 주택연금 및 역모기지론의 활성화가 요구되나, 현재 주택연금 가입률은 1%대에 머물러 있다. 이를 타개하기 위해 가입 절차의 획기적 간소화, 유동화 구조의 개선, 그리고 금융기관 간 리스크 분산 메커니즘 구축을 통한 가입 유인 강화가 시급하다.</p>
+<div class="term-box"><span class="term-name">역모기지론</span><span class="term-def">주택을 담보로 맡기고 평생 혹은 일정 기간 동안 매월 연금 방식으로 노후 생활자금을 지급받는 금융 상품</span></div>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> 금융투자 다변화 및 안정적 현금흐름(항상소득) 창출</h4>
+<p class="ia-para-body">단순 예·적금에 머물러 있는 자금을 중·저위험 기반의 투자 상품으로 전환해야 한다. 고령층의 가장 큰 니즈인 &#x27;안정적이고 지속적인 소득&#x27;을 충족시키기 위해 즉시연금 상품을 다양화하고, 주식의 배당이나 채권 이자 등을 통해 정기적인 수익을 지급하는 인컴(Income)형 펀드 및 목표수익형 ETF 등의 공급을 대폭 확대해야 한다.</p>
+<div class="term-box"><span class="term-name">인컴형 펀드</span><span class="term-def">주식의 배당금, 채권 이자, 부동산 임대수익 등 정기적으로 발생하는 수익(Income)을 바탕으로 안정적인 현금흐름을 창출하는 금융 상품</span></div>
+<h4 class="ia-sub-title"><span class="sub-num">③</span> 사적연금 제도 강화 및 운용 효율성 제고</h4>
+<p class="ia-para-body">국민연금의 한계를 보완하기 위해 퇴직연금과 개인연금 등 사적연금의 세제 혜택을 확대해야 한다. 특히 근로세대가 은퇴 전 충분한 자산을 축적할 수 있도록, 디폴트옵션(사전지정운용제도)의 실질적 운영 방안을 고도화하여 퇴직연금의 고질적인 저수익률 문제를 해결해야 한다.</p>
+<div class="term-box"><span class="term-name">디폴트옵션(사전지정운용제도)</span><span class="term-def">연금 가입자가 별도의 운용 지시를 하지 않을 경우, 금융사가 사전에 정해둔 투자 비율이나 상품으로 적립금을 자동 운용하는 제도</span></div>
+<h4 class="ia-sub-title"><span class="sub-num">④</span> 고령층 친화형 금융환경 조성</h4>
+<p class="ia-para-body">투자 상품 전환 시 필연적으로 수반되는 리스크를 관리하기 위해, 금융소비자 보호 체계를 대폭 강화해야 한다. 금융회사와 고령층 간의 정보 비대칭을 완화하고, 적합성 및 적정성 원칙이 서류상 절차를 넘어 실질적으로 운영되도록 감독당국(금융감독원 등)의 촘촘한 가이드라인과 금융투자협회의 교육 프로그램이 병행되어야 한다.</p>
+<div class="ia-section-h">초고령사회의 금융시스템 재설계 및 향후 전망</div>
+<p class="ia-para-body">고령화는 피할 수 없는 구조적 메가트렌드이며, 자본시장은 &#x27;투자기회 제공자&#x27;를 넘어 &#x27;고령층의 전 생애 자산운용 파트너&#x27;로 패러다임을 전환해야 한다. 연금, 부동산, 금융투자가 유기적으로 연결된 시스템이 구축될 때 비로소 긍정적 선순환이 완성된다.</p>
+<div class="ia-section-h">[내 생각 / 추가 인사이트 / 정책적 방향성 / 제언]</div>
+<p class="ia-para-body">단순히 고령층의 자산을 민간 자산운용사에 맡기는 것만으로는 부족합니다. 산업은행과 같은 국책은행이 &#x27;고령층 유휴 자본&#x27;과 &#x27;국가 혁신 산업&#x27;을 연결하는 강력한 파이프라인(마중물) 역할을 수행해야 합니다.</p>
+<div class="term-box"><span class="term-name">제언 1</span><span class="term-def">산업은행 주도의 『실버-혁신 벤처 매칭 매자닌 펀드』 조성**</span></div>
+<p class="ia-para-body">고령층은 원금 손실을 극도로 꺼립니다. 따라서 산업은행이 일정 부분 신용보강을 제공하거나 후순위 출자자로 참여하여 리스크를 완충하는 구조화 펀드를 설계할 필요가 있습니다. 이 펀드에 유입된 고령층의 유동화 자본을 AI, 수소, 항공우주 등 국가 첨단전략산업의 메자닌(전환사채 등)에 투자한다면, 고령층에게는 시중금리 플러스 알파(안정적 인컴)를 제공하고, 벤처기업에는 절실한 장기 스케일업 자금을 공급할 수 있습니다.</p>
+<div class="term-box"><span class="term-name">제언 2</span><span class="term-def">주택금융공사(HF) - 산업은행(KDB) 연계 자산유동화증권(MBS) 기반 인컴 상품 개발**</span></div>
+<p class="ia-para-body">주택연금 가입률을 획기적으로 높이기 위해, 주택금융공사가 발행하는 고품질의 역모기지 유동화 증권을 산업은행이 인수 및 구조화하여 자본시장에 공급하는 방안을 제안합니다. 이를 기초자산으로 삼아 시중 은행과 증권사가 고령층 맞춤형 월 지급식 신탁 상품을 출시하도록 유도한다면, 부동산 자본의 금융시장 이전 속도를 크게 앞당길 수 있습니다.</p>
+<h3 class="ia-para-title"></h3>
+<div class="ia-section-h">Q1. 고령층의 자산을 투자 상품으로 유도할 때 발생하는 원금 손실 리스크나 불완전판매 문제는 어떻게 해결해야 합니까?</div>
+<div class="qa-a">&quot;가장 중요한 것은 신뢰 확보입니다. 단순히 고수익을 미끼로 한 상품 판매가 아니라, 국책은행이나 정책보증기관이 참여하여 꼬리 위험(Tail Risk)을 방어해 주는 &#x27;중·저위험 구조화 연계 상품&#x27;이 우선 공급되어야 합니다. 더불어, AI 기반의 로보어드바이저를 활용해 고령자의 건강 상태, 실질 현금흐름, 위험 감내도 등을 다각도로 분석하여 맞춤형 포트폴리오를 제공함으로써 정보 비대칭으로 인한 불완전판매를 원천 차단해야 합니다.&quot;</div>
+<div class="ia-section-h">Q2. 개인의 노후 자산 관리에 산업은행(기업금융 중심의 국책은행)이 관여하는 것이 기관의 설립 목적에 부합한다고 보십니까?</div>
+<div class="qa-a">&quot;네, 강력히 부합한다고 생각합니다. 산업은행의 본질적 역할은 &#x27;시대가 요구하는 국가 경제의 성장 동력을 발굴하고 필요한 자본을 적재적소에 공급하는 것&#x27;입니다. 초고령사회에서는 시중 자금의 40% 이상이 고령층에 묶이게 됩니다. 이 거대한 민간 유휴 자본을 산업 자본(모험 자본)으로 전환시키는 시스템을 기획하고 마중물을 붓는 것은, 거시적인 국가 자본 형성의 관점에서 볼 때 기업금융 이상으로 중요한 국책은행의 거시적·전략적 책무입니다.&quot;</div>
+  </div>
+</div>
+</div><div class="card-row" data-text="현황 및 문제의식 : 부동산 편중이 초래한 국가 경제의 구조적 한계 " style="display:contents">
+<div class="row" id="row-2">
+  <div class="row-body">
+    <h3 class="row-title">현황 및 문제의식 : 부동산 편중이 초래한 국가 경제의 구조적 한계</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="현황 및 문제의식 : 부동산 편중이 초래한 국가 경제의 구조적 한계"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 가계/금융문제</div>
+  <h2 class="ia-title">현황 및 문제의식 : 부동산 편중이 초래한 국가 경제의 구조적 한계</h2>
+  <div class="article-content">
+    <p class="ia-para-body">📊 <strong>가계 금융자산 확대와 자본시장 활성화 전략</strong></p>
+<div class="ia-section-h">현황 및 문제의식 : 부동산 편중이 초래한 국가 경제의 구조적 한계</div>
+<p class="ia-para-body">현재 한국 가계의 순자산 규모는 세계적 수준이나, 그 구성에 있어 비금융자산(특히 부동산)에 과도하게 편중되어 있다는 치명적인 약점을 지니고 있습니다. 이러한 자산 구조는 단순한 개인의 투자 성향 문제를 넘어, 국가 경제의 자본 활용 효율성을 심각하게 저해하는 거시적 리스크로 작용하고 있습니다.</p>
+<p class="ia-para-body">가장 큰 문제는 경제의 혈맥 역할을 해야 할 가계 자금이 부동산에 묶이면서, 정작 자금이 절실한 생산적 산업이나 혁신 기업으로의 모험자본 공급이 차단된다는 점입니다. 이는 궁극적으로 국가 경제의 역동성과 혁신 잠재력을 갉아먹는 결과로 이어집니다. 또한 자본시장 내 투자자 저변도 약화되고 있는데, 고령층은 저금리 기조 속에서도 고위험 투자를 회피하며 예적금으로 이탈하고 있으며, 청년층은 투자 자본력 부족과 자본시장에 대한 신뢰 부재로 인해 시장 참여가 극히 저조한 실정입니다.</p>
+<div class="ia-section-h">자본시장 활성화의 경제적 파급효과</div>
+<p class="ia-para-body">가계 자금을 자본시장으로 유도하는 것은 두 가지 핵심적인 거시경제적 효과를 창출합니다.</p>
+<p class="ia-para-body">첫째, 혁신 기업의 성장을 폭발적으로 촉진할 수 있습니다. 자금조달에 제약을 받는 혁신·벤처 기업일수록, 은행을 통한 간접금융보다 자본시장을 통한 직접적인 자금조달이 뒷받침될 때 훨씬 빠르고 스케일업된 성장을 이룰 수 있습니다.</p>
+<p class="ia-para-body">둘째, 고질적인 가계부채 문제를 완화할 수 있습니다. 막대한 레버리지(대출)를 동원해야만 진입이 가능한 부동산 투자와 달리, 자본시장의 금융상품은 순수 자기자본만으로도 분할 참여가 가능합니다. 따라서 금융투자의 장려는 곧 부채 의존도를 낮추는 건전한 자산 형성으로 직결됩니다.</p>
+<div class="term-box"><span class="term-name">간접금융</span><span class="term-def">은행 등 금융중개기관을 거쳐 예금자로부터 자금을 조달해 기업에 대출해 주는 방식</span></div>
+<div class="term-box"><span class="term-name">직접금융</span><span class="term-def">기업이 주식이나 채권을 발행하여 자본시장에서 투자자로부터 직접 자금을 조달하는 방식</span></div>
+<div class="ia-section-h">핵심 해결방안 및 정책적 대응 전략</div>
+<p class="ia-para-body">가계가 부동산 중심의 포트폴리오를 유지하는 근본 원인은 자본시장의 낮은 투자 수익률에 기인합니다. 따라서 가계 금융자산을 확대하기 위해서는 자본시장 자체의 체질 개선과 강력한 정책적 인센티브가 결합된 통합적 해결책이 필수적입니다.</p>
+<ul>
+<li><strong>세제 혜택 기반의 연금 자산화 (기획재정부 역할) 🏛️</strong></li>
+</ul>
+<p class="ia-para-body">부동산을 주로 보유한 중장년층이 자발적으로 금융자산으로 자금을 이전할 수 있도록, 노후 대비용 연금 적립에 대한 파격적인 세제 혜택을 제공해야 합니다. 이는 자본시장으로의 안정적인 장기 유동성 공급을 가능케 하며, 궁극적으로는 노후 빈곤 지원에 투입될 국가 재정 부담을 크게 완화하는 일석이조의 효과를 냅니다.</p>
+<ul>
+<li><strong>부동산 자산의 금융 유동화 촉진 🏢</strong></li>
+</ul>
+<p class="ia-para-body">유동성이 극히 떨어지는 부동산의 한계를 극복하고 노후 소비 여력을 확보하기 위해, 주택연금을 비롯해 리츠(REITs) 및 부동산펀드 등을 통한 실물 부동산의 금융 유동화가 가속화되어야 합니다. 이를 통해 자산의 묶임 현상을 해소하고, 주식·채권·펀드를 아우르는 정기적 수익 창출 모델로 가계 경제를 재편해야 합니다.</p>
+<ul>
+<li><strong>자본시장의 수익성 증명 및 신뢰 회복 (금융감독원·한국거래소 역할) 📈</strong></li>
+</ul>
+<p class="ia-para-body">기업들은 주주환원율을 대폭 확대하고 기업 성과를 주가에 반영시켜야 합니다. 또한 금융당국은 금융상품의 투명성을 강화하고 소비자 보호 장치를 철저히 하여 시장 신뢰를 제고해야 하며, 소액 투자 및 자동 투자 서비스를 확대하여 청년층의 진입 장벽을 대폭 낮춰야 합니다.</p>
+<div class="term-box"><span class="term-name">리츠(REITs)</span><span class="term-def">다수의 투자자로부터 자금을 모아 부동산 및 관련 증권에 투자하고 그 수익을 배당하는 부동산투자회사</span></div>
+<h3 class="ia-para-title"></h3>
+<p class="ia-para-body">한국 경제가 직면한 가계부채 리스크와 노후 불안, 그리고 혁신 성장 동력의 부재는 모두 &#x27;부동산 편중 자산 구조&#x27;라는 하나의 뿌리에서 출발합니다. 가계 금융자산 확대는 단순한 자산 다각화 차원이 아니라, 고령화 사회의 개인 금융 안정성을 담보하고 국가 자본시장의 역동성을 회복하기 위한 국가적 생존 전략입니다. 앞으로의 핵심 관건은 자본시장이 부동산을 뛰어넘는 &#x27;신뢰성&#x27;과 &#x27;수익성&#x27;을 증명해 낼 수 있는가에 달려 있습니다.</p>
+<p class="ia-para-body">이 과정에서 <strong>산업은행</strong>은 자본시장의 앵커(Anchor) 역할을 수행해야 합니다. 시중 유동성이 부동산으로 쏠리는 것을 막기 위해, 산업은행이 보유한 우량 혁신기업의 지분이나 국책 인프라 자산을 기초로 한 매력적인 금융상품을 시장에 공급함으로써, 가계 자금이 자연스럽게 국가 첨단산업 투자의 마중물로 흘러갈 수 있도록 &#x27;민간-공공 합작의 금융 투자 플랫폼&#x27;을 구축하는 선도적 역할이 요구됩니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</h3>
+<div class="term-box"><span class="term-name">💡 **차별화 포인트 1</span><span class="term-def">&#x27;국민 참여형 첨단산업 인프라 펀드&#x27; 조성 (산업은행 주도)**</span></div>
+<p class="ia-para-body">단순히 주식 투자를 권유하는 것을 넘어, 가계 자금을 국가 필수 성장 동력(AI 전력망, 2차전지 클러스터 등)에 연결하는 KDB 주도의 인프라 펀드 조성을 제언합니다. 산업은행이 후순위 출자를 통해 원금 손실 리스크를 1차적으로 방어해 주고, 개인 투자자에게는 은행 예금 이상의 안정적 배당 수익과 세제 혜택을 제공한다면, 부동산 자본의 안전자산 선호 심리를 충족시키면서도 대규모 산업 자본을 조달할 수 있는 훌륭한 대안이 될 것입니다.</p>
+<div class="term-box"><span class="term-name">💡 **차별화 포인트 2</span><span class="term-def">부동산 다운사이징과 벤처펀드 연계 세제 시스템 구축**</span></div>
+<p class="ia-para-body">은퇴 세대가 거주 주택의 규모를 줄이고 남은 차액을 금융자산으로 전환할 때 발생하는 양도소득세를 획기적으로 감면해 주는 제도가 필요합니다. 단, 감면의 조건으로 해당 차액의 일정 비율을 코스닥 ETF나 혁신 벤처펀드 등 &#x27;모험자본&#x27;에 의무적으로 일정 기간 예치하도록 연계하는 것입니다. 이는 고령층의 노후 현금흐름 확보와 청년 창업 생태계로의 자본 이전(세대 간 자본 선순환)을 동시에 달성할 수 있는 실효성 높은 방안입니다.</p>
+<div class="ia-section-h">Q. 예상 꼬리질문 2선 및 답변</div>
+<div class="ia-section-h">Q1. 가계 자금이 그동안 부동산에만 몰렸던 가장 근본적인 이유가 무엇이라고 생각하십니까?</div>
+<div class="qa-a">&quot;우상향에 대한 학습효과와 자본시장에 대한 불신 때문입니다. 과거 고도성장기를 거치며 &#x27;부동산은 절대 배신하지 않는다&#x27;는 경험적 신뢰가 형성된 반면, 국내 주식시장은 낮은 배당 성향과 지배구조 문제로 장기 투자에 대한 성과를 증명하지 못했습니다. 결국 자금의 흐름을 바꾸려면 밸류업 정책 등을 통해 자본시장의 주주환원율을 높여 금융상품 자체의 매력도를 실질적으로 끌어올리는 것이 최우선입니다.&quot;</div>
+<div class="ia-section-h">Q2. 고령층은 원금 손실을 극도로 꺼리는데, 이들의 자금을 어떻게 자본시장으로 끌어올 수 있을까요?</div>
+<div class="qa-a">&quot;원금 보장 성향이 강한 고령층에게 직접 투자를 권유하는 것은 한계가 있습니다. 따라서 &#x27;주택연금&#x27;과 &#x27;안정형 금융상품&#x27;을 결합하는 방식을 제안합니다. 주택연금을 통해 매월 지급받는 현금흐름 중 일부를 변동성이 적은 국공채 펀드나 우량 배당형 리츠에 자동 투자하도록 유도하고, 이 수익에 대해 전면 비과세 혜택을 부여한다면 거부감 없이 금융자산 비중을 늘려갈 수 있을 것입니다.&quot;</div>
+  </div>
+</div>
+</div>
+    </div>
+  </div>
+</div>
+
+<nav class="mobile-tabs">
+  <a href="../index.html" class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lab">홈</span></a>
+  <button class="tab" id="mFsBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span class="lab">크기</span></button>
+  <button class="tab" id="mSettingsBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="lab">설정</span></button>
+</nav>
+
+<!-- 설정 패널 -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-panel">
+    <h3>설정</h3>
+    <div class="setting-row">
+      <div class="setting-label">배경 톤</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="theme:paper">종이</button>
+        <button class="setting-btn" data-setting="theme:white">화이트</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">목록 밀도</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="density:compact">컴팩트</button>
+        <button class="setting-btn" data-setting="density:grid">그리드</button>
+        <button class="setting-btn" data-setting="density:magazine">매거진</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">아티클 스타일</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="mode:magazine">매거진</button>
+        <button class="setting-btn" data-setting="mode:newspaper">신문</button>
+        <button class="setting-btn" data-setting="mode:minimal">미니멀</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">글자 크기</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="fs:s">S</button>
+        <button class="setting-btn" data-setting="fs:m">M</button>
+        <button class="setting-btn" data-setting="fs:l">L</button>
+        <button class="setting-btn" data-setting="fs:xl">XL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 발췌 클립 -->
+<button class="clips-fab">📌 발췌 <span class="num">0</span></button>
+<div class="clips-drawer-overlay" id="clipsOverlay"></div>
+<aside class="clips-drawer">
+  <div class="cd-head">
+    <h2>발췌</h2>
+    <span class="cd-count">0개</span>
+    <button class="icon-btn" id="clipsClose"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="cd-list"></div>
+</aside>
+
+<script>const SVG_CLIP = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg>';</script>
+<script>
+// ── State ──
+let density = localStorage.getItem('ns_density') || 'magazine';
+let theme = localStorage.getItem('ns_theme') || 'white';
+let mode = localStorage.getItem('ns_mode') || 'magazine';
+let fsIdx = ['s','m','l','xl'].indexOf(localStorage.getItem('ns_fs') || 'm');
+if (fsIdx < 0) fsIdx = 1;
+const fsSizes = ['s','m','l','xl'];
+const fsLabels = {'s':'작게','m':'보통','l':'크게','xl':'아주 크게'};
+let bookmarks = new Set(JSON.parse(localStorage.getItem('ns_bookmarks') || '[]'));
+let clips = JSON.parse(localStorage.getItem('ns_clips') || '[]');
+
+function applyState() {
+  document.body.className = `density-${density} theme-${theme} mode-${mode}`;
+  document.body.dataset.fs = fsSizes[fsIdx];
+  // Update settings buttons
+  document.querySelectorAll('[data-setting]').forEach(btn => {
+    const [key, val] = btn.dataset.setting.split(':');
+    const current = key === 'density' ? density : key === 'theme' ? theme : key === 'mode' ? mode : fsSizes[fsIdx];
+    btn.classList.toggle('active', val === current);
+  });
+  updateBookmarkUI();
+  updateClipsFab();
+}
+
+// ── Search ──
+const searchInput = document.getElementById('searchInput');
+const rows = document.querySelectorAll('.card-row');
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    let vis = 0;
+    rows.forEach(r => {
+      const show = !q || r.dataset.text.includes(q);
+      r.style.display = show ? '' : 'none';
+      if (show) vis++;
+    });
+    const fc = document.getElementById('filterCount');
+    if (fc) fc.textContent = vis + '편';
+  });
+}
+
+// ── Expand/Collapse ──
+document.querySelectorAll('.row').forEach(row => {
+  row.addEventListener('click', function(e) {
+    if (e.target.closest('.bookmark-btn') || e.target.closest('.ia-close')) return;
+    const wasOpen = this.classList.contains('expanded');
+    document.querySelectorAll('.row.expanded').forEach(r => r.classList.remove('expanded'));
+    if (!wasOpen) {
+      this.classList.add('expanded');
+      setTimeout(() => {
+        const art = this.nextElementSibling;
+        if (art && art.classList.contains('inline-article')) {
+          const top = art.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({top, behavior: 'smooth'});
+        }
+      }, 50);
+    }
+  });
+});
+document.querySelectorAll('.ia-close').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const art = this.closest('.inline-article');
+    if (art && art.previousElementSibling) art.previousElementSibling.classList.remove('expanded');
+  });
+});
+
+// ── Bookmarks ──
+function updateBookmarkUI() {
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    const t = btn.dataset.title;
+    const on = bookmarks.has(t);
+    btn.classList.toggle('on', on);
+    btn.querySelector('svg').setAttribute('fill', on ? 'currentColor' : 'none');
+  });
+}
+document.querySelectorAll('.bookmark-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const t = this.dataset.title;
+    if (bookmarks.has(t)) bookmarks.delete(t); else bookmarks.add(t);
+    localStorage.setItem('ns_bookmarks', JSON.stringify([...bookmarks]));
+    updateBookmarkUI();
+  });
+});
+
+// ── Font Size ──
+document.getElementById('fsBtn')?.addEventListener('click', () => {
+  fsIdx = (fsIdx + 1) % fsSizes.length;
+  localStorage.setItem('ns_fs', fsSizes[fsIdx]);
+  applyState();
+});
+
+// ── Density ──
+document.getElementById('densityBtn')?.addEventListener('click', () => {
+  const order = ['compact','grid','magazine'];
+  density = order[(order.indexOf(density) + 1) % order.length];
+  localStorage.setItem('ns_density', density);
+  applyState();
+});
+
+// ── Settings Panel ──
+const settingsOverlay = document.getElementById('settingsOverlay');
+document.getElementById('settingsBtn')?.addEventListener('click', () => {
+  settingsOverlay?.classList.toggle('open');
+  applyState();
+});
+settingsOverlay?.addEventListener('click', (e) => {
+  if (e.target === settingsOverlay) settingsOverlay.classList.remove('open');
+});
+document.querySelectorAll('[data-setting]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const [key, val] = this.dataset.setting.split(':');
+    if (key === 'density') { density = val; localStorage.setItem('ns_density', val); }
+    if (key === 'theme') { theme = val; localStorage.setItem('ns_theme', val); }
+    if (key === 'mode') { mode = val; localStorage.setItem('ns_mode', val); }
+    if (key === 'fs') { fsIdx = fsSizes.indexOf(val); localStorage.setItem('ns_fs', val); }
+    applyState();
+  });
+});
+
+// ── Clips (발췌) ──
+function updateClipsFab() {
+  const fab = document.querySelector('.clips-fab');
+  if (fab) {
+    fab.classList.toggle('show', clips.length > 0);
+    fab.querySelector('.num').textContent = clips.length;
+  }
+}
+function addClip(text, title) {
+  clips.unshift({id: Date.now(), text, title, createdAt: Date.now()});
+  localStorage.setItem('ns_clips', JSON.stringify(clips));
+  updateClipsFab();
+}
+function removeClip(id) {
+  clips = clips.filter(c => c.id !== id);
+  localStorage.setItem('ns_clips', JSON.stringify(clips));
+  updateClipsFab();
+  renderClipsList();
+}
+
+// Clip popover on text selection
+let clipPopover = null;
+document.addEventListener('mouseup', () => {
+  setTimeout(() => {
+    if (clipPopover) { clipPopover.remove(); clipPopover = null; }
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return;
+    const text = sel.toString().trim();
+    if (text.length < 4) return;
+    const range = sel.getRangeAt(0);
+    const art = range.commonAncestorContainer.closest?.('.inline-article') ||
+                range.commonAncestorContainer.parentElement?.closest?.('.inline-article');
+    if (!art) return;
+    const rect = range.getBoundingClientRect();
+    const pop = document.createElement('div');
+    pop.className = 'clip-popover';
+    pop.style.position = 'fixed';
+    pop.style.left = (rect.left + rect.width/2) + 'px';
+    pop.style.top = rect.top + 'px';
+    const title = art.querySelector('.ia-title')?.textContent || '';
+    pop.innerHTML = `<button onclick="addClip('${text.replace(/'/g,"\'")}','${title.replace(/'/g,"\'")}');this.parentElement.remove();window.getSelection().removeAllRanges()">` +
+      `${SVG_CLIP} 클립</button>` +
+      `<button onclick="navigator.clipboard?.writeText('${text.replace(/'/g,"\'")}');this.parentElement.remove();window.getSelection().removeAllRanges()">복사</button>`;
+    document.body.appendChild(pop);
+    clipPopover = pop;
+  }, 10);
+});
+document.addEventListener('mousedown', (e) => {
+  if (clipPopover && !e.target.closest('.clip-popover')) { clipPopover.remove(); clipPopover = null; }
+});
+
+// Clips drawer
+document.querySelector('.clips-fab')?.addEventListener('click', () => {
+  document.getElementById('clipsOverlay')?.classList.add('open');
+  document.querySelector('.clips-drawer')?.classList.add('open');
+  renderClipsList();
+});
+document.getElementById('clipsOverlay')?.addEventListener('click', () => {
+  document.getElementById('clipsOverlay')?.classList.remove('open');
+  document.querySelector('.clips-drawer')?.classList.remove('open');
+});
+document.getElementById('clipsClose')?.addEventListener('click', () => {
+  document.getElementById('clipsOverlay')?.classList.remove('open');
+  document.querySelector('.clips-drawer')?.classList.remove('open');
+});
+function renderClipsList() {
+  const list = document.querySelector('.cd-list');
+  if (!list) return;
+  if (clips.length === 0) {
+    list.innerHTML = '<div class="cd-empty"><div style="font-family:Noto Serif KR,serif;font-size:3rem;color:var(--rule);font-weight:700;margin-bottom:12px">¶</div><div>본문에서 텍스트를 드래그하면<br>여기에 모입니다.</div></div>';
+    return;
+  }
+  list.innerHTML = clips.map(c => `<div class="clip-item"><div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">${c.title || ''}</div><div class="ci-text">${c.text}</div><div class="ci-tools"><button onclick="navigator.clipboard?.writeText(\`${c.text.replace(/`/g,'')}\`)">복사</button><button onclick="removeClip(${c.id})">삭제</button></div></div>`).join('');
+  document.querySelector('.cd-count').textContent = clips.length + '개';
+}
+
+// Mobile tabs
+document.getElementById('mFsBtn')?.addEventListener('click', () => document.getElementById('fsBtn')?.click());
+document.getElementById('mSettingsBtn')?.addEventListener('click', () => document.getElementById('settingsBtn')?.click());
+
+// ── 인라인 편집 ──
+const EDITS_KEY = 'ns_edits';
+let edits = JSON.parse(localStorage.getItem(EDITS_KEY) || '{}');
+
+// 저장된 편집 복원
+function restoreEdits() {
+  Object.entries(edits).forEach(([id, data]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      if (data.title) {
+        const titleEl = el.querySelector('.row-title') || el.querySelector('.ia-title');
+        if (titleEl) titleEl.textContent = data.title;
+        // 행 제목도 동기화
+        const row = el.previousElementSibling || document.getElementById(id);
+        if (row) {
+          const rt = row.querySelector('.row-title');
+          if (rt && data.title) rt.textContent = data.title;
+        }
+      }
+    }
+  });
+}
+
+// 더블클릭 → contentEditable
+function makeEditable(el, saveKey, field) {
+  el.addEventListener('dblclick', function(e) {
+    e.stopPropagation();
+    if (this.contentEditable === 'true') return;
+    this.contentEditable = 'true';
+    this.style.outline = '2px solid var(--accent)';
+    this.style.borderRadius = '4px';
+    this.style.padding = '4px 8px';
+    this.focus();
+
+    const done = () => {
+      this.contentEditable = 'false';
+      this.style.outline = '';
+      this.style.padding = '';
+      // 저장
+      if (!edits[saveKey]) edits[saveKey] = {};
+      edits[saveKey][field] = this.textContent;
+      localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
+      // row 제목 동기화
+      if (field === 'title') {
+        const card = this.closest('.card-row');
+        if (card) {
+          const rt = card.querySelector('.row-title');
+          const it = card.querySelector('.ia-title');
+          if (rt) rt.textContent = this.textContent;
+          if (it) it.textContent = this.textContent;
+        }
+      }
+    };
+    this.addEventListener('blur', done, {once: true});
+    this.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') { ev.preventDefault(); this.blur(); }
+    });
+  });
+}
+
+// 모든 제목에 편집 기능 부여
+document.querySelectorAll('.card-row').forEach((row, i) => {
+  const id = 'card-' + i;
+  row.id = id;
+  const rowTitle = row.querySelector('.row-title');
+  const iaTitle = row.querySelector('.ia-title');
+  if (rowTitle) makeEditable(rowTitle, id, 'title');
+  if (iaTitle) makeEditable(iaTitle, id, 'title');
+
+  // 편집 복원
+  if (edits[id]?.title) {
+    if (rowTitle) rowTitle.textContent = edits[id].title;
+    if (iaTitle) iaTitle.textContent = edits[id].title;
+  }
+});
+
+// ── Init ──
+applyState();
+</script>
+</body>
+</html>

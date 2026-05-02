@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>산업별/가전_스마트폰_디스플레이 — 논술 요약</title>
+<meta name="theme-color" content="#f4ede0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="논술 리더">
+<link rel="manifest" href="../manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<style>
+/* ── 인라인 편집 ── */
+.row-title:hover, .ia-title:hover, .ia-section-h:hover, .ia-para-title:hover {
+  cursor: text; background: color-mix(in oklab, var(--accent-soft) 50%, transparent);
+  border-radius: 4px; transition: background 150ms;
+}
+[contenteditable="true"] { outline: 2px solid var(--accent) !important; border-radius: 4px; padding: 4px 8px; background: var(--card); }
+
+/* ── 접기/펼치기 ── */
+.inline-article { display: none !important; }
+.row.expanded + .inline-article { display: block !important; animation: ia-in 200ms ease-out; }
+@keyframes ia-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── 본문 기본 ── */
+.article-content { word-break: keep-all; text-wrap: pretty; }
+.article-content p {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  margin-bottom: 1.35em; word-break: keep-all;
+}
+.article-content p:last-child { margin-bottom: 0; }
+.article-content ul { padding-left: 1.5em; margin: 0.8em 0; }
+.article-content ul li {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  margin-bottom: 0.5em; word-break: keep-all;
+}
+.article-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1.2em 0; }
+.article-content table th { background: var(--paper-2); padding: 10px 14px; font-weight: 700; text-align: left; border-bottom: 2px solid var(--rule); }
+.article-content table td { padding: 10px 14px; border-bottom: 1px solid var(--rule-2); vertical-align: top; line-height: 1.7; }
+
+/* ── 빈 소제목 숨김 ── */
+.ia-section-h:empty, .ia-para-title:empty, .ia-sub-title:empty, .ia-tag-title:empty { display: none; }
+
+/* ── 소제목 계층: section-h(H2) > para-title(H3) > sub-title(①) > tag-title([태그]) ── */
+.ia-section-h {
+  font-family: 'Noto Serif KR',serif; font-size: 1.3rem; font-weight: 900;
+  letter-spacing: -0.8px; line-height: 1.3;
+  margin: 48px 0 18px !important; padding: 0 0 10px;
+  border-bottom: 2px solid var(--accent); color: var(--ink);
+}
+.ia-section-h::before { content: ''; width: 28px; height: 2px; background: var(--accent); }
+.ia-para-title, h3.ia-para-title {
+  font-family: 'Noto Serif KR',serif !important; font-size: 1.18rem !important; font-weight: 800 !important;
+  letter-spacing: -0.5px; line-height: 1.35;
+  margin: 36px 0 14px !important; padding-left: 14px;
+  border-left: 4px solid var(--accent); color: var(--ink);
+}
+.ia-sub-title {
+  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 700;
+  margin: 28px 0 10px; color: var(--ink); line-height: 1.4;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.ia-sub-title .sub-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; background: var(--accent); color: var(--paper);
+  border-radius: 50%; font-size: 0.82rem; font-weight: 800; flex-shrink: 0;
+  font-family: 'Pretendard',sans-serif;
+}
+.ia-tag-title {
+  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 800;
+  margin: 24px 0 10px; color: var(--ink); line-height: 1.4;
+  display: flex; align-items: center; gap: 10px; letter-spacing: -0.3px;
+}
+.tag-label {
+  display: inline-block; padding: 4px 12px;
+  background: var(--accent); color: var(--paper); border-radius: 4px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 1.5px;
+  font-family: 'Pretendard',sans-serif; white-space: nowrap; flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+/* ── 용어박스 (grid) ── */
+.term-box {
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 16px;
+  padding: 14px 18px 14px 20px; margin: 14px 0;
+  background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+  border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
+  align-items: baseline;
+}
+.term-name { font-size: 0.9rem; font-weight: 800; color: var(--ink); letter-spacing: -0.3px; white-space: nowrap; }
+.term-def { font-size: 0.9rem; color: var(--ink-3); line-height: 1.75; }
+
+/* ── Q&A ── */
+.qa-q {
+  font-family: 'Noto Serif KR',serif; font-size: 1.05rem; font-weight: 700;
+  line-height: 1.55; color: var(--ink);
+  border-top: 2px solid var(--ink); padding: 20px 0 14px 44px;
+  margin-top: 36px; position: relative;
+}
+.qa-q::before {
+  content: 'Q'; position: absolute; left: 0; top: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--ink); color: var(--paper);
+  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
+  font-family: 'Pretendard',sans-serif;
+}
+.qa-a {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  padding: 14px 0 14px 44px; border-bottom: 1px solid var(--rule);
+  margin-bottom: 20px; position: relative; word-break: keep-all;
+}
+.qa-a::before {
+  content: 'A'; position: absolute; left: 0; top: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--accent); color: var(--paper);
+  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
+  font-family: 'Pretendard',sans-serif;
+}
+
+/* ── 설정 패널 ── */
+.settings-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 300; display: none; }
+.settings-overlay.open { display: block; }
+.settings-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; z-index: 301; width: min(400px, 90vw); box-shadow: var(--shadow-2); }
+.settings-panel h3 { font-family: 'Noto Serif KR',serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; }
+.setting-row { margin-bottom: 16px; }
+.setting-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+.setting-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.setting-btn { padding: 6px 14px; border-radius: var(--r-pill); border: 1px solid var(--rule); font-size: 0.82rem; cursor: pointer; transition: all 120ms; background: var(--card); }
+.setting-btn:hover { background: var(--paper-2); }
+.setting-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ── 클립 FAB ── */
+.clips-fab { position: fixed; right: 22px; bottom: 22px; z-index: 90; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 10px 16px 10px 12px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.18); display: none; align-items: center; gap: 8px; }
+.clips-fab.show { display: inline-flex; }
+.clips-fab:hover { transform: translateY(-2px); }
+.clips-fab .num { background: var(--accent); color: white; border-radius: 999px; padding: 2px 8px; font-size: 0.74rem; }
+@media (max-width: 880px) { .clips-fab { bottom: 76px; right: 14px; } }
+
+/* ── 클립 드로어 ── */
+.clips-drawer-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 200; display: none; }
+.clips-drawer-overlay.open { display: block; }
+.clips-drawer { position: fixed; top: 0; right: 0; width: min(440px, 100vw); height: 100vh; background: var(--paper); z-index: 201; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(0,0,0,0.18); transform: translateX(100%); transition: transform 240ms cubic-bezier(.2,.7,.2,1); }
+.clips-drawer.open { transform: translateX(0); }
+.cd-head { padding: 22px 24px 16px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; gap: 12px; }
+.cd-head h2 { font-family: 'Noto Serif KR',serif; font-size: 1.4rem; font-weight: 800; }
+.cd-head .cd-count { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+.cd-list { overflow-y: auto; flex: 1; padding: 10px 0 80px; }
+.cd-empty { padding: 60px 24px; text-align: center; color: var(--muted); }
+.clip-item { padding: 16px 24px; border-bottom: 1px solid var(--rule-2); }
+.clip-item .ci-text { font-family: 'Noto Serif KR',serif; font-size: 0.95rem; line-height: 1.7; border-left: 2px solid var(--accent); padding-left: 12px; margin-top: 8px; }
+.clip-item .ci-tools { display: flex; gap: 8px; margin-top: 10px; }
+.clip-item .ci-tools button { font-size: 0.72rem; color: var(--muted); padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--rule); background: var(--card); }
+.clip-item .ci-tools button:hover { background: var(--paper-2); color: var(--ink); }
+
+/* ── 클립 팝오버 ── */
+.clip-popover { position: absolute; z-index: 300; background: var(--ink); color: var(--paper); border-radius: 8px; padding: 6px; display: flex; gap: 4px; box-shadow: 0 8px 28px rgba(0,0,0,0.25); transform: translate(-50%,-100%); margin-top: -8px; }
+.clip-popover::after { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px; background: var(--ink); }
+.clip-popover button { background: transparent; color: var(--paper); font-size: 0.78rem; padding: 6px 12px; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; white-space: nowrap; }
+.clip-popover button:hover { background: rgba(255,255,255,0.12); }
+mark.clip-mark { background: oklch(0.92 0.1 85 / 0.7); color: inherit; padding: 0 1px; border-radius: 2px; }
+</style>
+</head>
+<body data-fs="m" class="density-magazine theme-white mode-magazine">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">논술 리더</div>
+      <div class="sub">Essay Reader</div>
+    </div>
+    <div class="nav-list">
+      <a href="../index.html" class="nav-item"><span>← 전체 카테고리</span></a>
+      <a href="../bookmarks.html" class="nav-item"><span>📌 내 북마크</span></a>
+    </div>
+    <div class="nav-list">
+      <div class="nav-section-title">카테고리</div>
+      <a href="../ESG/index.html" class="nav-item"><span>🌱 ESG</span><span class="count">20</span></a><a href="../가계_고령문제/index.html" class="nav-item"><span>📄 가계/고령문제</span><span class="count">10</span></a><a href="../가계_금융문제/index.html" class="nav-item"><span>📄 가계/금융문제</span><span class="count">3</span></a><a href="../가계_인력문제/index.html" class="nav-item"><span>📄 가계/인력문제</span><span class="count">9</span></a><a href="../공급망/index.html" class="nav-item"><span>📄 공급망</span><span class="count">12</span></a><a href="../글로벌_관세_통상_국제/index.html" class="nav-item"><span>📄 글로벌/관세_통상_국제</span><span class="count">18</span></a><a href="../글로벌_외화/index.html" class="nav-item"><span>📄 글로벌/외화</span><span class="count">17</span></a><a href="../금융업/index.html" class="nav-item"><span>📄 금융업</span><span class="count">31</span></a><a href="../디지털_기타/index.html" class="nav-item"><span>📄 디지털/기타</span><span class="count">5</span></a><a href="../디지털_코인/index.html" class="nav-item"><span>📄 디지털/코인</span><span class="count">19</span></a><a href="../벤처_창업_스케일업/index.html" class="nav-item"><span>📄 벤처/창업_스케일업</span><span class="count">16</span></a><a href="../벤처_투자_모험자본/index.html" class="nav-item"><span>📄 벤처/투자_모험자본</span><span class="count">25</span></a><a href="../부동산/index.html" class="nav-item"><span>📄 부동산</span><span class="count">4</span></a><a href="../산업_과제_산업_과제/index.html" class="nav-item"><span>📄 산업 과제/산업 과제</span><span class="count">18</span></a><a href="../산업_과제_생산적금융/index.html" class="nav-item"><span>📄 산업 과제/생산적금융</span><span class="count">17</span></a><a href="../산업별_AI_AI_도입/index.html" class="nav-item"><span>📄 산업별/AI/AI 도입</span><span class="count">13</span></a><a href="../산업별_AI_일자리/index.html" class="nav-item"><span>📄 산업별/AI/일자리</span><span class="count">7</span></a><a href="../산업별_AI_도입/index.html" class="nav-item"><span>📄 산업별/AI/도입</span><span class="count">7</span></a><a href="../산업별_가전_스마트폰_디스플레이/index.html" class="nav-item active"><span>📄 산업별/가전_스마트폰_디스플레이</span><span class="count">6</span></a><a href="../산업별_건설_제조_기계_철강/index.html" class="nav-item"><span>📄 산업별/건설_제조_기계_철강</span><span class="count">10</span></a><a href="../산업별_로봇/index.html" class="nav-item"><span>📄 산업별/로봇</span><span class="count">4</span></a><a href="../산업별_바이오_헬스/index.html" class="nav-item"><span>📄 산업별/바이오_헬스</span><span class="count">10</span></a><a href="../산업별_반도체/index.html" class="nav-item"><span>📄 산업별/반도체</span><span class="count">9</span></a><a href="../산업별_방산/index.html" class="nav-item"><span>📄 산업별/방산</span><span class="count">5</span></a><a href="../산업별_섬유패션산업/index.html" class="nav-item"><span>📄 산업별/섬유패션산업</span><span class="count">6</span></a><a href="../산업별_우주/index.html" class="nav-item"><span>📄 산업별/우주</span><span class="count">4</span></a><a href="../산업별_원전/index.html" class="nav-item"><span>📄 산업별/원전</span><span class="count">6</span></a><a href="../산업별_유통_서비스_컨텐츠/index.html" class="nav-item"><span>📄 산업별/유통_서비스_컨텐츠</span><span class="count">11</span></a><a href="../산업별_이차전지/index.html" class="nav-item"><span>📄 산업별/이차전지</span><span class="count">10</span></a><a href="../산업별_자동차/index.html" class="nav-item"><span>📄 산업별/자동차</span><span class="count">9</span></a><a href="../산업별_조선_해운/index.html" class="nav-item"><span>📄 산업별/조선_해운</span><span class="count">13</span></a><a href="../산업별_항공/index.html" class="nav-item"><span>📄 산업별/항공</span><span class="count">2</span></a><a href="../산업별_화학_에너지/index.html" class="nav-item"><span>📄 산업별/화학_에너지</span><span class="count">15</span></a><a href="../시사/index.html" class="nav-item"><span>📄 시사</span><span class="count">27</span></a><a href="../자본시장_국장/index.html" class="nav-item"><span>📄 자본시장/국장</span><span class="count">25</span></a><a href="../자본시장_채권/index.html" class="nav-item"><span>📄 자본시장/채권</span><span class="count">5</span></a><a href="../정책금융_소상공인/index.html" class="nav-item"><span>📄 정책금융/소상공인</span><span class="count">6</span></a><a href="../정책금융_정책금융개선/index.html" class="nav-item"><span>📄 정책금융/정책금융개선</span><span class="count">5</span></a><a href="../정책금융_중소기업/index.html" class="nav-item"><span>📄 정책금융/중소기업</span><span class="count">12</span></a><a href="../중동이슈/index.html" class="nav-item"><span>📄 중동이슈</span><span class="count">28</span></a><a href="../지역균형/index.html" class="nav-item"><span>📄 지역균형</span><span class="count">10</span></a>
+    </div>
+  </aside>
+  <div class="content">
+    <div class="topbar">
+      <div class="search">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" placeholder="제목·내용 검색…" id="searchInput">
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="densityBtn" title="보기 방식"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 10h18M3 14h18M3 18h18"/></svg></button>
+        <button class="icon-btn" id="fsBtn" title="글자 크기"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></button>
+        <button class="icon-btn" id="settingsBtn" title="설정"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      </div>
+      <span id="filterCount" style="font-size:0.78rem;color:var(--muted)">6편</span>
+    </div>
+    <header class="page-head">
+      <div class="eyebrow">📄 논술 요약</div>
+      <h2>산업별/가전_스마트폰_디스플레이</h2>
+      <div class="ph-sub">6편의 요약 보고서</div>
+    </header>
+    <div class="timeline">
+      <div class="card-row" data-text="&#x27;직접환급제(direct pay)&#x27; 연계 브릿지 론(bridge loan) 상품 신설 " style="display:contents">
+<div class="row" id="row-0">
+  <div class="row-body">
+    <h3 class="row-title">&#x27;직접환급제(Direct Pay)&#x27; 연계 브릿지 론(Bridge Loan) 상품 신설</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="&#x27;직접환급제(Direct Pay)&#x27; 연계 브릿지 론(Bridge Loan) 상품 신설"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 산업별/가전_스마트폰_디스플레이</div>
+  <h2 class="ia-title">&#x27;직접환급제(Direct Pay)&#x27; 연계 브릿지 론(Bridge Loan) 상품 신설</h2>
+  <div class="article-content">
+    <p class="ia-para-body">📊 <strong>글로벌 디스플레이 시장 패러다임 변화와 산업은행의 전략적 금융지원 방향</strong></p>
+<p class="ia-para-body">디스플레이 산업은 과거 단순한 영상표시장치를 넘어 가전, 모빌리티, 의료기기, 방위산업 등 미래 첨단 산업의 핵심 인프라로 진화하고 있습니다. 최근 미·중 무역 패권 경쟁과 중국의 막대한 자본 공세 속에서, 본 보고서는 글로벌 디스플레이 시장의 지형 변화를 분석하고 국가 경쟁력 수호를 위한 정책적·금융적 대응 전략을 제시합니다.</p>
+<h3 class="ia-para-title">글로벌 패권 경쟁과 디스플레이 산업의 구조적 위기</h3>
+<p class="ia-para-body">최근 자국 우선주의 기조가 강화되면서 디스플레이 산업을 둘러싼 글로벌 통상 환경의 불확실성이 극대화되고 있습니다. 한때 아시아 4개국이 주도하던 시장은 현재 한국과 중국이 전 세계 점유율의 약 83%를 차지하는 양강 구도로 재편되었습니다.</p>
+<p class="ia-para-body">특히 중국은 중앙·지방 정부의 노골적이고 전폭적인 산업 육성 정책을 통해 2021년 한국을 제치고 디스플레이 국가 점유율 1위를 탈환했습니다. 중국 기업들은 토지 무상 제공, 세금 감면, 원재료 수입 관세 면제 등 다각적인 지원을 받고 있으며, 대표적으로 세계 1위 기업인 BOE는 10.5세대 대형 LCD 라인 구축 시 총 투자비의 단 10%(약 5.6억 달러)만 자체 부담하는 기형적인 재무 구조로도 공격적인 확장이 가능했습니다.</p>
+<h3 class="ia-para-title">한국 디스플레이 산업의 현주소 : &#x27;OLED 피벗&#x27;과 하이엔드 주도권</h3>
+<p class="ia-para-body">LCD 패권을 중국에 내어준 한국은 고부가가치 영역인 유기발광다이오드(OLED) 시장으로 전면적인 구조 전환을 단행했습니다. 그 결과, 2023년 기준 전체 글로벌 OLED 시장의 약 74%를 점유하고 있으며, 전력 효율이 극도로 높은 프리미엄 제품군에서는 85%라는 압도적인 장악력을 보이고 있습니다.</p>
+<p class="ia-para-body">실제로 2024년 한국 디스플레이 기업들의 매출은 전년 대비 13.3% 증가한 442억 달러를 기록하며 반등했습니다. 이는 온디바이스 AI 확산에 따라 고효율 전력 관리가 필수적인 환경이 조성되었고, 이에 최적화된 프리미엄 패널의 채택률이 급증했기 때문입니다. 전체 패널 매출 중 OLED가 차지하는 비중이 2021년 69%에서 2024년 82.1%로 상승한 것은 고부가 중심의 산업 재편이 성공적으로 안착하고 있음을 증명합니다.</p>
+<div class="term-box"><span class="term-name">LTPO(저온다결정산화물) OLED</span><span class="term-def">화면 주사율을 세밀하게 조절하여 전력 소모를 대폭 줄인 프리미엄 디스플레이 기술로, 최근 배터리 소모가 심한 AI 스마트폰 등에서 필수적으로 채택됨.</span></div>
+<h3 class="ia-para-title">미·중 무역 갈등 격화 및 중국의 공급망 내재화 리스크</h3>
+<p class="ia-para-body">한국은 하이엔드 기술력으로 선방하고 있으나, 거시적 무역 환경은 심각한 위협 요인으로 작용하고 있습니다. 미국의 대중국 관세 장벽이 높아질 경우, 중국 내에서 조립·생산되는 주요 글로벌 IT 기기(애플 등)의 가격 경쟁력이 하락하게 됩니다. 이는 결국 글로벌 전방산업의 소비 위축을 불러와 한국 패널 기업들의 패널 출하량 감소로 직결될 수 있습니다.</p>
+<p class="ia-para-body">또한 중국은 외부 갈등에 대응하여 이른바 &#x27;애국 소비&#x27;를 장려하고, 자국산 부품 탑재 비율을 극단적으로 끌어올리고 있습니다. 스마트폰과 자동차, 노트북 분야 등에서 3년 전까지만 해도 압도적이었던 한국산 OLED의 중국 로컬 세트업체 향(向) 점유율이 최근 급감한 현상은 이러한 &#x27;공급망 내재화&#x27;의 결과를 명확히 보여줍니다.</p>
+<div class="term-box"><span class="term-name">이구환신(以舊換新)</span><span class="term-def">소비자가 낡은 가전이나 자동차 등을 새 제품으로 교체할 때 중국 정부가 보조금을 지급하는 강력한 내수 진작 및 자국산 부품 소비 촉진 정책.</span></div>
+<h3 class="ia-para-title">핵심 대응 과제 : 초격차 기술 투자 및 전폭적 제도 지원 방안 (최우선 과제)</h3>
+<p class="ia-para-body">단순한 생산 물량 중심의 경쟁으로는 자본력을 앞세운 중국을 이길 수 없습니다. 원문에서 강력하게 제시하는 해법은 &quot;자본을 뛰어넘는 압도적인 기술 초격차 확보&quot;와 &quot;이를 뒷받침할 획기적인 국가적 지원 시스템 구축&quot;입니다.</p>
+<ul>
+<li><strong>미래 폼팩터 및 차세대 기술에 대한 선제적 투자:</strong> 기존 주력 제품을 넘어, 공간 컴퓨팅 및 확장현실(XR)에 필수적인 마이크로 디스플레이, 무기발광 디스플레이 등 차세대 성장 동력에 대규모 자본을 선제적으로 투입해야 합니다.</li>
+<li><strong>투자 불확실성 해소를 위한 직접환급제 등 조세 지원:</strong> 막대한 설비 투자가 필요한 장치산업의 특성을 고려하여, 세액공제 이월 기한을 대폭 연장해야 합니다. 더 나아가 이익이 나지 않는 대규모 투자 초기 적자 상태라도 세액공제분만큼 현금으로 돌려주는 제도적 장치가 마련되어야 합니다.</li>
+<li><strong>소재·부품·장비(소부장) 혁신 및 인재 육성:</strong> 패널 대기업뿐만 아니라 밸류체인 전반의 국산화율을 높이고, 중국으로의 핵심 인력 유출을 막는 종합적인 생태계 육성 정책이 동반되어야 시장 1위 재탈환이 가능합니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">올레도스(OLEDoS)</span><span class="term-def">유리 기판 대신 실리콘 웨이퍼 위에 유기물을 증착하여 아주 작은 크기에도 초고해상도를 구현할 수 있는 차세대 마이크로 디스플레이 기술.</span></div>
+<div class="term-box"><span class="term-name">무기발광 디스플레이</span><span class="term-def">유기물이 아닌 무기물을 발광 소자로 사용하여 수명이 월등히 길고 화면 늘어짐(번인) 현상이 없는 미래형 디스플레이.</span></div>
+<div class="term-box"><span class="term-name">직접환급제(Direct Pay)</span><span class="term-def">기업이 영업이익 부족 등으로 세액공제 혜택을 온전히 받지 못할 경우, 국가가 공제액을 현금으로 직접 환급해 주어 투자를 유인하는 제도.</span></div>
+<h3 class="ia-para-title">핵심 시사점 및 KDB산업은행의 역할</h3>
+<p class="ia-para-body">디스플레이 산업은 단순한 부품 산업을 넘어, 미래 국가 경쟁력과 직결되는 전략 자산이자 안보 자산입니다. AI 시대로의 전환에 따라 디스플레이의 역할이 일상 전반의 &#x27;초연결 인터페이스&#x27;로 확장되는 상황에서, 이 주도권을 상실하면 국가 첨단산업 전반의 경쟁력이 흔들리게 됩니다. 중국이 국가 주도의 자본력으로 OLED 시장까지 맹추격해오는 현재, 기업 단독의 노력만으로는 거대한 국가 자본을 상대하기 어렵습니다.</p>
+<p class="ia-para-body">따라서 <strong>KDB산업은행은 글로벌 무역 분쟁과 수요 위축이라는 불확실성 속에서 &#x27;금융 방파제&#x27; 역할을 수행해야 합니다.</strong> 초대형 CapEx 투자가 중단 없이 이루어질 수 있도록 장기·저리의 인내 자본을 공급하고, 디스플레이 산업 밸류체인 전반의 리스크를 분담하는 중추적인 정책금융기관으로 자리매김해야 할 시점입니다.</p>
+<h3 class="ia-para-title"></h3>
+<div class="ia-section-h">&#x27;직접환급제(Direct Pay)&#x27; 연계 브릿지 론(Bridge Loan) 상품 신설</div>
+<p class="ia-para-body">원문에서 언급된 직접환급제가 도입된다면, 기업들은 미래에 받을 현금 환급분을 기반으로 초기 투자 자금을 융통할 수 있는 수요가 커질 것입니다. 산업은행이 선제적으로 기업의 향후 조세 환급 채권을 담보(혹은 유동화)로 하여, 대규모 설비투자가 필요한 착공 시점에 대규모 자금을 적기 지원하는 혁신적인 정책금융 상품을 기획해 볼 수 있습니다. 이는 재정정책(세제 지원)과 금융정책(산은 여신)의 시너지를 극대화하는 방안이 될 것입니다.</p>
+<div class="ia-section-h">중국 &#x27;공급망 내재화&#x27;에 대응하기 위한 &#x27;디스플레이 초격차 소부장 생태계 전용 펀드&#x27; 조성</div>
+<p class="ia-para-body">중국의 자국산 우대 정책으로 인해 가장 먼저 타격을 받는 곳은 패널 대기업보다 하위 밸류체인에 있는 소부장 중소·중견기업들입니다. 산업은행은 대기업 중심의 대출 지원을 넘어, 차세대 디스플레이 소재 및 장비를 개발하는 딥테크 기업에 지분 투자(Equity)와 복합 금융을 제공하는 전용 블라인드 펀드를 주도적으로 조성해야 합니다. 대기업과 공동 펀드를 조성해 소부장 기업을 육성한다면, 흔들리지 않는 국내 자체 디스플레이 밸류체인을 완성할 수 있습니다.</p>
+<h3 class="ia-para-title"></h3>
+<div class="qa-q">중국이 정부 보조금을 바탕으로 OLED 시장에서도 저가 물량 공세를 펴며 추격하고 있습니다. 만약 국내 기업의 점유율이 꺾이고 수익성이 일시적으로 악화되는 국면이 온다면, 산업은행은 어떤 스탠스로 여신이나 투자를 결정해야 합니까?</div>
+<div class="qa-a">수익성이 일시 악화되더라도, 미래 폼팩터(OLEDoS, 투명 디스플레이 등) 확보를 위한 기술 투자라면 오히려 금융 지원을 확대하는 &#x27;역주기적(Counter-cyclical) 스탠스&#x27;를 취해야 한다고 생각합니다. 디스플레이는 수조 원의 단위 투자가 필요한 장치 산업이므로 한 번 투자 타이밍을 놓치면 회복이 불가능합니다. 단순 재무제표가 아닌 기술 특허 포트폴리오와 차세대 양산 로드맵 등 &#x27;미래 기술 가치&#x27;를 핵심 심사 기준으로 삼아 인내 자본을 공급해야 합니다.</div>
+<div class="qa-q">미·중 무역 갈등으로 인해 글로벌 IT 기업들의 탈(脫)중국 현상이 가속화되고 있습니다. 이런 상황에서 국내 디스플레이 소부장 기업들에 대한 금융 지원 방향은 해외 진출 지원이 맞을까요, 아니면 국내 복귀(리쇼어링) 지원이 맞을까요?</div>
+<div class="qa-a">투트랙(Two-track) 접근이 필요하지만, 방점은 &#x27;국내 첨단 클러스터 구축(리쇼어링 및 국내 투자 유도)&#x27;에 두어야 합니다. 차세대 디스플레이는 기술 보안이 매우 중요하므로 연구개발과 핵심 공정은 국내에 두는 것이 유리합니다. 따라서 산은은 소부장 기업이 국내에 스마트 팩토리를 짓고 생산성을 높일 수 있도록 금리 우대 등 파격적인 시설자금 대출을 지원해야 합니다. 다만, 글로벌 세트업체의 베트남·인도 등 신규 거점 이동에 맞춰 물류와 조립을 위한 최소한의 해외 진출에 대해서는 글로벌 공급망 재편 지원 자금을 통해 유연하게 대응해야 한다고 생각합니다.</div>
+  </div>
+</div>
+</div><div class="card-row" data-text="ai 시대, 한국 가전산업의 위기 진단 및 생존 전략 " style="display:contents">
+<div class="row" id="row-1">
+  <div class="row-body">
+    <h3 class="row-title">AI 시대, 한국 가전산업의 위기 진단 및 생존 전략</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="AI 시대, 한국 가전산업의 위기 진단 및 생존 전략"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 산업별/가전_스마트폰_디스플레이</div>
+  <h2 class="ia-title">AI 시대, 한국 가전산업의 위기 진단 및 생존 전략</h2>
+  <div class="article-content">
+    <div class="ia-section-h">AI 시대, 한국 가전산업의 위기 진단 및 생존 전략</div>
+<h3 class="ia-para-title">패러독스에 빠진 한국 가전산업: 글로벌 1위 이면의 위기</h3>
+<p class="ia-para-body">2024년은 인공지능(AI) 산업화의 원년으로, 가전산업은 AI 기반 제품 및 공정 혁신이 가장 빠르게 일어나는 격전지다. 삼성, LG 등 한국 가전기업은 글로벌 시장을 선도하고 있으나, 거시적인 관점에서 국내 가전산업 생태계의 성장은 심각한 정체기에 빠져있다.</p>
+<ul>
+<li><strong>지표로 보는 역성장의 늪:</strong> 최근 5년간(2019~2023년) 국내 주요 대기업의 가전 매출은 연평균 4~6%대 성장했음에도 불구, 한국 가전산업 전체의 국내 생산액은 연평균 0.4% 감소, 수출액은 1.6% 감소했다.</li>
+<li><strong>성장 부진의 3대 핵심 원인:</strong></li>
+<li><strong>원가 경쟁에 따른 해외 생산 고착화:</strong> TV 완제품의 99.8%, 세탁기 87.8% 등 주요 가전의 해외 생산 비중이 압도적으로 높으며, 이는 국내 고용 및 생산 창출의 단절로 이어진다.</li>
+<li><strong>중국의 무서운 추격과 규모의 경제:</strong> 매출액 기준 세계 2, 3위를 중국의 메이디와 하이얼이 차지하는 등 거대 내수와 가격 경쟁력을 앞세운 중국 기업들이 글로벌 시장 점유율을 매섭게 잠식하고 있다.</li>
+<li><strong>플랫폼 및 소프트웨어 역량 부족:</strong> 제품(하드웨어) 경쟁력은 세계 최고 수준이나, 미래 먹거리인 스마트홈 생태계, 운영체제(OS), 서비스 플랫폼 영역에서는 미국 빅테크(구글, 아마존 등) 대비 주도권을 확보하지 못하고 있다.</li>
+</ul>
+<h3 class="ia-para-title">게임의 룰이 바뀐다: 하드웨어에서 &#x27;서비스·플랫폼&#x27;으로</h3>
+<p class="ia-para-body">AI 기술의 융합은 가전산업의 부가가치 원천을 완전히 뒤바꿔 놓았다. 과거에는 백색가전의 &#x27;모터 성능&#x27;과 TV의 &#x27;화질&#x27;이 핵심이었다면, 이제는 기기 간 연결을 통한 &#x27;솔루션과 서비스 제공&#x27;이 핵심 경쟁력이다.</p>
+<ul>
+<li><strong>이종 산업 간의 합종연횡:</strong> 가전산업은 단일 기기 판매를 넘어 건설, 가구, 인테리어, 통신, 모빌리티(자동차) 등과 결합하는 초연결 생태계로 진화하고 있다. 제품을 팔고 끝나는 것이 아니라, 고객 데이터를 지속적으로 수집하고 초개인화된 구독 및 유지보수 서비스를 제공하는 구조로 재편 중이다.</li>
+</ul>
+<div class="term-box"><span class="term-name">스마트홈</span><span class="term-def">TV, 냉장고 등 개별 가전과 조명, 보안기기 등이 AI 네트워크로 연결되어 에너지 관리, 엔터테인먼트 등 통합 서비스를 제공하는 주거 환경.</span></div>
+<div class="term-box"><span class="term-name">온디바이스 AI</span><span class="term-def">외부 클라우드 서버나 인터넷 연결 없이 기기 자체에 탑재된 반도체를 통해 독자적으로 연산하고 작동하는 인공지능 기술.</span></div>
+<h3 class="ia-para-title">韓 vs 中 주요 가전 선도기업의 AI 혁신 전략 비교</h3>
+<p class="ia-para-body">한국과 중국의 선도기업들은 AI를 접목하는 방식에서 자사의 비교우위에 맞춘 서로 다른 전략을 취하고 있다.</p>
+<ul>
+<li><strong>🇰🇷 한국 A사 (프리미엄 &amp; 온디바이스 중심):</strong></li>
+<li><strong>제품 혁신:</strong> 5억 대 이상의 보급 기기에서 나오는 데이터를 바탕으로 자체 대형언어모델(LLM)을 구축하고, 프리미엄 가전에 &#x27;온디바이스 AI 칩&#x27;을 탑재하여 화질 개선, 고객 맞춤형 제어 기능을 극대화하고 있다.</li>
+<li><strong>공정 혁신:</strong> 세계경제포럼(WEF) &#x27;등대공장&#x27;으로 선정된 창원 및 미국 테네시 공장은 AI 디지털 트윈, 무인운반차(AGV)를 활용한 100% 혼류 생산(고객 맞춤형 다품종 생산)을 구현했다.</li>
+<li><strong>🇨🇳 중국 B사 (시나리오 기반 솔루션 &amp; 원가 절감 집중):</strong></li>
+<li><strong>서비스 융합:</strong> 중저가 이미지를 탈피하기 위해 가전, 가구, 인테리어를 통합하여 제공하는 &#x27;시나리오 브랜드(San Yi Niao)&#x27;를 론칭하며 고객 맞춤형 공간 솔루션 기업으로 변모 중이다.</li>
+<li><strong>공정 혁신:</strong> 칭다오, 허페이 등대공장에서 머신비전과 AI를 활용해 제품 설계 기간을 63% 단축하고, 불량률을 85% 감소시키는 등 생산 효율 극대화와 원가 절감에 초점을 맞추고 있다.</li>
+</ul>
+<h3 class="ia-para-title">AI 시대, 한국 가전산업의 생존 및 재도약 해결방안 (중요)</h3>
+<p class="ia-para-body">본문은 한국 가전산업이 직면한 위기를 타개하기 위해 AI를 적극 활용한 4가지 전략적 대응 방향을 제시한다.</p>
+<ul>
+<li><strong>AI 스마트공장 기반 &#x27;국내 생산의 귀환(Reshoring)&#x27; 유도:</strong></li>
+</ul>
+<p class="ia-para-body">비용 문제로 지속 확대된 해외 생산 비중을 낮추기 위해, AI 기반의 완전 자동화 및 지능형 공정을 국내에 선제적으로 도입해야 한다. 공정 효율을 한계치까지 끌어올려 인건비 격차를 상쇄하고, 국내 생산 물량을 유지·확대하여 내수 생태계의 성장을 이끌어야 한다.</p>
+<ul>
+<li><strong>국내 밸류체인의 &#x27;고부가가치화&#x27; (서비스 및 플랫폼 거점화):</strong></li>
+</ul>
+<p class="ia-para-body">단순 조립 제조는 해외에서 하더라도, 제품과 서비스의 통합 설계, 대규모 데이터 처리, 스마트홈 플랫폼 운영 및 고도화 등 핵심 고부가가치 밸류체인은 반드시 국내에 남겨두고 육성해야 한다.</p>
+<ul>
+<li><strong>초격차 제품 차별화 및 미래 신시장 개척 (중소기업 포용):</strong></li>
+</ul>
+<p class="ia-para-body">프리미엄 AI 가전(고효율, 편의성 극대화)을 통해 중국과의 가격 경쟁을 탈피해야 한다. 특히 가정용 로봇 등 차세대 디바이스 연구개발을 가속하고, 자본력이 부족해 AI 전환에 어려움을 겪는 가전 분야 중소·중견기업을 위한 정책적 실증사업 지원이 필수적이다.</p>
+<ul>
+<li><strong>글로벌 스마트홈 플랫폼 생태계 확보 및 현지화 전략:</strong></li>
+</ul>
+<p class="ia-para-body">미국 빅테크 주도의 플랫폼 종속을 막기 위해 韓 가전의 강력한 하드웨어 점유율을 지렛대 삼아 독자적인 글로벌 플랫폼(OS) 경쟁력을 키워야 한다. 동시에 해외 각국의 로컬 통신·건설사와의 유연한 협력을 통한 &#x27;현지화된 스마트홈 서비스&#x27; 공급 전략이 필요하다.</p>
+<h3 class="ia-para-title"></h3>
+<div class="ia-section-h">&quot;그래서 왜 중요한가, 앞으로 무엇을 봐야 하는가, 산업은행은 어떤 역할을 해야 하는가&quot;</div>
+<p class="ia-para-body">가전산업은 더 이상 &#x27;전기 기계&#x27;를 만드는 제조업이 아닙니다. 개인의 가장 내밀한 일상 데이터를 수집하고 삶을 관리하는 <strong>&#x27;AI 데이터 플랫폼 산업&#x27;</strong>으로 본질이 변했습니다. 우리가 글로벌 시장 점유율 1위에 안주하여 플랫폼과 서비스 시장을 미국 빅테크나 중국에 내어준다면, 한국 가전은 결국 남의 플랫폼에 연결되는 하청 &#x27;깡통 하드웨어&#x27; 전락할 위험이 큽니다.</p>
+<p class="ia-para-body">앞으로 관건은 <strong>&#x27;초연결성을 담보한 로컬라이제이션(현지화)&#x27;</strong>입니다. 각국의 건설, 통신 인프라와 얼마나 긴밀하게 결합해 서비스를 제공하느냐가 승패를 가를 것입니다.</p>
+<p class="ia-para-body">이에 <strong>산업은행은 단순한 설비 투자 금융을 넘어 &#x27;생태계 전환 금융&#x27;을 주도해야 합니다.</strong> 대기업의 플랫폼 구축을 지원함과 동시에, 국내 가전 중소/중견 부품사들이 AI 칩 설계, 스마트 센서 도입, 스마트팩토리 전환을 이룰 수 있도록 중장기 시설자금과 R&amp;D 모험자본을 공급하는 &#x27;산업 재편의 페이스메이커&#x27; 역할을 수행해야 합니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</h3>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> 차별화 포인트 1: &#x27;서비스형 가전(AaaS, Appliance as a Service)&#x27; 전환 특별 펀드 조성</h4>
+<p class="ia-para-body">원문에서 강조한 &#x27;서비스화&#x27;를 구체적으로 실현하기 위해, 산업은행 주도하에 기업들이 &#x27;구독 및 솔루션 비즈니스&#x27;로 전환할 수 있도록 돕는 전용 펀드가 필요합니다. 중견 가전기업이 클라우드 서버를 구축하거나, AI 소프트웨어 스타트업을 M&amp;A 할 때 필요한 자금을 지원하여 제조업의 서비스화(Servitization)를 금융 측면에서 이끌어야 합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> 차별화 포인트 2: 이종 산업(가전-건설-통신) 간 &#x27;스마트시티 K-컨소시엄&#x27; 금융 지원</h4>
+<p class="ia-para-body">스마트홈의 종착지는 결국 스마트시티입니다. 플랫폼 경쟁에서 미국 빅테크를 이기기 위해서는 가전 단품을 넘어 주거 환경 전체를 설계해야 합니다. KDB가 국내 선도 가전기업, 통신 3사, 대형 건설사가 공동으로 참여하는 &#x27;K-스마트 주거 생태계 컨소시엄&#x27;에 대규모 신디케이트론을 주선하여, 해외 신도시 수출 시 우리의 가전과 플랫폼이 패키지로 진출할 수 있는 활로를 열어주어야 합니다.</p>
+<h3 class="ia-para-title"></h3>
+<div class="qa-q">중국 가전업체들도 이미 AI와 플랫폼을 빠르게 접목하고 있습니다. 중국 기업들의 공세에 맞서 한국 가전산업이 지켜야 할 가장 강력한 비교우위는 무엇이라고 생각합니까?</div>
+<p class="ia-para-body"><strong>A.</strong> 제가 생각하는 핵심 비교우위는 <strong>&#x27;데이터 보안과 프리미엄 브랜드 신뢰도&#x27;</strong>입니다. 스마트홈은 개인의 24시간 생활 패턴, 영상, 음성 데이터를 수집합니다. 중국 기업들이 가격 경쟁력과 기술력을 갖췄다 하더라도, 글로벌 시장(특히 북미/유럽)에서 데이터 해킹 및 유출에 대한 지정학적 불신이 존재합니다. 우리는 강력한 온디바이스 AI를 통해 개인정보를 외부로 보내지 않고 기기 내에서 처리하는 &#x27;절대적 보안 역량&#x27;을 마케팅 포인트로 삼아 프리미엄 시장의 지배력을 굳혀야 합니다.</p>
+<div class="qa-q">본인이 산업은행의 심사역이라면, AI 도입을 추진하지만 자본력이 부족한 중견 가전업체에 어떤 방식의 금융지원을 우선적으로 검토하겠습니까?</div>
+<p class="ia-para-body"><strong>A.</strong> 단순한 대출 확대보다는 <strong>&#x27;스마트공장 고도화 및 AI 디지털 트윈 도입&#x27;을 위한 조건부 맞춤형 금융</strong>을 우선 검토하겠습니다. 원문에서 지적했듯 국내 생산 물량을 유지하려면 인건비를 극복할 공정 효율화가 시급합니다. 따라서 해당 기업이 도입하려는 AI 자동화 설비가 실제 생산원가 절감에 기여하는지 현금흐름(CF) 개선 효과를 면밀히 심사하고, 성과 지표(불량률 감소, 에너지 절감 등) 달성 시 금리를 우대해 주는 &#x27;지속가능연계대출(SLL)&#x27; 방식을 적용해 자발적 혁신을 유도하겠습니다.</p>
+  </div>
+</div>
+</div><div class="card-row" data-text="ai 온디바이스화에 따른 무선통신기기 및 부품산업 동향과 전략적 대응 방안 " style="display:contents">
+<div class="row" id="row-2">
+  <div class="row-body">
+    <h3 class="row-title">AI 온디바이스화에 따른 무선통신기기 및 부품산업 동향과 전략적 대응 방안</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="AI 온디바이스화에 따른 무선통신기기 및 부품산업 동향과 전략적 대응 방안"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 산업별/가전_스마트폰_디스플레이</div>
+  <h2 class="ia-title">AI 온디바이스화에 따른 무선통신기기 및 부품산업 동향과 전략적 대응 방안</h2>
+  <div class="article-content">
+    <div class="ia-section-h">AI 온디바이스화에 따른 무선통신기기 및 부품산업 동향과 전략적 대응 방안</div>
+<h3 class="ia-para-title"><strong>1. 핵심 요약 및 패러다임의 전환</strong></h3>
+<p class="ia-para-body">최근 생성형 AI 산업의 최대 화두는 클라우드 서버에 의존하던 기존 방식에서 벗어나 스마트폰, 웨어러블 등 스마트 기기 자체에서 AI를 구동하는 &#x27;온디바이스(On-Device) AI&#x27;로의 진화입니다. 클라우드 기반 AI는 막대한 데이터센터 운영 비용과 막대한 전력 소모, 개인정보 유출이라는 치명적인 한계에 직면해 있었습니다. 이를 극복하기 위해 통신 네트워크 연결 없이도 기기 자체에서 실시간 데이터 처리와 개인화된 서비스를 제공하는 온디바이스 AI가 폭발적으로 성장하고 있습니다 [2-4].</p>
+<p class="ia-para-body">이러한 혁신은 코로나19 팬데믹 이후 긴 침체의 늪에 빠져 있던 국내 무선통신기기 및 부품산업에 강력한 턴어라운드 모멘텀을 제공하고 있습니다. 2024년 2분기를 기점으로 고성능 기판, 방열 부품, 적층세라믹콘덴서(MLCC) 등 고부가가치 핵심 부품을 중심으로 생산과 수출이 제조업 평균을 상회하며 폭발적인 회복세를 보이고 있습니다. 하지만, 동시에 주요 교역국의 기술 자립화에 따른 글로벌 가치사슬(GVC) 재편이라는 중대한 리스크도 상존하고 있어, 초격차 기술 확보와 수요처 다변화가 시급한 시점입니다 [7-9].</p>
+<h3 class="ia-para-title"><strong>2. 온디바이스 AI 부상을 견인하는 핵심 기술 요소</strong></h3>
+<p class="ia-para-body">온디바이스 AI의 상용화는 소프트웨어(SW)의 경량화와 하드웨어(HW)의 고도화가 완벽하게 맞물린 결과입니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> [SW] 소형언어모델(SLM)의 부상</h4>
+<p class="ia-para-body">초거대언어모델(LLM)은 수백억 개 이상의 매개변수를 처리하기 위해 막대한 클라우드 자원이 필요하지만, 소형언어모델(SLM)은 수십만에서 수백억 개 수준의 매개변수만으로 특정 영역에서 뛰어난 성능을 발휘합니다. SLM은 연산 자원과 메모리 소모량을 획기적으로 줄여 학습 및 구동 비용을 절감하며, 배터리로 구동되는 모바일 디바이스 환경에서 전력 소모를 최소화합니다. 또한, 기기 내부에서 모든 연산이 이뤄지므로 헬스케어, 금융 등 민감한 사용자 데이터 유출 위험을 원천 차단하는 보안상의 강력한 이점을 지닙니다.</p>
+<div class="term-box"><span class="term-name">소형언어모델(SLM)</span><span class="term-def">수십만~수백억 개의 매개변수로 구동되어 스마트폰 등 기기 내부에서 독자적인 연산과 추론이 가능한 고효율·경량화 AI 모델</span></div>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> [HW] 디바이스 구동을 위한 3대 하드웨어 혁신</h4>
+<p class="ia-para-body">무선통신기기 부품 산업은 SLM 구동을 뒷받침하기 위해 극한의 스펙 향상을 이뤄내고 있습니다.</p>
+<ul>
+<li><strong>고성능·저전력 반도체 고도화:</strong> CPU, GPU 등을 단일 칩에 통합한 AI SoC(System on Chip) 발전으로 모바일 기기에서도 고도화된 연산이 가능해졌습니다 (예: 애플 A18, 삼성 엑시노스).</li>
+<li><strong>고성능 방열 설계:</strong> 연산량 급증에 따른 발열을 제어하기 위해 베이퍼 챔버(Vapor Chamber)의 면적을 대폭 확대하고, 배터리 케이스 소재를 금속으로 변경하는 등 열 분산 기술이 핵심 경쟁력으로 부상했습니다.</li>
+<li><strong>메모리 병목 현상 해소:</strong> 연산 장치와 메모리 간의 데이터 전송 지연을 막기 위해, 서버용으로 쓰이던 고대역폭메모리(HBM)를 스마트폰 등 모바일 기기로 확장 탑재하려는 연구개발이 가속화되고 있습니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">SoC(System on Chip)</span><span class="term-def">CPU, GPU, 메모리 등 다양한 컴퓨팅 기능을 하나의 칩에 통합하여 고성능 연산과 저전력 소비를 동시에 구현하는 핵심 반도체</span></div>
+<div class="term-box"><span class="term-name">베이퍼 챔버(Vapor Chamber)</span><span class="term-def">기기 내부의 칩셋 발열을 액체와 기체의 상변화(증발과 응축) 원리를 이용해 기기 전체로 빠르고 넓게 분산시키는 첨단 방열 부품</span></div>
+<h3 class="ia-para-title"><strong>3. AI가 촉발한 무선통신기기·부품산업의 지각 변동과 명암</strong></h3>
+<p class="ia-para-body">국내 무선통신기기 및 부품산업은 제조업 전체 생산의 3.6%를 차지하는 핵심 주력 산업입니다. 팬데믹 이후 2년 이상 역성장을 겪었으나, AI 폰 출시와 교체 수요가 맞물리며 2024년 2분기 무선통신기기 생산 증가율 27.8%를 기록, 급격한 반등에 성공했습니다. 특히 AI 연산을 위해 기기 내부에 탑재되는 고부가가치 부품의 수요가 폭증하고 있습니다.</p>
+<div class="ia-section-h">기회 요인: 고부가 핵심 부품(기판·소자)의 수요 폭발</div>
+<ul>
+<li><strong>인쇄회로기판(PCB)의 진화:</strong> 기존 유기기판을 넘어 연결 밀도를 10배 이상 높이고 고열 환경에서도 형태를 유지하는 &#x27;유리기판&#x27;이 차세대 핵심 부품으로 급부상하고 있습니다.</li>
+<li><strong>배터리 보호회로 및 수동소자:</strong> 전력 제어와 방열에 특화된 PMP 등 상위 호환 보호회로의 채택이 늘고 있으며, 고용량 반도체 작동 시 전류를 안정적으로 제어하는 적층세라믹콘덴서(MLCC)의 탑재량이 AI 스마트폰 1대당 기하급수적으로 증가하고 있습니다.</li>
+</ul>
+<div class="ia-section-h">위협 요인: 글로벌 공급망(GVC) 재편과 경쟁 심화</div>
+<p class="ia-para-body">수출 실적 호조 이면에는 구조적인 위기가 존재합니다. 과거 한국이 핵심 부품을 중국 등에 수출하면 현지에서 완제품을 조립하는 구조였으나, 최근 중국이 부품 기술을 내재화하며 맹추격하고 있습니다. 실제로 2022년 68.8%에 달했던 한국의 대중국 카메라 모듈 수출 비중은 중국의 자체 생산 확대로 2023년 한 자릿수(5.4%)로 급감했으며, 인쇄회로기판 역시 대중국 수출 비중이 축소되고 있습니다.</p>
+<h3 class="ia-para-title"><strong>4. 국가 경제 성장을 견인하기 위한 3대 전략 과제 (가장 중요)</strong></h3>
+<p class="ia-para-body">부품 산업의 회복세를 장기적이고 구조적인 성장으로 이어가기 위해서는 원문에서 강조하는 아래의 3대 발전 과제를 적극적으로 이행해야 합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> [기술초격차] AI 맞춤형 부품 기술 고도화 및 공정 혁신</h4>
+<p class="ia-para-body">온디바이스 AI 환경에서는 반도체의 한계를 부품이 보완해야 합니다. 기판과 소자는 단순한 회로 연결을 넘어, AI 프로세서의 연산 성능을 직접적으로 향상시키는 보조적 역할을 수행해야 합니다. 이를 위해 고성능·저전력 특성은 물론, 기기 내부의 좁은 공간에서 발생하는 극심한 발열과 변형을 견딜 수 있는 신소재(예: 유리기판) 개발, 정교한 3D 적층 구조 설계, 그리고 이를 양산할 수 있는 첨단 제조 공정 혁신에 사활을 걸어야 합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> [애플리케이션] 디바이스 AI 기반 융합 사업 다각화 (개방형 혁신)</h4>
+<p class="ia-para-body">스마트폰에 국한된 부품 공급망을 전방위로 확장해야 합니다. AI 기능이 일상화되면서 기존 무선통신 부품들은 웨어러블 디바이스, 스마트 가전, 디지털 헬스케어 기기, 자율주행 자동차, 산업용 로봇 등 다양한 모빌리티와 IoT 환경으로 채택처를 넓힐 수 있습니다. 반도체 패키징 부품을 소형화·유연화하여 생체 인식 센서 등에 접목하는 방식이 대표적입니다. 이를 위해서는 부품사 단독의 노력을 넘어 AI 플랫폼 기업, SW 개발사, 모빌리티 등 타 산업 제조사와의 긴밀한 &#x27;오픈 이노베이션(개방형 혁신)&#x27; 생태계 조성이 필수적입니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">③</span> [시장확보] 수출 수요처 다변화를 통한 공급망 리스크 헷지</h4>
+<p class="ia-para-body">AI는 이제 개별 기술을 넘어 국가 안보와 직결되는 전략 무기로 격상되었으며, 이에 따라 글로벌 무역 구조가 급변하고 있습니다. 특정 국가(특히 중국)에 편중된 현재의 핵심 부품 수출 구조는 기술 탈취 및 무역 규제의 직접적인 타겟이 될 수 있습니다. 따라서 인도, 베트남, 동유럽 등 신흥 제조 거점으로 수출 라인을 다변화하고, 주력 제품의 의존도를 분산시키는 전략적 포트폴리오 재편이 산업 경쟁력을 수호하는 핵심 방패가 될 것입니다.</p>
+<div class="term-box"><span class="term-name">유리기판</span><span class="term-def">기존 플라스틱(유기) 소재 대신 유리를 뼈대로 사용하여 칩의 연결 밀도를 대폭 높이고 열팽창으로 인한 휘어짐을 방지하는 차세대 반도체 기판</span></div>
+<h3 class="ia-para-title"><strong>5. </strong></h3>
+<p class="ia-para-body">클라우드에서 온디바이스로의 AI 패러다임 전환은, 단순한 IT 기기 스펙업을 넘어 무선통신기기 및 부품산업의 밸류체인 전체를 뒤흔드는 &#x27;파괴적 혁신&#x27;입니다. AI가 기기 내에서 스스로 연산함에 따라, 과거 단가 싸움에 치중했던 하드웨어 부품(기판, 수동소자, 방열판 등)이 기기의 두뇌 성능을 좌우하는 핵심 경쟁력으로 재평가받고 있습니다. 이는 오랜 침체를 겪던 우리 부품 산업에 찾아온 천재일우의 기회지만, 동시에 중국 등 후발주자의 매서운 추격을 따돌려야 하는 과제를 안고 있습니다.</p>
+<p class="ia-para-body">결국 앞으로 가장 주목해야 할 점은 <strong>&quot;누가 더 작고, 열이 안 나며, 전력을 적게 먹는 초고성능 부품을 양산하여, 스마트폰을 넘어 자율주행차·로봇 등으로 빠르게 확장할 수 있는가&quot;</strong>입니다. 이를 위해 정책금융의 맏형인 산업은행은 부품 기업들이 자금 제약 없이 첨단 공정(유리기판, 차세대 방열소재 등) 전환을 위한 설비투자를 단행하고, 이종 산업 간 M&amp;A 및 R&amp;D 협력을 추진할 수 있도록 대규모 자금의 마중물 역할을 강력하게 수행해야 합니다.</p>
+<h3 class="ia-para-title"><strong>6. [내 생각 / 정책적 방향성 / 산업은행의 역할 제언]</strong></h3>
+<div class="term-box"><span class="term-name">💡 제언 1</span><span class="term-def">KDB 주도의 &#x27;온디바이스 AI 크로스보더(Cross-Border) 신디케이트론&#x27; 조성**</span></div>
+<p class="ia-para-body">원문에서 지적한 특정 국가 편중 리스크를 해소하기 위해, 국내 우량 부품사들이 인도, 베트남, 멕시코 등 &#x27;Alt-Asia(대안 아시아)&#x27; 및 니어쇼어링 거점으로 생산 라인을 이전·확장할 때 필요한 대규모 시설 자금을 지원해야 합니다. 산은이 주간사가 되어 시중은행과 공동으로 대규모 신디케이션 대출을 기획하고, 이 과정에서 현지 정부와의 협상력(외교적 금융 지원)을 레버리지로 삼아 우리 기업들의 성공적인 수요처 다변화와 공급망 리스크 헷지를 적극 지원해야 합니다.</p>
+<div class="term-box"><span class="term-name">💡 제언 2</span><span class="term-def">&#x27;AI 하드웨어-소프트웨어 융합 오픈 이노베이션 펀드&#x27; 운용**</span></div>
+<p class="ia-para-body">무선통신 부품을 자율주행, 로보틱스, 헬스케어 등으로 사업 다각화하기 위해서는 소프트웨어, AI 모델링 기업과의 합종연횡이 필수적입니다. 산업은행은 벤처캐피탈(VC)실 및 넥스트라운드 플랫폼을 활용해, &#x27;전통 제조 부품사&#x27;와 &#x27;AI/SW 혁신 스타트업&#x27;이 공동 프로젝트를 수행하거나 조인트 벤처(JV)를 설립할 때 전용으로 투자하는 &#x27;오픈 이노베이션 특화 펀드&#x27;를 조성해야 합니다. 이는 이종 산업 간의 결합을 금융의 힘으로 촉진하여 부품 산업의 질적 도약을 이끌어낼 것입니다.</p>
+<h3 class="ia-para-title"><strong>7. [예상 꼬리질문 2선 및 면접 대비 답변]</strong></h3>
+<div class="qa-q">온디바이스 AI 발전으로 부품사들이 수혜를 본다고 하셨는데, R&amp;D 자금력이 절대적으로 부족한 중소 부품사들을 위해 산업은행은 구체적으로 어떤 여신/투자 지원을 할 수 있겠습니까?</div>
+<div class="term-box"><span class="term-name">A.** 중소 부품사들이 새로운 소재(예</span><span class="term-def">유리기판)나 첨단 방열 부품을 개발하기 위해서는 막대한 초기 투자 비용이 듭니다. 산업은행은 단기적인 재무제표 위주의 심사보다는, AI 밸류체인 내에서의 기술적 필수성과 대기업과의 납품 계약 구조를 중점적으로 평가하는 &#x27;공급망 금융(Supply Chain Finance)&#x27;을 확대해야 합니다. 대기업(세트업체)의 발주나 공동 R&amp;D 협약서를 담보로 중소기업에 우대금리로 대출을 실행해 주거나, 정책형 뉴딜펀드 등을 통해 자본(Equity) 투자를 병행하여 기업의 부채 비율 부담을 덜어주며 혁신을 견인해야 합니다.</span></div>
+<div class="qa-q">원문 데이터를 보면 중국의 카메라 모듈 자급률이 상승해 우리 수출 비중이 급감했는데(68.8% ➔ 5.4%), 이처럼 신흥국의 기술 추격이 거센 상황에서 국내 부품산업이 어떻게 살아남을 수 있다고 생각합니까?</div>
+<p class="ia-para-body"><strong>A.</strong> 범용 모듈 시장에서는 중국의 거대한 내수시장과 원가 경쟁력을 이기기 어렵습니다. 따라서 우리는 온디바이스 AI 시대에 발맞춰 진입장벽이 매우 높은 하이엔드(High-End) 부품으로 빠르게 사업 구조를 고도화해야 합니다. 스마트폰용 카메라 모듈에 머물지 않고, 라이다(LiDAR) 센서나 자율주행차용 3D 고정밀 카메라모듈 등으로 전방 산업을 선제적으로 전환해야 합니다. 이 과정에서 산은은 사업구조 재편(원샷법 활용 등)을 시도하는 기업에게 금리 감면과 컨설팅을 제공해 기민한 체질 개선을 도와야 한다고 생각합니다.</p>
+  </div>
+</div>
+</div><div class="card-row" data-text="ⅰ. 글로벌 디스플레이 산업 지형 변화 및 k-oled 현황 진단 " style="display:contents">
+<div class="row" id="row-3">
+  <div class="row-body">
+    <h3 class="row-title">Ⅰ. 글로벌 디스플레이 산업 지형 변화 및 K-OLED 현황 진단</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="Ⅰ. 글로벌 디스플레이 산업 지형 변화 및 K-OLED 현황 진단"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 산업별/가전_스마트폰_디스플레이</div>
+  <h2 class="ia-title">Ⅰ. 글로벌 디스플레이 산업 지형 변화 및 K-OLED 현황 진단</h2>
+  <div class="article-content">
+    <p class="ia-para-body">📊 <strong>[산업분석 요약 보고서] K-OLED 경쟁력 진단 및 초격차 수성 전략</strong></p>
+<div class="ia-section-h">Ⅰ. 글로벌 디스플레이 산업 지형 변화 및 K-OLED 현황 진단</div>
+<div class="ia-section-h">패권 이동과 한·중 양강 체제의 고착화</div>
+<p class="ia-para-body">한국 디스플레이 산업은 과거 17년간 세계 1위의 위상을 자랑했으나, 중국 정부의 전폭적인 보조금을 등에 업은 저가 물량 공세(치킨게임)로 인해 LCD 주도권을 상실하며 2021년을 기점으로 디스플레이 전체 시장 1위 자리를 내주었습니다. 2025년 상반기 기준 전체 시장 점유율은 중국 54.7%, 한국 30.0%로 재편되었습니다.</p>
+<div class="ia-section-h">OLED 시장 내 압도적 우위와 점유율 방어전</div>
+<p class="ia-para-body">전체 디스플레이 시장에서 약 40% 비중을 차지하는 핵심 고부가가치 영역인 OLED 시장에서는 한국이 68.7%, 중국이 31.2%의 점유율(2025년 기준)로 여전히 압도적인 리더십을 발휘하고 있습니다. 특히 9인치 이상 대형 패널은 한국이 90%를 독식하고 있으나, 스마트폰 중심의 중소형 패널 시장에서는 중국이 자국의 거대한 내수 스마트폰 수요와 가격 경쟁력을 무기로 2017년 1.5%에 불과했던 점유율을 2025년 35%까지 끌어올리며 강력한 위협으로 부상했습니다.</p>
+<div class="ia-section-h">Ⅱ. 어플리케이션별 K-OLED 핵심 경쟁력 및 기술 초격차 분석</div>
+<div class="ia-section-h">스마트폰 (모바일 패널) : 하이엔드 시장에서의 확고한 3년 격차</div>
+<p class="ia-para-body">현재 한국과 중국 간 프리미엄 고부가 스마트폰 패널 기술 격차는 약 3년 수준으로 뚜렷하게 유지되고 있습니다. 특히 애플 아이폰 17 프로 라인업 공급망 진입을 시도했던 중국 BOE가 심각한 불량 문제로 생산을 중단하는 사태가 발생하면서, 고품질 패널 양산 수율과 신뢰성 측면에서 한국과의 격차가 여실히 증명되었습니다. 삼성디스플레이와 LG디스플레이는 애플의 하이엔드 모델(프로/프로맥스) 물량을 독과점하며 글로벌 기술 표준을 이끌고 있습니다.</p>
+<div class="term-box"><span class="term-name">LTPO</span><span class="term-def">화면 주사율을 상황에 맞게 조절하여 스마트폰의 전력 소비를 획기적으로 줄여주는 저온 다결정 산화물 백플레인 기술</span></div>
+<div class="term-box"><span class="term-name">CoE</span><span class="term-def">기존에 빛 반사를 막기 위해 부착하던 두꺼운 편광판을 제거해, 패널 두께와 소비전력을 동시에 낮추는 차세대 캡슐화 공정</span></div>
+<div class="ia-section-h">모바일 PC (태블릿·노트북) : 게임 체인저가 될 8.6세대 팹 선점</div>
+<p class="ia-para-body">애플을 필두로 IT 기기용 OLED 탑재가 본격화되는 가운데, 해당 분야의 한·중 간 기술 격차는 2년 수준으로 다소 좁혀진 상태입니다. 이 시장의 핵심은 &#x27;Tandem(탠덤)&#x27; 기술과 &#x27;하이브리드 OLED&#x27; 제조 공정입니다. 한국은 10~20인치 IT 패널의 생산성을 극대화하기 위해 &#x27;8.6세대 설비&#x27; 선제 투자에 사활을 걸고 있으며, 삼성디스플레이는 2026년 2분기 본격 양산에 돌입하여 애플 맥북 물량 등을 선점할 계획입니다. 반면 중국 기업들은 신기술 도입 지연으로 수율 안정화가 한국 대비 1~2년 늦어질 것으로 전망됩니다.</p>
+<div class="term-box"><span class="term-name">RGB Tandem</span><span class="term-def">발광층을 2단 이상으로 쌓아 올려 화면 밝기(휘도)와 패널 수명을 기존 대비 획기적으로 늘린 적층 기술</span></div>
+<div class="term-box"><span class="term-name">8.6세대 팹</span><span class="term-def">유리 기판 크기를 대폭 키워, 기존 6세대 대비 한 번에 더 많은 IT용 대형 패널을 찍어낼 수 있는 초고효율 양산 라인</span></div>
+<div class="ia-section-h">TV 및 자동차 : 압도적 품질 및 내구성을 기반으로 한 절대 우위</div>
+<p class="ia-para-body">TV 및 모니터용 대형 OLED 패널은 LG디스플레이(WOLED, 81%)와 삼성디스플레이(QD-OLED, 19%)가 전 세계 물량을 양분하여 독점 생산 중입니다. 극강의 내구성과 고휘도가 요구되는 차량용 디스플레이 시장 역시 탠덤 기술의 세계 최초 상용화에 성공한 한국 기업이 석권하고 있으며, 삼성과 LG가 프리미엄 완성차 공급망을 주도하고 있습니다.</p>
+<div class="ia-section-h">Ⅲ. 핵심 방어 기제: 지식재산권(IP) 수익화 및 촘촘한 특허망</div>
+<p class="ia-para-body">과거 단순한 방어 수단이었던 특허는 이제 경쟁사의 추격을 물리적으로 차단하고 수익을 창출하는 &#x27;초격차 무기&#x27;로 진화했습니다. 한국은 LTPO, Tandem 등 핵심 분야에서 질적·양적 압도적 리더십을 보유하고 있습니다.</p>
+<p class="ia-para-body">최근 삼성디스플레이는 중국 BOE를 상대로 3년간 벌인 영업비밀 및 특허 침해 분쟁에서 승리하여 5천억 원 이상의 로열티를 확보했으며, LG디스플레이 또한 2025년 로열티 수익만 1,000억 원을 돌파할 것으로 예상됩니다. 이는 중국이 핵심 기술을 훔쳐다 싸게 파는 불공정 행위에 철퇴를 내린 것으로, 중국 기업의 제조 원가를 상승시켜 &#x27;비대칭적 보조금 경쟁&#x27;을 무력화시키는 핵심 역할을 하고 있습니다.</p>
+<div class="ia-section-h">Ⅳ. 주요 위협 요인 및 정책적 해결방안</div>
+<p class="ia-para-body">중국은 LCD 시장을 초토화시켰던 &#x27;정부 주도 대규모 보조금 기반 치킨게임&#x27; 전략을 OLED 시장에도 이식하려 시도하고 있으며, 2028년 중국의 8.6세대 생산능력이 전 세계의 64%까지 확대될 수 있다는 위협적 전망도 존재합니다. 이에 대응하기 위해 다음의 3대 전략이 필수적입니다.</p>
+<div class="term-box"><span class="term-name">대규모 설비투자(CAPEX) 파격 지원 강화**</span><span class="term-def">디스플레이는 막대한 초기 자본이 필요한 장치 산업입니다. 삼성디스플레이의 8.6세대 팹 구축에만 4.1조 원이 투입되는 만큼, 개별 기업의 몫으로만 넘길 수 없습니다. 중국 자본에 맞서기 위해 정부와 정책금융기관의 전폭적인 금융 및 세제 혜택(투자 세액공제, 장기 저리 대출 등)이 수반되어야 합니다.</span></div>
+<div class="term-box"><span class="term-name">끊임없는 R&amp;D를 통한 &#x27;Moving Target&#x27; 전략**</span><span class="term-def">기술의 과녁을 계속 이동시켜 추격자가 쫓아오지 못하게 해야 합니다. 과거 LCD 시장에서 특허 우위를 점하고도 R&amp;D 투자를 줄였다가 단 7년 만에 중국에 역전당한 뼈아픈 역사를 반복해선 안 됩니다. 매출의 약 10%를 R&amp;D에 쏟는 삼성과 LG의 노력이 빛을 발할 수 있도록 국가 R&amp;D 펀드 매칭 등이 필요합니다.</span></div>
+<div class="term-box"><span class="term-name">수주형 사업구조의 강점 극대화 및 지식재산권 보호 강화**</span><span class="term-def">표준화된 부품을 대량으로 찍어내던 LCD와 달리, OLED는 애플, 벤츠 등 글로벌 탑티어 고객의 사양에 맞춰 개발하는 &#x27;수주형 사업&#x27;입니다. 이 탄탄한 글로벌 고객망을 록인(Lock-in)하고, 앞서 언급한 IP 보호망을 더욱 공격적으로 가동해 기술 도용 시 즉각적인 징벌적 배상이 이뤄지도록 글로벌 공조 체계를 강화해야 합니다.</span></div>
+<p class="ia-para-body">K-OLED 산업은 스마트폰, AI PC, 모빌리티 등 미래 혁신 기기의 하드웨어 생태계를 책임지는 대한민국 제조업의 중추입니다. 현재 하이엔드 프리미엄 시장에서 2~3년의 기술 격차와 확고한 지식재산권(IP) 리더십을 쥐고 방어선을 치고 있으나, 막대한 자금력을 앞세운 중국의 8.6세대 라인 집중 투자는 시장 점유율을 뒤흔들 수 있는 중대한 위협입니다.</p>
+<p class="ia-para-body">단순한 생산량 중심의 수율 경쟁을 넘어, 향후 시장의 핵심 관전 포인트는 <strong>&#x27;8.6세대 IT용 OLED 팹의 수율 안정화 속도&#x27;</strong>와 <strong>&#x27;애플 등 빅테크의 차세대 폼팩터 로드맵&#x27;</strong>에 있습니다. 기술의 난이도가 기하급수적으로 높아지는 하이엔드 시장에서 우리가 특허 소송을 통해 중국의 원가 압박을 가중시키며 추격 속도를 늦추는 사이, 차세대 기술(Micro-OLED 등)로 무사히 넘어가야만 국가 패권을 유지할 수 있습니다.</p>
+<p class="ia-para-body">이러한 중대 기로에서 <strong>산업은행은 국가 첨단 전략산업의 수호자이자 &#x27;인내하는 자본(Patient Capital)&#x27;</strong>의 역할을 온전히 수행해야 합니다. 8.6세대 전환과 같은 조 단위 대규모 투자의 리스크를 덜어주는 신디케이티드론 주선은 물론, 대기업 패널 제조사 아래 포진한 핵심 소재·부품·장비 벤처 및 중견기업들까지 빈틈없이 육성하는 선제적 공급망 금융 마스터플랜을 즉시 가동해야 할 때입니다.</p>
+<div class="ia-section-h">[내 생각 / 추가 인사이트 / 정책적 방향성 / 제언]</div>
+<div class="ia-section-h">K-디스플레이 &#x27;소부장&#x27; 자립화를 위한 공급망 연계 금융(Supply Chain Finance) 도입</div>
+<p class="ia-para-body">우리 K-OLED 패널 기업들의 완성품 경쟁력은 세계 최고지만, 이를 만드는 증착기(일본 캐논토키)나 섀도마스크(일본 DNP) 등 핵심 공정 장비와 소재는 철저히 해외에 의존하고 있습니다. 이는 진정한 의미의 밸류체인 초격차라고 볼 수 없습니다. 산업은행은 단순히 대기업에 직접 대출을 실행하는 것을 넘어, <strong>&#x27;OLED 공급망 연계 특별 펀드&#x27;</strong>를 조성해야 한다고 생각합니다. 대기업(삼성·LG)이 우수 기술을 가진 국내 소부장 기업의 제품 구매를 확약하거나 테스트베드를 제공할 경우, 산업은행이 해당 소부장 기업에 금리 인하 및 장기 R&amp;D 자금을 패키지로 지원하는 형태입니다. 이를 통해 국산화 생태계를 튼튼히 구축해야 중국의 맹추격 속에서도 뿌리 깊은 경쟁력을 유지할 수 있습니다.</p>
+<div class="ia-section-h">첨단기술 무형자산(IP) 유동화 금융 플랫폼 구축</div>
+<p class="ia-para-body">본문에서도 드러났듯 &#x27;특허&#x27;는 이제 기업의 수익과 직결되는 강력한 현금 창출원이자 무기입니다. 삼성, LG와 달리 특허 방어 역량이 부족한 중소 소재·부품 기업들을 위해 산업은행이 <strong>&#x27;국가 첨단기술 IP 방어 및 유동화 펀드&#x27;</strong>를 주도적으로 조성할 것을 제안합니다. 뛰어난 OLED 원천기술을 가진 혁신 벤처기업들이 자본이 부족할 때, 자사가 보유한 특허의 미래가치(무형자산)를 담보로 대규모 사업화 자금을 조달받을 수 있게 IP 가치평가 역량을 내재화하고 유동화를 돕는 금융 플랫폼 구축이 시급합니다.</p>
+<div class="qa-q">본문에서 중국이 과거 LCD 시장을 장악했던 &#x27;치킨게임&#x27; 전략이 OLED 시장에서는 잘 통하지 않을 것이라 분석했는데, 지원자 본인은 그 근거가 무엇이라고 생각합니까?</div>
+<div class="qa-a">두 산업의 본질적인 &#x27;사업 구조&#x27; 차이 때문입니다. LCD는 누구나 비슷하게 찍어내서 끼워 맞출 수 있는 철저히 표준화된 범용 부품이었으므로, 보조금을 바탕으로 물량을 쏟아내 가격을 낮추면 경쟁사를 고사시킬 수 있었습니다. 하지만 OLED는 고객사(애플 등)가 요구하는 두께, 전력 소비량, 휘도 등 까다로운 사양을 맞춰야만 납품할 수 있는 철저한 &#x27;수주형 맞춤 사업&#x27;입니다. 최근 중국 1위 기업 BOE가 애플 아이폰 17 공급망에서 불량 문제로 퇴출된 사례가 보여주듯, LTPO와 같은 고난도 기술력의 질적 차이가 확보되지 않으면 아무리 저가로 밀어붙여도 글로벌 하이엔드 공급망 진입 자체가 불가능하기 때문에 중국의 치킨게임은 그 한계가 명확합니다.</div>
+<div class="qa-q">산업은행 실무자 입장에서, 국내 패널 기업이 8.6세대 IT용 OLED 생산라인에 대규모 자금 지원을 요청해 온다면 가장 중점적으로 심사해야 할 핵심 리스크는 무엇이고, 이를 어떻게 헷지하시겠습니까?</div>
+<div class="qa-a">가장 치명적인 리스크는 &#x27;전방 IT 수요 부진&#x27;과 새로운 공정에 대한 &#x27;수율 안정화 지연 리스크&#x27;입니다. 8.6세대 라인 구축에는 조 단위의 막대한 자금이 투입되는데, 수율이 제때 올라오지 않거나 생산된 패널을 사줄 고객이 없다면 기업은 순식간에 유동성 위기에 빠질 수 있습니다. 이를 헷지하기 위해 심사 시 &#x27;글로벌 빅테크(애플 등)와의 확정된 중장기 공급 계약(Backlog)&#x27;이 맺어져 있는지를 최우선으로 검증하겠습니다. 또한 리스크 관리를 위해 자금을 한 번에 집행하지 않고, 공정 수율 목표치 도달이나 샘플 통과 같은 확실한 마일스톤 달성에 따라 자금을 단계별로 집행(Tranche)하는 금융 구조를 설계하여 국책은행의 자본 안정성을 지키겠습니다.</div>
+  </div>
+</div>
+</div><div class="card-row" data-text="ⅰ. 글로벌 디스플레이 시장의 구조적 변화와 위기 의식 " style="display:contents">
+<div class="row" id="row-4">
+  <div class="row-body">
+    <h3 class="row-title">Ⅰ. 글로벌 디스플레이 시장의 구조적 변화와 위기 의식</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="Ⅰ. 글로벌 디스플레이 시장의 구조적 변화와 위기 의식"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 산업별/가전_스마트폰_디스플레이</div>
+  <h2 class="ia-title">Ⅰ. 글로벌 디스플레이 시장의 구조적 변화와 위기 의식</h2>
+  <div class="article-content">
+    <p class="ia-para-body"><em>*</em></p>
+<p class="ia-para-body">🎯 <em>*</em>*</p>
+<div class="term-box"><span class="term-name">주제</span><span class="term-def">디스플레이 패러다임 전환과 OLED 신수요(IT·차량용) 시장 확대에 따른 산업적·정책적 시사점</span></div>
+<div class="ia-section-h">Ⅰ. 글로벌 디스플레이 시장의 구조적 변화와 위기 의식</div>
+<p class="ia-para-body">현재 글로벌 디스플레이 시장은 전체적인 성장이 정체된 가운데, 범용화된 LCD의 비중이 지속적으로 축소되고 고부가가치인 OLED로의 전환이 가속화되는 구조적 패러다임 변화를 맞고 있습니다. 과거 한국은 선제적 투자를 통해 글로벌 OLED 시장의 압도적 1위를 점유해 왔으나, 최근 중국이 막대한 정부 보조금을 등에 업고 저가 모바일용 OLED 패널 물량을 쏟아내며 거세게 추격하고 있습니다.</p>
+<p class="ia-para-body">현재 매출액 기준으로는 한국이 프리미엄 패널(ASP 89달러 vs 중국 29달러) 시장을 굳건히 장악하며 1위를 수성하고 있으나, 규모는 작아도 향후 폭발적인 성장이 예상되는 <strong>IT용(태블릿, 노트북) 및 차량용 OLED 시장 선점</strong>이 한국 디스플레이 산업의 중장기 생존과 직결된 핵심 승부처로 부상하고 있습니다.</p>
+<div class="ia-section-h">Ⅱ. 핵심 논점: OLED 신수요 시장의 부상 배경과 성장 잠재력</div>
+<div class="ia-section-h">IT용 OLED: 온디바이스 AI와 프리미엄화가 이끄는 교체 수요</div>
+<p class="ia-para-body">IT용 디스플레이는 모바일폰 대비 교체 주기가 길고(4~5년), 학업 및 업무 등으로 장시간 사용되기 때문에 긴 수명과 높은 전력 효율이 필수적으로 요구됩니다. 과거에는 번인(Burn-in) 현상과 대형화에 따른 수율 저하로 OLED 탑재가 제한적이었으나, 기술적 한계가 극복되며 프리미엄 라인업을 중심으로 채택이 급증하고 있습니다.</p>
+<p class="ia-para-body">특히, 기기 자체의 연산량이 급증하는 온디바이스 AI의 확산으로 배터리 소모가 극심해지면서, 일반 콘텐츠 구동 시 LCD 대비 60~80%의 전력만을 소비하는 OLED의 압도적인 강점이 부각되고 있습니다. 이에 따라 IT용 OLED 시장은 2031년까지 연평균 15.9%의 고성장이 전망됩니다.</p>
+<div class="term-box"><span class="term-name">온디바이스 AI</span><span class="term-def">외부 클라우드 서버를 거치지 않고 스마트기기 내부에서 자체적으로 정보를 수집하고 연산하는 인공지능 기술</span></div>
+<div class="ia-section-h">차량용 OLED: SDV(소프트웨어 중심 자동차) 시대의 핵심 인터페이스</div>
+<p class="ia-para-body">차량용 디스플레이는 운전자의 생명과 직결되므로 영하 40도에서 영상 90도에 이르는 극한 환경을 견뎌야 하며, 10년 이상의 보증기간과 높은 휘도(밝기)를 요구하는 초고난도 시장입니다. 진입장벽이 높은 만큼 모바일용 대비 평균 판매단가(ASP)가 약 6배(323달러) 이상 높은 대표적인 고부가가치 영역입니다.</p>
+<p class="ia-para-body">최근 자율주행(ADAS) 발전과 인포테인먼트 수요 증가로 계기판과 센터페시아 등이 하나로 연결되는 대형 스크린(Pillar-to-Pillar)이 도입되고 있습니다. 디스플레이 대형화는 전력 소모를 높여 전기차(EV) 주행거리를 단축시키므로, 백라이트가 없어 전비(전력 효율)가 뛰어나고 곡면 설계로 충돌 안전성까지 확보할 수 있는 플렉서블 OLED가 필수재로 자리 잡으며 연평균 27.8% 폭발적 성장이 예상됩니다.</p>
+<div class="term-box"><span class="term-name">SDV (Software Defined Vehicle)</span><span class="term-def">하드웨어 중심이 아닌, 소프트웨어가 차량의 주요 기능과 성능을 제어하고 관리하는 자동차</span></div>
+<div class="ia-section-h">Ⅲ. 산업적 승부처: 초격차 확보를 위한 주요 기술 이슈</div>
+<p class="ia-para-body">중국의 거센 양적 팽창을 따돌리기 위해서는 추격이 불가능한 수준의 하드웨어 기술력, 즉 &#x27;초격차&#x27;를 유지하는 것이 유일한 해법입니다.</p>
+<ul>
+<li><strong>탠덤(Tandem) OLED 상용화 주도:</strong> 발광층을 2단(Two-Stack) 이상 직렬로 적층하는 고난도 기술입니다. 기존 대비 밝기가 뛰어나고, 동일 전류로 두 번 발광해 소비전력을 최대 40% 절감하면서 패널 수명을 획기적으로 늘려주어 IT 및 차량용 패널의 필수 기술로 꼽힙니다. 현재 LG와 삼성 등 한국 기업이 상용화를 주도 중이며, 중국 BOE 등은 글로벌 톱티어 고객사의 엄격한 품질 기준을 맞추는 데 고전하고 있습니다.</li>
+<li><strong>8.6세대 대형 원장 선제 투자:</strong> 패널 면적이 큰 IT 기기용 OLED의 단가를 획기적으로 낮추고 생산성을 극대화하려면, 기존 6세대 원장 대신 8.6세대 대형 기판 투자가 필수적입니다. 8.6세대는 6세대 대비 패널 생산 능력이 2.2~2.5배 뛰어납니다.</li>
+<li><strong>플렉서블(Flexible) 하이브리드 고도화:</strong> 가볍고 유연한 폼팩터 구현을 위해 폴리이미드(PI) 기판이 쓰이나, 제조 단가 최적화를 위해 PI 기판과 유리 기판의 장점을 결합한 &#x27;하이브리드 OLED&#x27; 양산으로 한국이 시장 주도권을 넓히고 있습니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">탠덤 OLED</span><span class="term-def">유기발광층을 2개 층 이상으로 겹겹이 쌓아 올려 화면 밝기와 내구성을 대폭 개선한 차세대 디스플레이 기술</span></div>
+<div class="ia-section-h">Ⅳ. 핵심 해결방안 및 대응 전략 (최우선 과제)</div>
+<p class="ia-para-body">원문은 한국 디스플레이 산업의 위기 극복을 위해 기업 자체의 뼈깎는 체질 개선은 물론, 정부와 금융의 전폭적이고 파격적인 제도적 지원이 수반되어야 함을 강력히 촉구하고 있습니다.</p>
+<div class="ia-section-h">사업 포트폴리오의 전략적 재편 및 선제적 CAPEX 투자</div>
+<p class="ia-para-body">성숙기에 진입해 단가 경쟁이 치열한 모바일 시장(캐시카우)에서는 &#x27;규모의 경제&#x27;와 &#x27;초격차 프리미엄&#x27; 전략으로 방어전을 펼치고, 여기서 창출된 막대한 현금흐름을 고수익·고성장 시장인 IT와 차량용 디스플레이에 전면 재분배해야 합니다.</p>
+<div class="ia-section-h">세제 및 제도적 인프라의 획기적 개편 (정책적 지원)</div>
+<p class="ia-para-body">디스플레이 산업은 천문학적인 시설 투자가 요구되나, 중국의 저가 물량 공세로 영업적자가 발생할 경우 현행법상 투자 세액공제 혜택을 전혀 받지 못하는 치명적 모순에 빠져 있습니다. 이를 타개하기 위해, 납부할 법인세가 없더라도 공제액을 현금으로 돌려주는 <strong>&#x27;직접환급제&#x27;</strong>를 즉시 도입해야 합니다.</p>
+<p class="ia-para-body">아울러 장기적인 투자 회수 기간을 고려하여 현행 10년인 세액공제 이월 기간을 20년 이상으로 대폭 늘려야 합니다. 기술 측면에서는 반도체 못지않게 심각한 디스플레이 핵심 인력의 해외 유출을 막기 위해 처벌 기준을 강화하고, 소부장 국산화 기업에 세제 혜택을 집중하는 &#x27;디스플레이 특별법&#x27; 제정이 시급합니다.</p>
+<div class="term-box"><span class="term-name">직접환급제</span><span class="term-def">기업이 적자가 발생해 납부할 법인세가 없더라도, 국가 첨단전략산업에 투자한 세액공제분만큼을 현금으로 지급해주는 조세 지원 제도</span></div>
+<h4 class="ia-tag-title"><span class="tag-label">결론</span> 종합 요약 및 KDB산업은행의 역할</h4>
+<p class="ia-para-body">현재 디스플레이 시장 패러다임 변화는 단순히 더 선명한 화면을 만드는 경쟁이 아니라, <strong>&quot;자동차가 스마트폰이 되는 SDV 시대&quot;</strong>와 <strong>&quot;기기가 스스로 생각하는 온디바이스 AI 시대&quot;</strong>의 핵심 하드웨어 인프라 패권을 쥐기 위한 거대한 국가 대항전입니다. 범용 시장을 중국에 잠식당한 한국의 유일한 생존 전략은, 중국이 아직 뚫지 못한 고신뢰성·초저전력 중심의 프리미엄 라인(탠덤 OLED 등)과 8.6세대 대형 원장 생산 역량을 선제적으로 장악하는 것뿐입니다.</p>
+<div class="ia-section-h">KDB산업은행의 역할</div>
+<p class="ia-para-body">산업은행은 국가 첨단전략산업을 책임지는 정책금융기관으로서 디스플레이 생태계의 골든타임을 지켜낼 <strong>&#x27;인내하는 자본(Patient Capital)&#x27;</strong>을 공급해야 합니다.</p>
+<p class="ia-para-body">첫째, 8.6세대 신규 라인 증설 및 탠덤 기술 고도화를 위한 대규모 신디케이티드 론(Syndicated Loan)을 주선하되, 스텝업(Step-up) 구조 등을 결합하여 대규모 자본 집행 초기 기업의 현금흐름 부담을 적극 완화해야 합니다.</p>
+<p class="ia-para-body">둘째, 패널 대기업뿐만 아니라 유기재료 및 하이브리드 공정 기술을 연구하는 중소·중견 소부장 기업을 향한 &#x27;공급망 연계 특별 우대 금융&#x27;을 신설해 건강하고 자립적인 K-디스플레이 밸류체인을 완성하는 마중물이 되어야 합니다.</p>
+<p class="ia-para-body"><em>*</em></p>
+<p class="ia-para-body">💡 <strong>[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</strong></p>
+<div class="ia-section-h">&quot;이종 산업 간 초격차 융합 펀드 (Display x Auto x AI)&quot; 조성</div>
+<p class="ia-para-body">디스플레이는 더 이상 독립된 하드웨어 부품이 아닙니다. 미래 모빌리티와 스마트 IT 기기의 운명을 결정짓는 핵심 플랫폼으로 진화했습니다. 따라서 산업은행은 단순 디스플레이 단일 기업에 대한 금융지원을 넘어, 완성차(현대차 등)-배터리-디스플레이 기업이 공동으로 출자하고 KDB가 매칭 투자하는 형태의 <strong>&#x27;미래 모빌리티 융합 얼라이언스 펀드&#x27;</strong> 조성을 주도해야 합니다. 완성차 맞춤형 OLED R&amp;D를 산업계가 공동으로 수행하게 되면 벤더 간 강력한 락인(Lock-in) 효과가 발생하며, 이는 막대한 자본으로 밀어붙이는 중국 패널업체가 완성차 공급망에 침투하는 것을 원천 방어하는 가장 견고한 진입장벽이 될 것입니다.</p>
+<div class="ia-section-h">&quot;기술보호 인센티브 연계형 금융 (Tech-Protection Linked Loan)&quot; 도입</div>
+<p class="ia-para-body">현장의 최대 골칫거리인 기술 및 인력 유출은 엄벌주의 같은 물리적 규제만으로는 온전히 막을 수 없습니다. 금융의 구조적 혁신이 필요합니다. 산업은행은 국가기관(국정원, 산업부)의 &#x27;보안 역량 우수 인증&#x27;을 획득하거나, 핵심 인력 이탈을 방지하는 자사주 지급 및 스톡옵션 등 보상 프로그램을 투명하게 명문화한 소부장 중소·중견기업을 대상으로 대출 금리를 파격적으로 인하하고 여신 한도를 확대해 주는 정책 상품을 신설해야 합니다. 이는 금융기관이 돈을 빌려주는 역할을 넘어, 국가 핵심 지식재산(IP)의 유출을 선제적으로 방어하는 &#x27;경제 안보의 1선 게이트키퍼&#x27; 역할을 수행하는 것입니다.</p>
+<p class="ia-para-body"><em>*</em></p>
+<p class="ia-para-body">🗣️ <strong>[예상 꼬리질문 및 답변 (면접 실전 대비 2선)]</strong></p>
+<div class="qa-q">중국이 막대한 정부 보조금을 바탕으로 8.6세대 투자 등 맹렬히 추격 중인데, 산은이 선제적으로 대규모 여신을 지원했다가 부실화될 리스크에 대한 관리 방안은 무엇인가요?</div>
+<div class="qa-a">&quot;중국의 무서운 추격 리스크는 분명 존재하며 단순 자본력 경쟁으로는 한계가 있습니다. 그러나 우리 K-디스플레이가 전략적으로 집중하는 차량용/IT용 OLED는 극한의 환경을 견디는 &#x27;신뢰성 기반 베이스&#x27; 시장이기에 기술 진입 장벽이 매우 높습니다. 탠덤 OLED만 하더라도 벤츠나 애플 같은 톱티어 고객사의 품질(퀄) 테스트를 통과하는 데 최소 2~3년이 소요됩니다.</div>
+<p class="ia-para-body">따라서 산은의 여신 리스크 관리는 &#x27;묻지마식 대규모 설비 투자&#x27; 지원이 아니라, 확고한 수주처(Captive Market)를 선제적으로 확보한 프로젝트에 한하여 브릿지 론이나 시설자금을 매칭해 주는 구조로 가야 합니다. 또한 단순 패널 생산량이 아닌, 투스택 탠덤 등 고부가 제품의 수율 안정화 지표를 금융 약정(Covenant)에 편입하여 자금 집행을 단계적으로 실시해 촘촘히 리스크를 통제하겠습니다.&quot;</p>
+<div class="qa-q">직접환급제와 같은 강력한 세제 지원 제도를 신설하자는 의견이 있었는데, 이는 사실상 적자 상태의 대기업에 세금을 퍼준다는 특혜 논란을 야기할 수 있습니다. 국책은행 직원으로서 이를 어떻게 설득하고 방어하시겠습니까?</div>
+<div class="qa-a">&quot;표면적으로는 대기업에 대한 일방적 조세 혜택으로 보일 수 있으나, 본질적으로 이는 <strong>&#x27;국가 생존 밸류체인에 대한 필수 인프라 투자&#x27;</strong>로 접근해야 함을 설득하겠습니다.</div>
+<p class="ia-para-body">첫째, 디스플레이 대기업의 패널 생산 라인 하나가 증설될 때 그 아래 연관된 수백 곳의 국내 중소·중견 소부장 기업의 생존과 고용이 창출되는 압도적인 낙수효과를 강조하겠습니다. 둘째, 이는 글로벌 스탠다드입니다. 이미 미국(IRA), 유럽(CRMA), 중국은 미래 첨단산업 육성을 위해 보조금과 세제 혜택을 국가 대항전 수준으로 직접 살포하고 있습니다. 위기 상황에서 적자가 나더라도, 당장 차세대 투자를 선행해야만 턴어라운드가 가능한 장치산업의 특성을 고려할 때, 직접환급제는 특혜가 아니라 기울어진 글로벌 운동장을 평평하게 만들고 국가 기술 주권을 지키는 최소한의 방어 장치임을 논리적으로 강조하겠습니다.&quot;</p>
+  </div>
+</div>
+</div><div class="card-row" data-text="미국 통상정책의 패러다임 변화와 가전·스마트폰 산업의 구조적 취약성 " style="display:contents">
+<div class="row" id="row-5">
+  <div class="row-body">
+    <h3 class="row-title">미국 통상정책의 패러다임 변화와 가전·스마트폰 산업의 구조적 취약성</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="미국 통상정책의 패러다임 변화와 가전·스마트폰 산업의 구조적 취약성"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 산업별/가전_스마트폰_디스플레이</div>
+  <h2 class="ia-title">미국 통상정책의 패러다임 변화와 가전·스마트폰 산업의 구조적 취약성</h2>
+  <div class="article-content">
+    <p class="ia-para-body">🇺🇸 <strong>미국 트럼프 신정부 관세정책에 따른 가전·스마트폰 산업 파급효과 및 대응 전략</strong></p>
+<div class="ia-section-h">미국 통상정책의 패러다임 변화와 가전·스마트폰 산업의 구조적 취약성</div>
+<p class="ia-para-body">미국 트럼프 신정부는 자국 산업 보호, 무역 적자 해소, 대중국 견제 강화를 목표로 &#x27;미국 우선주의&#x27; 기반의 강력한 보호무역주의를 전개하고 있습니다. 특히 미국의 가전·스마트폰 산업은 만성적인 무역수지 적자 상태에 놓여 있어 고율 관세의 핵심 타깃이 되고 있습니다. 2024년 기준 미국의 스마트폰 무역 적자는 약 414억 달러, TV는 111억 달러, 냉장고는 71억 달러에 달하며, 완제품 수요의 거의 전량을 해외 수입에 의존하는 실정입니다.</p>
+<p class="ia-para-body">미국의 관세 부과(보편관세 10%, 상호관세 최대 46% 등)는 촘촘하게 얽힌 글로벌 제조업 분업체계를 심각하게 교란시키고 있습니다. 한국에는 25%, 한국 기업의 주요 생산 거점인 베트남에는 무려 46%의 상호관세가 예고되었습니다. 이러한 고관세는 단순한 비용 증가를 넘어, 기존 글로벌 공급망의 전면적인 재편을 강제하는 강력한 압력으로 작용하고 있습니다.</p>
+<div class="term-box"><span class="term-name">온쇼어링(Onshoring)</span><span class="term-def">해외로 이전했던 자국 기업의 생산기지를 다시 본국으로 되돌리거나, 자국 내 생산 비중을 전략적으로 확대하는 현상</span></div>
+<div class="term-box"><span class="term-name">보편관세</span><span class="term-def">미국의 무역 적자 해소를 위해 모든 수입품에 대해 일괄적으로 10%의 기본관세를 추가로 부과하는 조치</span></div>
+<div class="ia-section-h">주요 품목별 글로벌 생산구조 및 관세 파급효과 분석</div>
+<p class="ia-para-body">가전 및 스마트폰 산업은 품목별 글로벌 생산 거점과 미국의 수입 의존도가 다르기 때문에, 관세정책이 미치는 파급효과 또한 차별적으로 나타납니다.</p>
+<p class="ia-para-body">📱 <strong>스마트폰 및 TV (글로벌 소수 생산거점 집중형)</strong></p>
+<p class="ia-para-body">스마트폰과 TV는 해외 운송비 비중이 낮아 베트남, 인도, 멕시코 등 소수 국가에서 전 세계 물량을 생산하는 구조입니다. 미국의 완제품 자체 생산 능력이 사실상 전무하기 때문에, 관세 부과가 미국 내 산업 부흥으로 이어지기는 어렵습니다.</p>
+<ul>
+<li><strong>스마트폰:</strong> 한국(삼성)과 미국(애플) 모두 고율 관세가 예고된 베트남과 중국을 피해 &#x27;인도&#x27;로 생산 물량을 대거 이전할 가능성이 큽니다. 경쟁사들이 동일한 압박을 받고 있어 미국 시장 내 점유율 변화는 미미하겠으나, 수요 위축으로 인한 전체 매출 감소가 우려됩니다.</li>
+<li><strong>TV:</strong> 한국 기업은 상호관세가 면제된 멕시코(USMCA 발효)와 동유럽에서 주로 생산합니다. 반면 최대 경쟁국인 중국산 TV에는 41.4%의 고관세가 적용되므로, 미국 시장 내에서 한국 기업이 가격경쟁력 우위를 점하고 점유율 격차를 벌릴 절호의 기회가 될 수 있습니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">USMCA</span><span class="term-def">미국, 멕시코, 캐나다 3국 간 체결된 무역협정으로, 일정 원산지 요건 등을 충족하는 제품에 대해 관세를 면제해 주는 제도</span></div>
+<p class="ia-para-body">📺 <strong>냉장고·세탁기·에어컨 (수요지 인접 다변화 생산형)</strong></p>
+<p class="ia-para-body">부피가 크고 무거운 대형 생활가전은 물류비 절감을 위해 미국 인접국(멕시코)이나 아시아 다수 국가에 생산 거점이 분산되어 있으며, 미국 내 생산 비중(월풀, GE 등)도 일부 존재합니다.</p>
+<ul>
+<li>한국 기업은 고관세를 피하기 위해 멕시코, 브라질 등 중남미 지역으로 생산기지를 확대하거나 미국 현지 공장 신·증설을 강제받고 있습니다.</li>
+<li>미국 현지 생산 비중이 높은 월풀, GE 등 경쟁사의 가격경쟁력이 상대적으로 급상승하여, 한국 기업의 미국 시장 점유율 방어에 적신호가 켜졌습니다.</li>
+<li>가장 큰 문제는 해외 생산이 가속화됨에 따라 &#x27;국내(한국) 완제품 생산 물량&#x27;마저 해외로 이전될 가능성이 높아, 국내 생산 기반 위축과 수출 타격이 불가피하다는 점입니다.</li>
+</ul>
+<div class="ia-section-h">관세 위기 극복 및 글로벌 경쟁력 강화를 위한 정책적 대응 방안</div>
+<p class="ia-para-body">보고서는 짙어지는 통상 불확실성 속에서 국내 산업 생태계를 보호하고 위기를 기회로 전환하기 위해 다음의 세 가지 핵심 정책 방향을 제시하고 있습니다. 최우선적으로 글로벌 공급망 재편에 대응하는 동시에, 초격차 기술력을 통한 질적 성장이 요구됩니다.</p>
+<ul>
+<li>🛠️ <strong>적극적인 &#x27;유턴(U-Turn) 정책&#x27; 지원 및 스마트 공장 연계:</strong></li>
+</ul>
+<p class="ia-para-body">동남아시아 등 고관세 부과 지역에 진출한 중소·중견 소재·부품 협력사들의 국내 복귀 수요가 급증할 것입니다. 정부는 세제 감면 확대, 보조금 상향뿐만 아니라 고임금 구조를 상쇄할 수 있는 &#x27;최고 수준의 자동화 및 스마트 공장 구축&#x27;을 패키지로 지원하여 국내 생산성의 근본적 제고를 이끌어야 합니다.</p>
+<ul>
+<li>💰 <strong>내수 진작을 통한 기업 실적 방어 및 혁신 촉진:</strong></li>
+</ul>
+<p class="ia-para-body">글로벌 수요 위축에 대비해 든든한 내수 기반을 마련해야 합니다. 스마트·고효율 가전 구매 보조금 지급, 친환경 스마트홈 솔루션 투자에 대한 세액 공제 등을 통해 내수 시장을 활성화하고, 기업들이 제품 혁신을 지속할 수 있는 캐시카우를 확보해주어야 합니다.</p>
+<ul>
+<li>🧠 <strong>AI 융합 중심의 초격차 R&amp;D 투자 확대 (비미국 시장 방어 전략):</strong></li>
+</ul>
+<p class="ia-para-body">중국이 쏟아낼 저가 공세에 맞서기 위해 단순 하드웨어 경쟁을 넘어선 차별화가 필수입니다. 국가전략기술로 지정된 AI 기술(AI 가전, 스마트홈 서비스)에 대한 R&amp;D 투자를 대폭 확대하고, 하드웨어(제품)와 소프트웨어(데이터)를 동시에 다룰 수 있는 융합형 AI 전문 인력을 대규모로 양성하여 질적 진입장벽을 구축해야 합니다.</p>
+<p class="ia-para-body">미국의 신관세정책은 단순히 제품 가격을 올리는 변수를 넘어, 글로벌 분업 체계로 성장해 온 우리 가전·스마트폰 산업의 근본적인 공급망 엑소더스를 요구하고 있습니다. TV 분야에서는 중국 견제에 따른 반사이익이 예상되나, 생활가전 전반에서는 미국 현지화 압박으로 인한 &#x27;국내 산업 공동화(Hollowing out)&#x27;와 미국 외 시장에서의 &#x27;중국발 출혈경쟁&#x27;이라는 치명적인 이중고를 맞이하게 되었습니다.</p>
+<p class="ia-para-body">따라서 향후 관전 포인트는 1) 유턴 기업들이 스마트 공장을 통해 국내에서 가격경쟁력을 확보할 수 있는지, 2) 원천 데이터와 AI가 결합된 프리미엄 생태계로 중국과의 격차를 벌릴 수 있는지에 달려 있습니다. <strong>산업은행은 국가 핵심 국책은행으로서</strong> 글로벌 공급망 재편으로 자금난을 겪는 부품 중소·중견기업에 대한 &#x27;공급망 안정화 특례보증&#x27;을 선제적으로 제공하고, AI 융합 가전 R&amp;D 및 스마트 공장 전환을 위한 &#x27;초장기·저금리 시설자금&#x27;을 과감히 투입하여 대한민국 주력 산업의 심장이 멈추지 않도록 든든한 금융의 방파제 역할을 수행해야 합니다.</p>
+<div class="ia-section-h">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</div>
+<div class="term-box"><span class="term-name">💡 **차별화 포인트 1</span><span class="term-def">&#x27;글로벌 동반 진출 및 다변화 특화 펀드&#x27; 조성**</span></div>
+<p class="ia-para-body">원문에서는 중소기업의 &#x27;국내 유턴&#x27;을 강조했지만, 현실적으로 모든 협력사가 국내로 돌아와 스마트 공장을 짓는 것은 막대한 자본이 필요해 비현실적일 수 있습니다. 따라서 대기업이 멕시코나 인도로 생산 기지를 이전할 때, 핵심 벤더(협력사)들이 동반 진출하여 현지 공급망을 즉시 구축할 수 있도록 산업은행 주도의 &#x27;공급망 다변화 동반진출 펀드&#x27;를 조성해야 합니다. 이를 통해 협력사들의 해외 이전 초기 캡펙스(CAPEX) 부담을 덜어주고 생태계 자체를 통째로 이식하는 전략이 필요합니다.</p>
+<div class="term-box"><span class="term-name">💡 **차별화 포인트 2</span><span class="term-def">&#x27;권역별 맞춤형 수출금융(Non-US 타겟)&#x27; 신설**</span></div>
+<p class="ia-para-body">중국의 &#x27;밀어내기 수출&#x27;로 가장 큰 타격을 입을 유럽, 중동, 아세안 시장을 방어하는 것이 급선무입니다. 미국 시장 쏠림을 막기 위해, 이들 대체 시장에 AI 기반 고효율 프리미엄 가전을 수출하는 기업(대기업 및 협력사)을 대상으로 금리 우대와 환위험 관리를 패키지로 제공하는 &#x27;비미국(Non-US) 시장 개척 특별 수출금융&#x27; 제도를 신설해야 합니다.</p>
+<div class="ia-section-h">예상 꼬리질문 2선 및 답변</div>
+<div class="ia-section-h">Q1. 중소·중견기업이 멕시코나 인도로 생산기지를 이전할 때, 산업은행은 구체적으로 어떤 지원을 할 수 있나요?</div>
+<div class="qa-a">산업은행은 기업의 부지 매입, 공장 건축, 설비 도입 등에 필요한 초기 대규모 자금을 &#x27;해외 진출 시설자금 대출&#x27; 형태로 장기·저리로 지원할 수 있습니다. 또한, 진출 초기 현지 매출이 안정화되기 전까지 발생할 수 있는 유동성 위기를 방어하기 위해 운영자금 지원 및 현지 통화 대출을 연계하여 환리스크를 최소화하는 금융 파트너 역할을 할 수 있습니다.</div>
+<div class="ia-section-h">Q2. 미국 밖의 시장에서 중국 기업들의 저가 공세가 심해질 텐데, 우리 기업이 취할 수 있는 현실적인 단기 방어 전략은 무엇이라 생각하나요?</div>
+<div class="qa-a">단기적으로 무리한 가격 인하로 대응하기보다는, 기존 가전에 &#x27;스마트홈&#x27; 기반의 구독 경제(정수기 필터 자동 배송, 에어컨 AI 원격 점검 등)를 결합하여 서비스 수익을 창출하는 &#x27;락인(Lock-in) 전략&#x27;이 유효하다고 봅니다. 단순히 기기를 파는 것을 넘어 서비스를 결합하면, 중국의 저가 하드웨어 공세 속에서도 충성 고객을 유지하고 수익성을 방어할 수 있을 것입니다.</div>
+  </div>
+</div>
+</div>
+    </div>
+  </div>
+</div>
+
+<nav class="mobile-tabs">
+  <a href="../index.html" class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lab">홈</span></a>
+  <button class="tab" id="mFsBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span class="lab">크기</span></button>
+  <button class="tab" id="mSettingsBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="lab">설정</span></button>
+</nav>
+
+<!-- 설정 패널 -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-panel">
+    <h3>설정</h3>
+    <div class="setting-row">
+      <div class="setting-label">배경 톤</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="theme:paper">종이</button>
+        <button class="setting-btn" data-setting="theme:white">화이트</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">목록 밀도</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="density:compact">컴팩트</button>
+        <button class="setting-btn" data-setting="density:grid">그리드</button>
+        <button class="setting-btn" data-setting="density:magazine">매거진</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">아티클 스타일</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="mode:magazine">매거진</button>
+        <button class="setting-btn" data-setting="mode:newspaper">신문</button>
+        <button class="setting-btn" data-setting="mode:minimal">미니멀</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">글자 크기</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="fs:s">S</button>
+        <button class="setting-btn" data-setting="fs:m">M</button>
+        <button class="setting-btn" data-setting="fs:l">L</button>
+        <button class="setting-btn" data-setting="fs:xl">XL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 발췌 클립 -->
+<button class="clips-fab">📌 발췌 <span class="num">0</span></button>
+<div class="clips-drawer-overlay" id="clipsOverlay"></div>
+<aside class="clips-drawer">
+  <div class="cd-head">
+    <h2>발췌</h2>
+    <span class="cd-count">0개</span>
+    <button class="icon-btn" id="clipsClose"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="cd-list"></div>
+</aside>
+
+<script>const SVG_CLIP = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg>';</script>
+<script>
+// ── State ──
+let density = localStorage.getItem('ns_density') || 'magazine';
+let theme = localStorage.getItem('ns_theme') || 'white';
+let mode = localStorage.getItem('ns_mode') || 'magazine';
+let fsIdx = ['s','m','l','xl'].indexOf(localStorage.getItem('ns_fs') || 'm');
+if (fsIdx < 0) fsIdx = 1;
+const fsSizes = ['s','m','l','xl'];
+const fsLabels = {'s':'작게','m':'보통','l':'크게','xl':'아주 크게'};
+let bookmarks = new Set(JSON.parse(localStorage.getItem('ns_bookmarks') || '[]'));
+let clips = JSON.parse(localStorage.getItem('ns_clips') || '[]');
+
+function applyState() {
+  document.body.className = `density-${density} theme-${theme} mode-${mode}`;
+  document.body.dataset.fs = fsSizes[fsIdx];
+  // Update settings buttons
+  document.querySelectorAll('[data-setting]').forEach(btn => {
+    const [key, val] = btn.dataset.setting.split(':');
+    const current = key === 'density' ? density : key === 'theme' ? theme : key === 'mode' ? mode : fsSizes[fsIdx];
+    btn.classList.toggle('active', val === current);
+  });
+  updateBookmarkUI();
+  updateClipsFab();
+}
+
+// ── Search ──
+const searchInput = document.getElementById('searchInput');
+const rows = document.querySelectorAll('.card-row');
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    let vis = 0;
+    rows.forEach(r => {
+      const show = !q || r.dataset.text.includes(q);
+      r.style.display = show ? '' : 'none';
+      if (show) vis++;
+    });
+    const fc = document.getElementById('filterCount');
+    if (fc) fc.textContent = vis + '편';
+  });
+}
+
+// ── Expand/Collapse ──
+document.querySelectorAll('.row').forEach(row => {
+  row.addEventListener('click', function(e) {
+    if (e.target.closest('.bookmark-btn') || e.target.closest('.ia-close')) return;
+    const wasOpen = this.classList.contains('expanded');
+    document.querySelectorAll('.row.expanded').forEach(r => r.classList.remove('expanded'));
+    if (!wasOpen) {
+      this.classList.add('expanded');
+      setTimeout(() => {
+        const art = this.nextElementSibling;
+        if (art && art.classList.contains('inline-article')) {
+          const top = art.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({top, behavior: 'smooth'});
+        }
+      }, 50);
+    }
+  });
+});
+document.querySelectorAll('.ia-close').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const art = this.closest('.inline-article');
+    if (art && art.previousElementSibling) art.previousElementSibling.classList.remove('expanded');
+  });
+});
+
+// ── Bookmarks ──
+function updateBookmarkUI() {
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    const t = btn.dataset.title;
+    const on = bookmarks.has(t);
+    btn.classList.toggle('on', on);
+    btn.querySelector('svg').setAttribute('fill', on ? 'currentColor' : 'none');
+  });
+}
+document.querySelectorAll('.bookmark-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const t = this.dataset.title;
+    if (bookmarks.has(t)) bookmarks.delete(t); else bookmarks.add(t);
+    localStorage.setItem('ns_bookmarks', JSON.stringify([...bookmarks]));
+    updateBookmarkUI();
+  });
+});
+
+// ── Font Size ──
+document.getElementById('fsBtn')?.addEventListener('click', () => {
+  fsIdx = (fsIdx + 1) % fsSizes.length;
+  localStorage.setItem('ns_fs', fsSizes[fsIdx]);
+  applyState();
+});
+
+// ── Density ──
+document.getElementById('densityBtn')?.addEventListener('click', () => {
+  const order = ['compact','grid','magazine'];
+  density = order[(order.indexOf(density) + 1) % order.length];
+  localStorage.setItem('ns_density', density);
+  applyState();
+});
+
+// ── Settings Panel ──
+const settingsOverlay = document.getElementById('settingsOverlay');
+document.getElementById('settingsBtn')?.addEventListener('click', () => {
+  settingsOverlay?.classList.toggle('open');
+  applyState();
+});
+settingsOverlay?.addEventListener('click', (e) => {
+  if (e.target === settingsOverlay) settingsOverlay.classList.remove('open');
+});
+document.querySelectorAll('[data-setting]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const [key, val] = this.dataset.setting.split(':');
+    if (key === 'density') { density = val; localStorage.setItem('ns_density', val); }
+    if (key === 'theme') { theme = val; localStorage.setItem('ns_theme', val); }
+    if (key === 'mode') { mode = val; localStorage.setItem('ns_mode', val); }
+    if (key === 'fs') { fsIdx = fsSizes.indexOf(val); localStorage.setItem('ns_fs', val); }
+    applyState();
+  });
+});
+
+// ── Clips (발췌) ──
+function updateClipsFab() {
+  const fab = document.querySelector('.clips-fab');
+  if (fab) {
+    fab.classList.toggle('show', clips.length > 0);
+    fab.querySelector('.num').textContent = clips.length;
+  }
+}
+function addClip(text, title) {
+  clips.unshift({id: Date.now(), text, title, createdAt: Date.now()});
+  localStorage.setItem('ns_clips', JSON.stringify(clips));
+  updateClipsFab();
+}
+function removeClip(id) {
+  clips = clips.filter(c => c.id !== id);
+  localStorage.setItem('ns_clips', JSON.stringify(clips));
+  updateClipsFab();
+  renderClipsList();
+}
+
+// Clip popover on text selection
+let clipPopover = null;
+document.addEventListener('mouseup', () => {
+  setTimeout(() => {
+    if (clipPopover) { clipPopover.remove(); clipPopover = null; }
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return;
+    const text = sel.toString().trim();
+    if (text.length < 4) return;
+    const range = sel.getRangeAt(0);
+    const art = range.commonAncestorContainer.closest?.('.inline-article') ||
+                range.commonAncestorContainer.parentElement?.closest?.('.inline-article');
+    if (!art) return;
+    const rect = range.getBoundingClientRect();
+    const pop = document.createElement('div');
+    pop.className = 'clip-popover';
+    pop.style.position = 'fixed';
+    pop.style.left = (rect.left + rect.width/2) + 'px';
+    pop.style.top = rect.top + 'px';
+    const title = art.querySelector('.ia-title')?.textContent || '';
+    pop.innerHTML = `<button onclick="addClip('${text.replace(/'/g,"\'")}','${title.replace(/'/g,"\'")}');this.parentElement.remove();window.getSelection().removeAllRanges()">` +
+      `${SVG_CLIP} 클립</button>` +
+      `<button onclick="navigator.clipboard?.writeText('${text.replace(/'/g,"\'")}');this.parentElement.remove();window.getSelection().removeAllRanges()">복사</button>`;
+    document.body.appendChild(pop);
+    clipPopover = pop;
+  }, 10);
+});
+document.addEventListener('mousedown', (e) => {
+  if (clipPopover && !e.target.closest('.clip-popover')) { clipPopover.remove(); clipPopover = null; }
+});
+
+// Clips drawer
+document.querySelector('.clips-fab')?.addEventListener('click', () => {
+  document.getElementById('clipsOverlay')?.classList.add('open');
+  document.querySelector('.clips-drawer')?.classList.add('open');
+  renderClipsList();
+});
+document.getElementById('clipsOverlay')?.addEventListener('click', () => {
+  document.getElementById('clipsOverlay')?.classList.remove('open');
+  document.querySelector('.clips-drawer')?.classList.remove('open');
+});
+document.getElementById('clipsClose')?.addEventListener('click', () => {
+  document.getElementById('clipsOverlay')?.classList.remove('open');
+  document.querySelector('.clips-drawer')?.classList.remove('open');
+});
+function renderClipsList() {
+  const list = document.querySelector('.cd-list');
+  if (!list) return;
+  if (clips.length === 0) {
+    list.innerHTML = '<div class="cd-empty"><div style="font-family:Noto Serif KR,serif;font-size:3rem;color:var(--rule);font-weight:700;margin-bottom:12px">¶</div><div>본문에서 텍스트를 드래그하면<br>여기에 모입니다.</div></div>';
+    return;
+  }
+  list.innerHTML = clips.map(c => `<div class="clip-item"><div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">${c.title || ''}</div><div class="ci-text">${c.text}</div><div class="ci-tools"><button onclick="navigator.clipboard?.writeText(\`${c.text.replace(/`/g,'')}\`)">복사</button><button onclick="removeClip(${c.id})">삭제</button></div></div>`).join('');
+  document.querySelector('.cd-count').textContent = clips.length + '개';
+}
+
+// Mobile tabs
+document.getElementById('mFsBtn')?.addEventListener('click', () => document.getElementById('fsBtn')?.click());
+document.getElementById('mSettingsBtn')?.addEventListener('click', () => document.getElementById('settingsBtn')?.click());
+
+// ── 인라인 편집 ──
+const EDITS_KEY = 'ns_edits';
+let edits = JSON.parse(localStorage.getItem(EDITS_KEY) || '{}');
+
+// 저장된 편집 복원
+function restoreEdits() {
+  Object.entries(edits).forEach(([id, data]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      if (data.title) {
+        const titleEl = el.querySelector('.row-title') || el.querySelector('.ia-title');
+        if (titleEl) titleEl.textContent = data.title;
+        // 행 제목도 동기화
+        const row = el.previousElementSibling || document.getElementById(id);
+        if (row) {
+          const rt = row.querySelector('.row-title');
+          if (rt && data.title) rt.textContent = data.title;
+        }
+      }
+    }
+  });
+}
+
+// 더블클릭 → contentEditable
+function makeEditable(el, saveKey, field) {
+  el.addEventListener('dblclick', function(e) {
+    e.stopPropagation();
+    if (this.contentEditable === 'true') return;
+    this.contentEditable = 'true';
+    this.style.outline = '2px solid var(--accent)';
+    this.style.borderRadius = '4px';
+    this.style.padding = '4px 8px';
+    this.focus();
+
+    const done = () => {
+      this.contentEditable = 'false';
+      this.style.outline = '';
+      this.style.padding = '';
+      // 저장
+      if (!edits[saveKey]) edits[saveKey] = {};
+      edits[saveKey][field] = this.textContent;
+      localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
+      // row 제목 동기화
+      if (field === 'title') {
+        const card = this.closest('.card-row');
+        if (card) {
+          const rt = card.querySelector('.row-title');
+          const it = card.querySelector('.ia-title');
+          if (rt) rt.textContent = this.textContent;
+          if (it) it.textContent = this.textContent;
+        }
+      }
+    };
+    this.addEventListener('blur', done, {once: true});
+    this.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') { ev.preventDefault(); this.blur(); }
+    });
+  });
+}
+
+// 모든 제목에 편집 기능 부여
+document.querySelectorAll('.card-row').forEach((row, i) => {
+  const id = 'card-' + i;
+  row.id = id;
+  const rowTitle = row.querySelector('.row-title');
+  const iaTitle = row.querySelector('.ia-title');
+  if (rowTitle) makeEditable(rowTitle, id, 'title');
+  if (iaTitle) makeEditable(iaTitle, id, 'title');
+
+  // 편집 복원
+  if (edits[id]?.title) {
+    if (rowTitle) rowTitle.textContent = edits[id].title;
+    if (iaTitle) iaTitle.textContent = edits[id].title;
+  }
+});
+
+// ── Init ──
+applyState();
+</script>
+</body>
+</html>

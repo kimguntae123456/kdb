@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>산업별/항공 — 논술 요약</title>
+<meta name="theme-color" content="#f4ede0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="논술 리더">
+<link rel="manifest" href="../manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<style>
+/* ── 인라인 편집 ── */
+.row-title:hover, .ia-title:hover, .ia-section-h:hover, .ia-para-title:hover {
+  cursor: text; background: color-mix(in oklab, var(--accent-soft) 50%, transparent);
+  border-radius: 4px; transition: background 150ms;
+}
+[contenteditable="true"] { outline: 2px solid var(--accent) !important; border-radius: 4px; padding: 4px 8px; background: var(--card); }
+
+/* ── 접기/펼치기 ── */
+.inline-article { display: none !important; }
+.row.expanded + .inline-article { display: block !important; animation: ia-in 200ms ease-out; }
+@keyframes ia-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── 본문 기본 ── */
+.article-content { word-break: keep-all; text-wrap: pretty; }
+.article-content p {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  margin-bottom: 1.35em; word-break: keep-all;
+}
+.article-content p:last-child { margin-bottom: 0; }
+.article-content ul { padding-left: 1.5em; margin: 0.8em 0; }
+.article-content ul li {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  margin-bottom: 0.5em; word-break: keep-all;
+}
+.article-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1.2em 0; }
+.article-content table th { background: var(--paper-2); padding: 10px 14px; font-weight: 700; text-align: left; border-bottom: 2px solid var(--rule); }
+.article-content table td { padding: 10px 14px; border-bottom: 1px solid var(--rule-2); vertical-align: top; line-height: 1.7; }
+
+/* ── 빈 소제목 숨김 ── */
+.ia-section-h:empty, .ia-para-title:empty, .ia-sub-title:empty, .ia-tag-title:empty { display: none; }
+
+/* ── 소제목 계층: section-h(H2) > para-title(H3) > sub-title(①) > tag-title([태그]) ── */
+.ia-section-h {
+  font-family: 'Noto Serif KR',serif; font-size: 1.3rem; font-weight: 900;
+  letter-spacing: -0.8px; line-height: 1.3;
+  margin: 48px 0 18px !important; padding: 0 0 10px;
+  border-bottom: 2px solid var(--accent); color: var(--ink);
+}
+.ia-section-h::before { content: ''; width: 28px; height: 2px; background: var(--accent); }
+.ia-para-title, h3.ia-para-title {
+  font-family: 'Noto Serif KR',serif !important; font-size: 1.18rem !important; font-weight: 800 !important;
+  letter-spacing: -0.5px; line-height: 1.35;
+  margin: 36px 0 14px !important; padding-left: 14px;
+  border-left: 4px solid var(--accent); color: var(--ink);
+}
+.ia-sub-title {
+  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 700;
+  margin: 28px 0 10px; color: var(--ink); line-height: 1.4;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.ia-sub-title .sub-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; background: var(--accent); color: var(--paper);
+  border-radius: 50%; font-size: 0.82rem; font-weight: 800; flex-shrink: 0;
+  font-family: 'Pretendard',sans-serif;
+}
+.ia-tag-title {
+  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 800;
+  margin: 24px 0 10px; color: var(--ink); line-height: 1.4;
+  display: flex; align-items: center; gap: 10px; letter-spacing: -0.3px;
+}
+.tag-label {
+  display: inline-block; padding: 4px 12px;
+  background: var(--accent); color: var(--paper); border-radius: 4px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 1.5px;
+  font-family: 'Pretendard',sans-serif; white-space: nowrap; flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+/* ── 용어박스 (grid) ── */
+.term-box {
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 16px;
+  padding: 14px 18px 14px 20px; margin: 14px 0;
+  background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+  border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
+  align-items: baseline;
+}
+.term-name { font-size: 0.9rem; font-weight: 800; color: var(--ink); letter-spacing: -0.3px; white-space: nowrap; }
+.term-def { font-size: 0.9rem; color: var(--ink-3); line-height: 1.75; }
+
+/* ── Q&A ── */
+.qa-q {
+  font-family: 'Noto Serif KR',serif; font-size: 1.05rem; font-weight: 700;
+  line-height: 1.55; color: var(--ink);
+  border-top: 2px solid var(--ink); padding: 20px 0 14px 44px;
+  margin-top: 36px; position: relative;
+}
+.qa-q::before {
+  content: 'Q'; position: absolute; left: 0; top: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--ink); color: var(--paper);
+  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
+  font-family: 'Pretendard',sans-serif;
+}
+.qa-a {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  padding: 14px 0 14px 44px; border-bottom: 1px solid var(--rule);
+  margin-bottom: 20px; position: relative; word-break: keep-all;
+}
+.qa-a::before {
+  content: 'A'; position: absolute; left: 0; top: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--accent); color: var(--paper);
+  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
+  font-family: 'Pretendard',sans-serif;
+}
+
+/* ── 설정 패널 ── */
+.settings-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 300; display: none; }
+.settings-overlay.open { display: block; }
+.settings-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; z-index: 301; width: min(400px, 90vw); box-shadow: var(--shadow-2); }
+.settings-panel h3 { font-family: 'Noto Serif KR',serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; }
+.setting-row { margin-bottom: 16px; }
+.setting-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+.setting-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.setting-btn { padding: 6px 14px; border-radius: var(--r-pill); border: 1px solid var(--rule); font-size: 0.82rem; cursor: pointer; transition: all 120ms; background: var(--card); }
+.setting-btn:hover { background: var(--paper-2); }
+.setting-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ── 클립 FAB ── */
+.clips-fab { position: fixed; right: 22px; bottom: 22px; z-index: 90; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 10px 16px 10px 12px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.18); display: none; align-items: center; gap: 8px; }
+.clips-fab.show { display: inline-flex; }
+.clips-fab:hover { transform: translateY(-2px); }
+.clips-fab .num { background: var(--accent); color: white; border-radius: 999px; padding: 2px 8px; font-size: 0.74rem; }
+@media (max-width: 880px) { .clips-fab { bottom: 76px; right: 14px; } }
+
+/* ── 클립 드로어 ── */
+.clips-drawer-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 200; display: none; }
+.clips-drawer-overlay.open { display: block; }
+.clips-drawer { position: fixed; top: 0; right: 0; width: min(440px, 100vw); height: 100vh; background: var(--paper); z-index: 201; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(0,0,0,0.18); transform: translateX(100%); transition: transform 240ms cubic-bezier(.2,.7,.2,1); }
+.clips-drawer.open { transform: translateX(0); }
+.cd-head { padding: 22px 24px 16px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; gap: 12px; }
+.cd-head h2 { font-family: 'Noto Serif KR',serif; font-size: 1.4rem; font-weight: 800; }
+.cd-head .cd-count { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+.cd-list { overflow-y: auto; flex: 1; padding: 10px 0 80px; }
+.cd-empty { padding: 60px 24px; text-align: center; color: var(--muted); }
+.clip-item { padding: 16px 24px; border-bottom: 1px solid var(--rule-2); }
+.clip-item .ci-text { font-family: 'Noto Serif KR',serif; font-size: 0.95rem; line-height: 1.7; border-left: 2px solid var(--accent); padding-left: 12px; margin-top: 8px; }
+.clip-item .ci-tools { display: flex; gap: 8px; margin-top: 10px; }
+.clip-item .ci-tools button { font-size: 0.72rem; color: var(--muted); padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--rule); background: var(--card); }
+.clip-item .ci-tools button:hover { background: var(--paper-2); color: var(--ink); }
+
+/* ── 클립 팝오버 ── */
+.clip-popover { position: absolute; z-index: 300; background: var(--ink); color: var(--paper); border-radius: 8px; padding: 6px; display: flex; gap: 4px; box-shadow: 0 8px 28px rgba(0,0,0,0.25); transform: translate(-50%,-100%); margin-top: -8px; }
+.clip-popover::after { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px; background: var(--ink); }
+.clip-popover button { background: transparent; color: var(--paper); font-size: 0.78rem; padding: 6px 12px; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; white-space: nowrap; }
+.clip-popover button:hover { background: rgba(255,255,255,0.12); }
+mark.clip-mark { background: oklch(0.92 0.1 85 / 0.7); color: inherit; padding: 0 1px; border-radius: 2px; }
+</style>
+</head>
+<body data-fs="m" class="density-magazine theme-white mode-magazine">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">논술 리더</div>
+      <div class="sub">Essay Reader</div>
+    </div>
+    <div class="nav-list">
+      <a href="../index.html" class="nav-item"><span>← 전체 카테고리</span></a>
+      <a href="../bookmarks.html" class="nav-item"><span>📌 내 북마크</span></a>
+    </div>
+    <div class="nav-list">
+      <div class="nav-section-title">카테고리</div>
+      <a href="../ESG/index.html" class="nav-item"><span>🌱 ESG</span><span class="count">20</span></a><a href="../가계_고령문제/index.html" class="nav-item"><span>📄 가계/고령문제</span><span class="count">10</span></a><a href="../가계_금융문제/index.html" class="nav-item"><span>📄 가계/금융문제</span><span class="count">3</span></a><a href="../가계_인력문제/index.html" class="nav-item"><span>📄 가계/인력문제</span><span class="count">9</span></a><a href="../공급망/index.html" class="nav-item"><span>📄 공급망</span><span class="count">12</span></a><a href="../글로벌_관세_통상_국제/index.html" class="nav-item"><span>📄 글로벌/관세_통상_국제</span><span class="count">18</span></a><a href="../글로벌_외화/index.html" class="nav-item"><span>📄 글로벌/외화</span><span class="count">17</span></a><a href="../금융업/index.html" class="nav-item"><span>📄 금융업</span><span class="count">31</span></a><a href="../디지털_기타/index.html" class="nav-item"><span>📄 디지털/기타</span><span class="count">5</span></a><a href="../디지털_코인/index.html" class="nav-item"><span>📄 디지털/코인</span><span class="count">19</span></a><a href="../벤처_창업_스케일업/index.html" class="nav-item"><span>📄 벤처/창업_스케일업</span><span class="count">16</span></a><a href="../벤처_투자_모험자본/index.html" class="nav-item"><span>📄 벤처/투자_모험자본</span><span class="count">25</span></a><a href="../부동산/index.html" class="nav-item"><span>📄 부동산</span><span class="count">4</span></a><a href="../산업_과제_산업_과제/index.html" class="nav-item"><span>📄 산업 과제/산업 과제</span><span class="count">18</span></a><a href="../산업_과제_생산적금융/index.html" class="nav-item"><span>📄 산업 과제/생산적금융</span><span class="count">17</span></a><a href="../산업별_AI_AI_도입/index.html" class="nav-item"><span>📄 산업별/AI/AI 도입</span><span class="count">13</span></a><a href="../산업별_AI_일자리/index.html" class="nav-item"><span>📄 산업별/AI/일자리</span><span class="count">7</span></a><a href="../산업별_AI_도입/index.html" class="nav-item"><span>📄 산업별/AI/도입</span><span class="count">7</span></a><a href="../산업별_가전_스마트폰_디스플레이/index.html" class="nav-item"><span>📄 산업별/가전_스마트폰_디스플레이</span><span class="count">6</span></a><a href="../산업별_건설_제조_기계_철강/index.html" class="nav-item"><span>📄 산업별/건설_제조_기계_철강</span><span class="count">10</span></a><a href="../산업별_로봇/index.html" class="nav-item"><span>📄 산업별/로봇</span><span class="count">4</span></a><a href="../산업별_바이오_헬스/index.html" class="nav-item"><span>📄 산업별/바이오_헬스</span><span class="count">10</span></a><a href="../산업별_반도체/index.html" class="nav-item"><span>📄 산업별/반도체</span><span class="count">9</span></a><a href="../산업별_방산/index.html" class="nav-item"><span>📄 산업별/방산</span><span class="count">5</span></a><a href="../산업별_섬유패션산업/index.html" class="nav-item"><span>📄 산업별/섬유패션산업</span><span class="count">6</span></a><a href="../산업별_우주/index.html" class="nav-item"><span>📄 산업별/우주</span><span class="count">4</span></a><a href="../산업별_원전/index.html" class="nav-item"><span>📄 산업별/원전</span><span class="count">6</span></a><a href="../산업별_유통_서비스_컨텐츠/index.html" class="nav-item"><span>📄 산업별/유통_서비스_컨텐츠</span><span class="count">11</span></a><a href="../산업별_이차전지/index.html" class="nav-item"><span>📄 산업별/이차전지</span><span class="count">10</span></a><a href="../산업별_자동차/index.html" class="nav-item"><span>📄 산업별/자동차</span><span class="count">9</span></a><a href="../산업별_조선_해운/index.html" class="nav-item"><span>📄 산업별/조선_해운</span><span class="count">13</span></a><a href="../산업별_항공/index.html" class="nav-item active"><span>📄 산업별/항공</span><span class="count">2</span></a><a href="../산업별_화학_에너지/index.html" class="nav-item"><span>📄 산업별/화학_에너지</span><span class="count">15</span></a><a href="../시사/index.html" class="nav-item"><span>📄 시사</span><span class="count">27</span></a><a href="../자본시장_국장/index.html" class="nav-item"><span>📄 자본시장/국장</span><span class="count">25</span></a><a href="../자본시장_채권/index.html" class="nav-item"><span>📄 자본시장/채권</span><span class="count">5</span></a><a href="../정책금융_소상공인/index.html" class="nav-item"><span>📄 정책금융/소상공인</span><span class="count">6</span></a><a href="../정책금융_정책금융개선/index.html" class="nav-item"><span>📄 정책금융/정책금융개선</span><span class="count">5</span></a><a href="../정책금융_중소기업/index.html" class="nav-item"><span>📄 정책금융/중소기업</span><span class="count">12</span></a><a href="../중동이슈/index.html" class="nav-item"><span>📄 중동이슈</span><span class="count">28</span></a><a href="../지역균형/index.html" class="nav-item"><span>📄 지역균형</span><span class="count">10</span></a>
+    </div>
+  </aside>
+  <div class="content">
+    <div class="topbar">
+      <div class="search">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" placeholder="제목·내용 검색…" id="searchInput">
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="densityBtn" title="보기 방식"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 10h18M3 14h18M3 18h18"/></svg></button>
+        <button class="icon-btn" id="fsBtn" title="글자 크기"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></button>
+        <button class="icon-btn" id="settingsBtn" title="설정"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      </div>
+      <span id="filterCount" style="font-size:0.78rem;color:var(--muted)">2편</span>
+    </div>
+    <header class="page-head">
+      <div class="eyebrow">📄 논술 요약</div>
+      <h2>산업별/항공</h2>
+      <div class="ph-sub">2편의 요약 보고서</div>
+    </header>
+    <div class="timeline">
+      <div class="card-row" data-text="생산 공정 및 관리 체계의 ai·디지털 전환(dx) 가속화 " style="display:contents">
+<div class="row" id="row-0">
+  <div class="row-body">
+    <h3 class="row-title">생산 공정 및 관리 체계의 AI·디지털 전환(DX) 가속화</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="생산 공정 및 관리 체계의 AI·디지털 전환(DX) 가속화"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 산업별/항공</div>
+  <h2 class="ia-title">생산 공정 및 관리 체계의 AI·디지털 전환(DX) 가속화</h2>
+  <div class="article-content">
+    <p class="ia-para-body">✈️ <strong>글로벌 항공산업 부품 ‘슈퍼사이클’ 도래와 구조적 재편 전략</strong></p>
+<h3 class="ia-para-title">1⃣ 핵심 논점 : 항공산업 ‘이중 사이클(Dual Cycle)’에 따른 역사적 호황기 진입</h3>
+<p class="ia-para-body">팬데믹이라는 전례 없는 위기를 겪은 글로벌 항공산업은 단순한 수요 정상화를 넘어 역사적인 ‘슈퍼사이클(Super Cycle)’에 진입하고 있습니다. 2024년 기준 세계 여객 수요는 이미 2019년의 고점을 돌파했으며, 글로벌 민간항공기 주문 잔고(Backlog)는 약 1만 5,300대라는 사상 최대치를 기록했습니다. 이는 향후 10년 이상 글로벌 완제기 제조사들이 풀 가동 체제를 유지해야만 소화할 수 있는 막대한 작업량입니다.</p>
+<p class="ia-para-body">이러한 폭발적 성장의 기저에는 ‘신규 수요’와 ‘교체 수요’가 동시에 폭발하는 이중 사이클이 자리 잡고 있습니다. 코로나19 기간 동안 억눌렸던 보복 여행 수요와 신흥국(중국, 인도 등)의 중산층 확대가 신규 발주를 강력하게 견인하고 있습니다. 이에 더해, 2000년대 대규모로 도입되었던 항공기들의 물리적 노후화 주기가 도래하였고, 각국의 안전 규제 강화 및 탄소 배출 저감을 위한 고효율 친환경 항공기 전환 요구가 거세지면서 교체 수요를 가속하고 있습니다.</p>
+<h3 class="ia-para-title">2⃣ 시장 현황 및 주요 이슈 : 공급망 병목 현상과 조선업 호황과의 평행이론</h3>
+<p class="ia-para-body">현재 항공산업은 막대한 수요에도 불구하고 최종 인도가 지연되는 현상을 겪고 있습니다. 에어버스 등 주요 완제기 제조사들은 엔진 제조사의 납기 지연, 정비 적체, 객실 인테리어 및 시트 부족 등을 주요 원인으로 지목하고 있습니다. 그러나 이는 구조적 수요 감소가 아니라, 팬데믹 기간 동안 재무 구조가 취약했던 하위 부품사들이 시장에서 퇴출당하면서 발생한 ‘일시적 공급망 후유증’입니다.</p>
+<p class="ia-para-body">실제로 보잉은 B737 기종의 월 생산량을 38대에서 42대로 늘리는 승인을 받았으며, 향후 6개월마다 월 5대씩 증산할 계획입니다. 에어버스 역시 A320의 월 생산량을 50대에서 2027년까지 75대로 대폭 확대할 예정입니다. 즉, 현재의 병목 현상은 매출의 ‘소멸’이 아니라 시간차를 두고 실현될 ‘이연(移延)’ 현상이며, 밀린 인도량이 점진적으로 매출로 꽂히게 될 것임을 시사합니다.</p>
+<p class="ia-para-body">주목할 점은 현재 항공업의 흐름이 17년 만에 슈퍼사이클을 맞이한 ‘조선업’의 궤적과 매우 흡사하다는 것입니다. 두 산업 모두 ① 노후 장비의 교체 사이클, ② 환경 및 안전 규제 압력(국제해사기구 탄소규제 vs 항공기 연료효율 규제), ③ 제한적인 생산 능력(공급 능력 제약)이라는 3대 구조적 동인을 공유합니다.</p>
+<div class="term-box"><span class="term-name">이연(移延) 매출</span><span class="term-def">수요 소멸이 아니라 공급망 제약 등 외부 요인으로 인해 상품 인도 시기가 밀리면서, 미래의 확정적 실적으로 쌓여 있는 대기 상태의 매출</span></div>
+<div class="term-box"><span class="term-name">리드타임(Lead Time)</span><span class="term-def">상품의 주문부터 실제 납품 및 운송이 완료되기까지 소요되는 총 시간</span></div>
+<h3 class="ia-para-title">3⃣ 국내 부품업계의 위상 강화와 기업가치 재평가(Re-rating) 기회</h3>
+<p class="ia-para-body">공급망 혼란 속에서 오히려 한국 중견 항공 부품사들의 글로벌 위상은 격상되고 있습니다. 국내 기업들은 여객기 동체 뼈대와 복잡한 가공이 필수적인 티타늄 부품 등 고난도 핵심 부품을 성공적으로 양산하며 글로벌 완제기 제조사들의 까다로운 인증을 통과했습니다. 에어버스 A320 핵심 협력사 참여는 물론, 보잉 737·777 민항기 구조물, 보잉 디펜스의 차세대 고등 훈련기(T-7A) 사업까지 참여하며 민항과 방산을 아우르는 강력한 포트폴리오를 구축했습니다.</p>
+<p class="ia-para-body">최근 일부 부품사들의 2023~2024년 수익성이 단기적으로 악화되며 시장에서 기업가치가 저평가(Undervaluation)받는 현상이 발생했습니다. 그러나 이는 전방 산업의 수요 부진이 아닌 공급망 교란에 따른 일시적 현상입니다. 수주 잔고가 온전히 보존되어 있고 양산 능력이 검증된 만큼, 공급망 병목이 완화되는 시점에는 폭발적인 실적 턴어라운드(Turnaround)와 함께 가치 재평가(Re-rating)가 이루어질 것입니다. 이를 인지한 국내 사모펀드(PEF)와 전략적 투자자들은 이미 대형 수주로 사업 기반이 입증된 중견 부품사들에 대한 선제적 투자를 검토하고 있습니다.</p>
+<div class="term-box"><span class="term-name">스트링거(Stringer)</span><span class="term-def">여객기 동체의 외피를 지지하고 형태를 유지하는 뼈대 역할을 하는 대형 구조물</span></div>
+<div class="term-box"><span class="term-name">5축 정밀가공</span><span class="term-def">X, Y, Z축에 두 개의 회전축을 더해, 복잡한 곡면을 가진 항공기 핵심 부품을 단 한 번의 세팅으로 초정밀하게 깎아내는 하이엔드 제조 공법</span></div>
+<h3 class="ia-para-title">4⃣ 최우선 과제 및 해결방안 : 슈퍼사이클 수혜를 위한 업계 전반의 전방위적 혁신 (가장 중요한 대목)</h3>
+<p class="ia-para-body">현재의 병목 현상은 결국 해소될 것이며, 그 이후 열릴 거대한 수주 시장은 철저히 ‘준비된 부품사’들의 몫이 될 것입니다. 국내 항공 부품업계가 이 슈퍼사이클의 진정한 수혜자가 되기 위해서는 단순히 시장 호황에 기대는 것을 넘어, 선제적이고 구조적인 내부 혁신과 고도화된 경영 전략이 필수적입니다. 최근 글로벌 컨설팅 팩토리에서 제시한 &#x27;2026년 항공우주·방위산업 성장 전략&#x27;에 기반하여, 부품업계가 최우선으로 실행해야 할 세 가지 핵심 해결방안을 도출할 수 있습니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> 생산 공정 및 관리 체계의 AI·디지털 전환(DX) 가속화</h4>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> 자본 배분의 우선순위 재편과 과감한 기술 투자</h4>
+<p class="ia-para-body">안정적인 수주 잔고를 바탕으로 벌어들인 현금을 단순히 재무구조 개선에만 쓸 것이 아니라, 전략적인 자본 배분을 통해 차세대 기술에 투자해야 합니다. 항공기 경량화를 위한 신소재 가공 기술, 친환경 연료 체계에 부합하는 부품 설계 등 미래 시장(Next-generation Program)이 요구하는 기술적 허들을 넘기 위한 R&amp;D 선행 투자가 경영판단의 최우선 순위가 되어야 합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">③</span> 차세대 프로그램 수행을 위한 엔지니어 및 숙련 기술자 등 인적 자본 확보</h4>
+<p class="ia-para-body">공급망 붕괴의 가장 뼈아픈 원인 중 하나는 팬데믹 기간 이탈한 &#x27;숙련 인력의 부재&#x27;였습니다. 첨단 가공 장비가 있어도 이를 다룰 고급 엔지니어가 없다면 무용지물입니다. 장기적인 관점에서 우수 엔지니어를 육성하고, 차세대 항공 프로그램의 복잡한 인증 절차를 전담할 수 있는 전문 인력에 대한 투자를 대폭 확대해 선제적으로 인적 방어벽을 구축해야 합니다.</p>
+<h3 class="ia-para-title">산업적 통찰 및 향후 전망</h3>
+<p class="ia-para-body">글로벌 항공산업은 팬데믹이라는 터널을 지나, 폭발적 신규 수요와 친환경·안전 규제 기반의 교체 수요가 맞물리는 거대한 이중 사이클에 올라탔습니다. 현재 시장을 지배하는 공급망 병목 현상은 역설적으로 이미 기술력과 양산 능력이 검증된 국내 핵심 부품사들에게 강력한 진입장벽이자 독점적 지위를 부여하는 기회로 작용하고 있습니다. 이들이 일시적인 저평가 국면을 극복하고 다가올 조 단위의 인도 물량을 소화하기 위해서는, 디지털 전환(DX)과 선제적인 인재·기술 투자가 반드시 동반되어야 합니다.</p>
+<p class="ia-para-body">결국, <strong>산업은행의 역할</strong>이 그 어느 때보다 중요합니다. 항공 부품산업은 막대한 초기 자본(CAPEX)과 긴 자금 회수 기간이 필요한 국가 기간산업입니다. 산업은행은 단기 실적 저하로 자금 조달에 어려움을 겪는 우량 중견기업에 ‘인내하는 자본(Patient Capital)’을 공급해야 합니다. 더 나아가 이들이 AI 기반 스마트 팩토리를 구축하고 차세대 부품 R&amp;D를 수행할 수 있도록 맞춤형 정책 금융을 지원함으로써, 대한민국 항공우주 산업이 글로벌 공급망의 최상위 티어로 도약하는 데 핵심적인 마중물 역할을 수행해야 할 것입니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</h3>
+<div class="ia-section-h">산업은행 주도의 ‘항공 공급망 스케일업(Scale-up) 전용 펀드’ 조성</div>
+<p class="ia-para-body">원문에서 사모펀드(PEF)들이 우량 부품사를 선별 투자하고 있다고 언급했습니다. 산업은행은 이를 한 단계 발전시켜, 민간 PEF와 공동으로 &#x27;항공 공급망 스케일업(Scale-up) 펀드&#x27;를 조성해야 합니다. 특히 단순 자금 지원을 넘어, 국내 1~2차 협력사 간의 M&amp;A를 촉진하여 기업 규모를 키우고(대형화), 원가 경쟁력과 수직 계열화를 달성할 수 있도록 전략적 구조조정을 지원하는 방향이 현실적입니다.</p>
+<div class="ia-section-h">타 산업(조선/자동차) 숙련 인력 및 첨단 공정의 ‘항공 산업 크로스오버(Cross-over) 지원제도’</div>
+<p class="ia-para-body">원문에서 지적한 &#x27;엔지니어 및 숙련 기술자 확보&#x27; 문제를 해결하기 위한 아이디어입니다. 조선업의 슈퍼사이클과 자동차 산업의 전동화 전환 과정에서 발생하는 고급 정밀가공 인력이나 유휴 생산 기술을 항공 부품 산업으로 유연하게 전환할 수 있도록, 정책금융기관 주도하에 &#x27;산업 간 인력·기술 전환 교육 및 설비 개조 자금&#x27;을 선도적으로 지원하는 패키지를 신설하는 것을 제안합니다.</p>
+<div class="ia-section-h">예상 꼬리질문 (면접 대비용)</div>
+<ul>
+<li><strong>Q1.</strong> <em>원문에서 항공 부품사들의 매출이 &#x27;소멸&#x27;이 아닌 &#x27;이연&#x27;되었다고 했는데, 여신 심사역 입장에서 이러한 이연 매출이 실제 현금흐름(실적)으로 전환되는 시점과 리스크를 어떻게 평가하고 모니터링할 것인가요?</em></li>
+<li><strong>Q2.</strong> <em>디지털 전환(DX)과 AI 투자가 해결방안으로 제시되었는데, 현실적으로 자금력이 부족한 국내 중견 부품사들이 이 막대한 비용을 감당하기 어렵습니다. 산업은행이 단순 대출 외에 어떤 방식의 혁신 금융 지렛대를 제공할 수 있을까요?</em></li>
+</ul>
+  </div>
+</div>
+</div><div class="card-row" data-text="차세대 항공기 특화 정비 기술 확보 및 국제 인증 가속화 " style="display:contents">
+<div class="row" id="row-1">
+  <div class="row-body">
+    <h3 class="row-title">차세대 항공기 특화 정비 기술 확보 및 국제 인증 가속화</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="차세대 항공기 특화 정비 기술 확보 및 국제 인증 가속화"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 산업별/항공</div>
+  <h2 class="ia-title">차세대 항공기 특화 정비 기술 확보 및 국제 인증 가속화</h2>
+  <div class="article-content">
+    <h3 class="ia-para-title">글로벌 MRO 시장 동향 및 산업 구조</h3>
+<p class="ia-para-body">항공 MRO(Maintenance, Repair, Overhaul) 산업은 항공기 운영 과정에서 필수적인 고부가가치 서비스 산업으로, 글로벌 항공 산업의 새로운 캐시카우(Cash Cow)로 부상하고 있습니다. 전 세계적인 항공기 보유 대수 증가와 기단 노후화에 따른 장기 운영으로 인해 정비 수요가 폭발적으로 증가하는 추세입니다.</p>
+<ul>
+<li><strong>폭발적인 시장 성장세:</strong> 2023년 기준 글로벌 MRO 시장 규모는 약 700억 달러에 달하며, 현재 연평균 3~4% 수준인 성장률은 향후 5~6%까지 가속화될 것으로 전망됩니다.</li>
+<li><strong>고도화된 과점 시장의 고착화:</strong> 현재 MRO 시장은 GE Aviation, Lufthansa Technik, Singapore Airlines Engineering 등 소수의 글로벌 거대 기업(OEM 및 대형 정비업체)이 주도하는 강력한 과점 체제를 형성하고 있습니다.</li>
+<li><strong>세분화된 시장 구조와 밸류체인:</strong> 전체 시장은 크게 3가지 영역으로 구분됩니다. 운항 중 일상적으로 수행되는 &#x27;Line Maintenance(40%)&#x27;는 항공사 자체 수행 비중이 높고 저가 경쟁이 치열한 반면, 기체 중정비인 &#x27;Base Maintenance(35%)&#x27;와 엔진·부품을 다루는 &#x27;Component(25%)&#x27; 영역은 고도의 기술력이 요구되는 고단가 시장입니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">MRO</span><span class="term-def">항공기의 정비(Maintenance), 수리(Repair), 분해조립(Overhaul)을 아우르는 필수 고부가가치 서비스 산업</span></div>
+<div class="term-box"><span class="term-name">Line Maintenance</span><span class="term-def">운항 간 이루어지는 일상 정비로 항공사 자체 수행 비중이 높고 저가 경쟁이 치열한 영역</span></div>
+<div class="term-box"><span class="term-name">Base Maintenance</span><span class="term-def">항공기 기체에 대한 중정비로 대형 정비업체(OEM) 중심의 고기술·고비용 구조</span></div>
+<h3 class="ia-para-title">한국 MRO 산업의 현 주소 및 직면한 한계</h3>
+<p class="ia-para-body">한국은 세계적인 수준의 대형 항공사(대한항공, 아시아나항공 등)를 보유한 항공 강국이지만, MRO 산업 생태계 측면에서는 철저한 후발주자에 머물러 있습니다. 글로벌 최고 수준의 공항 인프라와 IT 기술력을 보유하고 있음에도 불구하고, 다음과 같은 구조적 한계와 외부 위협에 직면해 있습니다.</p>
+<ul>
+<li><strong>강력한 국제 안전 규제와 진입 장벽:</strong> MRO 산업은 인간의 생명과 직결되는 특성상 글로벌 진입을 위해 미국 연방항공청(FAA), 유럽 항공안전청(EASA) 등 국제 안전 인증 취득이 필수적입니다. 이는 신규 진입자에게 엄청난 시간과 비용이 소요되는 기술적·제도적 장벽으로 작용합니다.</li>
+<li><strong>치열한 주변국 경쟁과 기술 격차:</strong> 싱가포르(Singapore Airlines Engineering), 중국(China Eastern) 등 아시아 경쟁국과 동남아시아 국가들이 국가적 지원을 바탕으로 거센 추격을 벌이고 있습니다. 글로벌 선도기업 및 이들 경쟁국과의 기술 격차, 특히 최신 엔진 및 핵심 부품에 대한 원천 정비 기술 부재가 뼈아픈 약점입니다.</li>
+<li><strong>대규모 초기 자본의 압박:</strong> 항공 정비 시설 구축과 고급 인력 양성, 인증 획득에 이르기까지 막대한 초기 투자 비용(CAPEX)이 요구되어 민간 주도의 독자적 생태계 조성에 어려움을 겪고 있습니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">FAA·EASA 인증</span><span class="term-def">미국 연방항공청(FAA) 및 유럽 항공안전청(EASA)이 발급하는 국제 항공안전 인증으로 글로벌 MRO 시장 진입의 핵심 라이선스</span></div>
+<h3 class="ia-para-title">핵심 해결방안 및 한국형 MRO 도약 전략</h3>
+<p class="ia-para-body">한국이 단순 여객·화물 운송 중심의 항공 산업을 넘어, 700억 달러 규모의 고부가가치 서비스업으로 도약하기 위해서는 기존 강점을 극대화하는 4대 차별화 전략이 최우선적으로 실행되어야 합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> 차세대 항공기 특화 정비 기술 확보 및 국제 인증 가속화</h4>
+<p class="ia-para-body">가장 시급한 것은 B787, A350과 같은 차세대 항공기 정비 기술의 선제적 확보입니다. 항공기 현대화에 따라 기체 구조가 탄소복합재료로 대체되고 전자시스템이 고도화되는 트렌드를 공략해야 합니다. 전자시스템, 엔진, 복합재료에 대한 원천 기술을 개발하고, 글로벌 핵심 공급망(Supply Chain)에 적극 참여하여 정비 수요를 직접 연계해야 합니다. 이와 동시에 FAA 및 EASA 인증 획득 절차를 국가 차원에서 패스트트랙으로 지원하여 글로벌 시장 진출의 교두보를 마련해야 합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> 동북아 MRO 지역 거점(Hub) 구축 및 인프라 집적화</h4>
+<p class="ia-para-body">지리적 이점과 세계 최고 수준의 물류 경쟁력을 갖춘 인천공항, 부산신항 등을 중심으로 &#x27;동북아 MRO 융복합 허브&#x27;를 육성해야 합니다. 정비 기지, 부품 물류센터, R&amp;D 시설을 한곳에 집적화하여 물류비용을 절감하고, 해외 정비 물량을 적극적으로 유치할 수 있는 물리적 기반을 조성해야 합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">③</span> 국내 대형 항공사(FSC) 간 전략적 얼라이언스 구축</h4>
+<p class="ia-para-body">글로벌 기업들의 &#x27;규모의 경제&#x27;에 맞서기 위해, 대한항공과 아시아나항공 등 국내 항공사들의 자체 정비 역량과 기지를 통합·활용하는 전략이 필요합니다. 공동 정비 센터를 설립하여 중복 투자를 방지하고 핵심 정비 역량을 결집한다면, 초기 투자 리스크를 줄이고 단기간에 글로벌 수주 경쟁력을 확보할 수 있습니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">④</span> AI·초격차 딥테크 기반의 정비 디지털화 및 인재 육성</h4>
+<p class="ia-para-body">전산화·자동화가 진행되는 글로벌 정비 트렌드에 발맞춰 한국의 압도적인 IT 기술을 접목해야 합니다. AI 기반의 예지 정비(고장 예측 진단), 드론을 활용한 초정밀 기체 점검 등 디지털 기술 혁신을 통해 작업 효율성과 안전성을 획기적으로 끌어올려야 합니다. 또한, 이러한 첨단 장비를 다룰 수 있는 항공정비 기술자 교육 프로그램을 대폭 확대하여 고숙련 인재의 안정적인 공급망을 갖춰야 합니다.</p>
+<div class="term-box"><span class="term-name">차세대 항공기(B787, A350)</span><span class="term-def">탄소복합재료 및 첨단 통신·전자시스템이 대거 적용되어 기존 금속 기체 대비 고도의 새로운 정비 기술력이 요구되는 최신 기종</span></div>
+<h3 class="ia-para-title">종합 요약 및 KDB 산업은행의 역할</h3>
+<p class="ia-para-body">MRO 산업은 단순히 비행기를 고치는 하청업이 아니라, 지속적인 부가가치와 양질의 일자리를 창출하는 700억 달러 규모의 핵심 지식 서비스업입니다. 한국은 우수한 항공 운항 인프라를 갖췄음에도 높은 진입 장벽과 막대한 초기 투자 비용 탓에 MRO 국산화율이 낮고 국부 유출이 지속되어 왔습니다. 앞으로는 단순 정비를 넘어 딥테크(AI, 드론)와 결합된 항공 MRO 생태계를 주도할 수 있느냐가 국가 항공 경쟁력의 핵심 잣대가 될 것입니다.</p>
+<p class="ia-para-body"><strong>KDB 산업은행의 역할:</strong> 산업은행은 후발주자인 한국이 안고 있는 <strong>&#x27;막대한 초기 투자 비용(CAPEX)&#x27;이라는 허들을 극복하기 위한 &#x27;인내하는 자본(Patient Capital)&#x27;</strong>의 역할을 수행해야 합니다. 동북아 MRO 허브 조성을 위한 대규모 PF(프로젝트 파이낸싱)를 주도하고, 국내 항공사와 글로벌 OEM 간의 조인트벤처(JV) 설립에 필요한 모험자본을 공급해야 합니다. 더불어, FAA/EASA 국제 인증 획득과 차세대 기술(복합재료, 예지정비 AI) R&amp;D에 도전하는 혁신 기업을 대상으로 맞춤형 정책금융을 지원하여, 국가 차원의 고부가 산업 성장을 견인해야 할 것입니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</h3>
+<div class="ia-section-h">MRO 특화 &#x27;항공정비 스케일업 펀드&#x27; 조성 및 조인트벤처(JV) 금융 지원</div>
+<p class="ia-para-body">원문의 &#x27;항공사 협력 및 기술 확보&#x27; 방안을 구체화하기 위해, KDB 주도의 MRO 전용 펀드 조성을 제안합니다. 글로벌 선도업체(OEM)의 원천기술을 흡수하는 가장 빠른 방법은 글로벌 기업과 국내 항공사/정비업체 간의 조인트벤처(JV)를 설립하는 것입니다. 산업은행이 지분 투자 및 장기 저리 대출을 매칭 지원하여 글로벌 우량 기업의 국내 거점 유치를 유도하고, 자연스러운 기술 이전과 국제 인증 노하우 체득을 도모해야 합니다.</p>
+<div class="ia-section-h">K-방산 연계 &#x27;민·군 통복합 MRO 클러스터&#x27; 활성화</div>
+<p class="ia-para-body">최근 급성장 중인 K-방산(T-50, KF-21 등) 수출 실적과 연계하여, 민간 항공기와 군용기 정비를 아우르는 통합 클러스터를 구축해야 합니다. 군용기 MRO를 통해 안정적인 기본 물량(Base Load)과 캐시플로우를 확보하고, 이를 바탕으로 민간 항공기 부품 정비(Component) 기술 R&amp;D에 재투자하는 선순환 구조를 만든다면 초기 리스크를 크게 상쇄할 수 있습니다.</p>
+<div class="ia-section-h">예상 꼬리질문 2선 및 답변</div>
+<div class="ia-section-h">Q1. 글로벌 MRO 기업들과 경쟁하기 위해 한국이 단기적으로 가장 집중해야 할 니치마켓(틈새시장)은 무엇이라고 생각합니까?</div>
+<div class="term-box"><span class="term-name">A</span><span class="term-def">단기적으로는 &#x27;AI와 드론을 결합한 디지털 점검·진단 영역&#x27;에 집중해야 한다고 생각합니다. 엔진 분해 조립 등 Base Maintenance 부문은 글로벌 OEM의 장벽이 공고하지만, 한국의 뛰어난 IT/반도체 기술력을 활용해 AI 기반의 예지 정비(Predictive Maintenance) 소프트웨어나 드론 기체 결함 스캐닝 기술을 상용화한다면, 기존 거대 기업들에게 필수적인 파트너로 자리 잡으며 시장에 신속히 침투할 수 있을 것입니다.</span></div>
+<div class="qa-q">막대한 초기 투자가 수반되는 MRO 산업 특성상, 산업은행의 자금 지원 이외에 프로젝트 성공을 위한 필수 전제조건은 무엇이라고 보십니까?</div>
+<div class="term-box"><span class="term-name">A</span><span class="term-def">자금 지원만큼 중요한 것은 &#x27;안정적인 초기 정비 물량(Captive Market) 확보&#x27;와 &#x27;신속한 제도적 인프라 정비&#x27;입니다. 국토부 등 정부 부처와 협력하여 국내 항공사들이 해외로 위탁하는 정비 물량을 국내로 돌릴 수 있도록 세제 혜택 등 인센티브 구조를 설계해야 합니다. 또한, 복잡한 국제 안전 인증(FAA/EASA)을 기업 단독이 아닌 민관 합동 패스트트랙으로 지원하는 행정적 뒷받침이 필수적입니다.</span></div>
+  </div>
+</div>
+</div>
+    </div>
+  </div>
+</div>
+
+<nav class="mobile-tabs">
+  <a href="../index.html" class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lab">홈</span></a>
+  <button class="tab" id="mFsBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span class="lab">크기</span></button>
+  <button class="tab" id="mSettingsBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="lab">설정</span></button>
+</nav>
+
+<!-- 설정 패널 -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-panel">
+    <h3>설정</h3>
+    <div class="setting-row">
+      <div class="setting-label">배경 톤</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="theme:paper">종이</button>
+        <button class="setting-btn" data-setting="theme:white">화이트</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">목록 밀도</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="density:compact">컴팩트</button>
+        <button class="setting-btn" data-setting="density:grid">그리드</button>
+        <button class="setting-btn" data-setting="density:magazine">매거진</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">아티클 스타일</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="mode:magazine">매거진</button>
+        <button class="setting-btn" data-setting="mode:newspaper">신문</button>
+        <button class="setting-btn" data-setting="mode:minimal">미니멀</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">글자 크기</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="fs:s">S</button>
+        <button class="setting-btn" data-setting="fs:m">M</button>
+        <button class="setting-btn" data-setting="fs:l">L</button>
+        <button class="setting-btn" data-setting="fs:xl">XL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 발췌 클립 -->
+<button class="clips-fab">📌 발췌 <span class="num">0</span></button>
+<div class="clips-drawer-overlay" id="clipsOverlay"></div>
+<aside class="clips-drawer">
+  <div class="cd-head">
+    <h2>발췌</h2>
+    <span class="cd-count">0개</span>
+    <button class="icon-btn" id="clipsClose"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="cd-list"></div>
+</aside>
+
+<script>const SVG_CLIP = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg>';</script>
+<script>
+// ── State ──
+let density = localStorage.getItem('ns_density') || 'magazine';
+let theme = localStorage.getItem('ns_theme') || 'white';
+let mode = localStorage.getItem('ns_mode') || 'magazine';
+let fsIdx = ['s','m','l','xl'].indexOf(localStorage.getItem('ns_fs') || 'm');
+if (fsIdx < 0) fsIdx = 1;
+const fsSizes = ['s','m','l','xl'];
+const fsLabels = {'s':'작게','m':'보통','l':'크게','xl':'아주 크게'};
+let bookmarks = new Set(JSON.parse(localStorage.getItem('ns_bookmarks') || '[]'));
+let clips = JSON.parse(localStorage.getItem('ns_clips') || '[]');
+
+function applyState() {
+  document.body.className = `density-${density} theme-${theme} mode-${mode}`;
+  document.body.dataset.fs = fsSizes[fsIdx];
+  // Update settings buttons
+  document.querySelectorAll('[data-setting]').forEach(btn => {
+    const [key, val] = btn.dataset.setting.split(':');
+    const current = key === 'density' ? density : key === 'theme' ? theme : key === 'mode' ? mode : fsSizes[fsIdx];
+    btn.classList.toggle('active', val === current);
+  });
+  updateBookmarkUI();
+  updateClipsFab();
+}
+
+// ── Search ──
+const searchInput = document.getElementById('searchInput');
+const rows = document.querySelectorAll('.card-row');
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    let vis = 0;
+    rows.forEach(r => {
+      const show = !q || r.dataset.text.includes(q);
+      r.style.display = show ? '' : 'none';
+      if (show) vis++;
+    });
+    const fc = document.getElementById('filterCount');
+    if (fc) fc.textContent = vis + '편';
+  });
+}
+
+// ── Expand/Collapse ──
+document.querySelectorAll('.row').forEach(row => {
+  row.addEventListener('click', function(e) {
+    if (e.target.closest('.bookmark-btn') || e.target.closest('.ia-close')) return;
+    const wasOpen = this.classList.contains('expanded');
+    document.querySelectorAll('.row.expanded').forEach(r => r.classList.remove('expanded'));
+    if (!wasOpen) {
+      this.classList.add('expanded');
+      setTimeout(() => {
+        const art = this.nextElementSibling;
+        if (art && art.classList.contains('inline-article')) {
+          const top = art.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({top, behavior: 'smooth'});
+        }
+      }, 50);
+    }
+  });
+});
+document.querySelectorAll('.ia-close').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const art = this.closest('.inline-article');
+    if (art && art.previousElementSibling) art.previousElementSibling.classList.remove('expanded');
+  });
+});
+
+// ── Bookmarks ──
+function updateBookmarkUI() {
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    const t = btn.dataset.title;
+    const on = bookmarks.has(t);
+    btn.classList.toggle('on', on);
+    btn.querySelector('svg').setAttribute('fill', on ? 'currentColor' : 'none');
+  });
+}
+document.querySelectorAll('.bookmark-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const t = this.dataset.title;
+    if (bookmarks.has(t)) bookmarks.delete(t); else bookmarks.add(t);
+    localStorage.setItem('ns_bookmarks', JSON.stringify([...bookmarks]));
+    updateBookmarkUI();
+  });
+});
+
+// ── Font Size ──
+document.getElementById('fsBtn')?.addEventListener('click', () => {
+  fsIdx = (fsIdx + 1) % fsSizes.length;
+  localStorage.setItem('ns_fs', fsSizes[fsIdx]);
+  applyState();
+});
+
+// ── Density ──
+document.getElementById('densityBtn')?.addEventListener('click', () => {
+  const order = ['compact','grid','magazine'];
+  density = order[(order.indexOf(density) + 1) % order.length];
+  localStorage.setItem('ns_density', density);
+  applyState();
+});
+
+// ── Settings Panel ──
+const settingsOverlay = document.getElementById('settingsOverlay');
+document.getElementById('settingsBtn')?.addEventListener('click', () => {
+  settingsOverlay?.classList.toggle('open');
+  applyState();
+});
+settingsOverlay?.addEventListener('click', (e) => {
+  if (e.target === settingsOverlay) settingsOverlay.classList.remove('open');
+});
+document.querySelectorAll('[data-setting]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const [key, val] = this.dataset.setting.split(':');
+    if (key === 'density') { density = val; localStorage.setItem('ns_density', val); }
+    if (key === 'theme') { theme = val; localStorage.setItem('ns_theme', val); }
+    if (key === 'mode') { mode = val; localStorage.setItem('ns_mode', val); }
+    if (key === 'fs') { fsIdx = fsSizes.indexOf(val); localStorage.setItem('ns_fs', val); }
+    applyState();
+  });
+});
+
+// ── Clips (발췌) ──
+function updateClipsFab() {
+  const fab = document.querySelector('.clips-fab');
+  if (fab) {
+    fab.classList.toggle('show', clips.length > 0);
+    fab.querySelector('.num').textContent = clips.length;
+  }
+}
+function addClip(text, title) {
+  clips.unshift({id: Date.now(), text, title, createdAt: Date.now()});
+  localStorage.setItem('ns_clips', JSON.stringify(clips));
+  updateClipsFab();
+}
+function removeClip(id) {
+  clips = clips.filter(c => c.id !== id);
+  localStorage.setItem('ns_clips', JSON.stringify(clips));
+  updateClipsFab();
+  renderClipsList();
+}
+
+// Clip popover on text selection
+let clipPopover = null;
+document.addEventListener('mouseup', () => {
+  setTimeout(() => {
+    if (clipPopover) { clipPopover.remove(); clipPopover = null; }
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return;
+    const text = sel.toString().trim();
+    if (text.length < 4) return;
+    const range = sel.getRangeAt(0);
+    const art = range.commonAncestorContainer.closest?.('.inline-article') ||
+                range.commonAncestorContainer.parentElement?.closest?.('.inline-article');
+    if (!art) return;
+    const rect = range.getBoundingClientRect();
+    const pop = document.createElement('div');
+    pop.className = 'clip-popover';
+    pop.style.position = 'fixed';
+    pop.style.left = (rect.left + rect.width/2) + 'px';
+    pop.style.top = rect.top + 'px';
+    const title = art.querySelector('.ia-title')?.textContent || '';
+    pop.innerHTML = `<button onclick="addClip('${text.replace(/'/g,"\'")}','${title.replace(/'/g,"\'")}');this.parentElement.remove();window.getSelection().removeAllRanges()">` +
+      `${SVG_CLIP} 클립</button>` +
+      `<button onclick="navigator.clipboard?.writeText('${text.replace(/'/g,"\'")}');this.parentElement.remove();window.getSelection().removeAllRanges()">복사</button>`;
+    document.body.appendChild(pop);
+    clipPopover = pop;
+  }, 10);
+});
+document.addEventListener('mousedown', (e) => {
+  if (clipPopover && !e.target.closest('.clip-popover')) { clipPopover.remove(); clipPopover = null; }
+});
+
+// Clips drawer
+document.querySelector('.clips-fab')?.addEventListener('click', () => {
+  document.getElementById('clipsOverlay')?.classList.add('open');
+  document.querySelector('.clips-drawer')?.classList.add('open');
+  renderClipsList();
+});
+document.getElementById('clipsOverlay')?.addEventListener('click', () => {
+  document.getElementById('clipsOverlay')?.classList.remove('open');
+  document.querySelector('.clips-drawer')?.classList.remove('open');
+});
+document.getElementById('clipsClose')?.addEventListener('click', () => {
+  document.getElementById('clipsOverlay')?.classList.remove('open');
+  document.querySelector('.clips-drawer')?.classList.remove('open');
+});
+function renderClipsList() {
+  const list = document.querySelector('.cd-list');
+  if (!list) return;
+  if (clips.length === 0) {
+    list.innerHTML = '<div class="cd-empty"><div style="font-family:Noto Serif KR,serif;font-size:3rem;color:var(--rule);font-weight:700;margin-bottom:12px">¶</div><div>본문에서 텍스트를 드래그하면<br>여기에 모입니다.</div></div>';
+    return;
+  }
+  list.innerHTML = clips.map(c => `<div class="clip-item"><div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">${c.title || ''}</div><div class="ci-text">${c.text}</div><div class="ci-tools"><button onclick="navigator.clipboard?.writeText(\`${c.text.replace(/`/g,'')}\`)">복사</button><button onclick="removeClip(${c.id})">삭제</button></div></div>`).join('');
+  document.querySelector('.cd-count').textContent = clips.length + '개';
+}
+
+// Mobile tabs
+document.getElementById('mFsBtn')?.addEventListener('click', () => document.getElementById('fsBtn')?.click());
+document.getElementById('mSettingsBtn')?.addEventListener('click', () => document.getElementById('settingsBtn')?.click());
+
+// ── 인라인 편집 ──
+const EDITS_KEY = 'ns_edits';
+let edits = JSON.parse(localStorage.getItem(EDITS_KEY) || '{}');
+
+// 저장된 편집 복원
+function restoreEdits() {
+  Object.entries(edits).forEach(([id, data]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      if (data.title) {
+        const titleEl = el.querySelector('.row-title') || el.querySelector('.ia-title');
+        if (titleEl) titleEl.textContent = data.title;
+        // 행 제목도 동기화
+        const row = el.previousElementSibling || document.getElementById(id);
+        if (row) {
+          const rt = row.querySelector('.row-title');
+          if (rt && data.title) rt.textContent = data.title;
+        }
+      }
+    }
+  });
+}
+
+// 더블클릭 → contentEditable
+function makeEditable(el, saveKey, field) {
+  el.addEventListener('dblclick', function(e) {
+    e.stopPropagation();
+    if (this.contentEditable === 'true') return;
+    this.contentEditable = 'true';
+    this.style.outline = '2px solid var(--accent)';
+    this.style.borderRadius = '4px';
+    this.style.padding = '4px 8px';
+    this.focus();
+
+    const done = () => {
+      this.contentEditable = 'false';
+      this.style.outline = '';
+      this.style.padding = '';
+      // 저장
+      if (!edits[saveKey]) edits[saveKey] = {};
+      edits[saveKey][field] = this.textContent;
+      localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
+      // row 제목 동기화
+      if (field === 'title') {
+        const card = this.closest('.card-row');
+        if (card) {
+          const rt = card.querySelector('.row-title');
+          const it = card.querySelector('.ia-title');
+          if (rt) rt.textContent = this.textContent;
+          if (it) it.textContent = this.textContent;
+        }
+      }
+    };
+    this.addEventListener('blur', done, {once: true});
+    this.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') { ev.preventDefault(); this.blur(); }
+    });
+  });
+}
+
+// 모든 제목에 편집 기능 부여
+document.querySelectorAll('.card-row').forEach((row, i) => {
+  const id = 'card-' + i;
+  row.id = id;
+  const rowTitle = row.querySelector('.row-title');
+  const iaTitle = row.querySelector('.ia-title');
+  if (rowTitle) makeEditable(rowTitle, id, 'title');
+  if (iaTitle) makeEditable(iaTitle, id, 'title');
+
+  // 편집 복원
+  if (edits[id]?.title) {
+    if (rowTitle) rowTitle.textContent = edits[id].title;
+    if (iaTitle) iaTitle.textContent = edits[id].title;
+  }
+});
+
+// ── Init ──
+applyState();
+</script>
+</body>
+</html>
