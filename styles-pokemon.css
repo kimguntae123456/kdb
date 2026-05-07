@@ -5,6 +5,24 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+/* ── PF스타더스트 3.0 (본문용 가독성 폰트) ── */
+@font-face {
+  font-family: 'PF Stardust';
+  src: url('fonts/PFStardust-Regular.ttf') format('truetype'),
+       url('../fonts/PFStardust-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PF Stardust';
+  src: url('fonts/PFStardust-Bold.ttf') format('truetype'),
+       url('../fonts/PFStardust-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ══════════════════════════════════════
    CSS 변수 오버라이드
 ══════════════════════════════════════ */
@@ -35,7 +53,27 @@
   --pk-blue:     #3a6ec8;
   --pk-green:    #2c8844;
   --pk-font:     'Press Start 2P', monospace;
+  --read-font:   'PF Stardust', 'Pretendard', 'Noto Sans KR', sans-serif;
 }
+
+/* ══════════════════════════════════════
+   본문 가독성 폰트 (PF 스타더스트)
+   - 픽셀 폰트는 작은 라벨/번호 전용으로 유지
+══════════════════════════════════════ */
+body,
+.row-title, .row-excerpt,
+.ph-title, .ph-sub,
+.ia-title, .ia-section-h, .ia-para-title, .ia-para-body,
+.qa-q, .qa-a,
+.pk-battle-name, .pk-battle-lv,
+p, li, blockquote, td, th, label, button, input, textarea, select,
+.nav-item, .nav-item span,
+.brand, .brand *,
+.eyebrow {
+  font-family: var(--read-font) !important;
+}
+.row-title { letter-spacing: -.2px !important; }
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
 /* ── 픽셀 렌더링 ── */
 img { image-rendering: pixelated; image-rendering: crisp-edges; }
