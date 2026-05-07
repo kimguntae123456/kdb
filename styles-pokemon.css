@@ -103,7 +103,12 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   user-select: none;
   box-shadow: 2px 2px 0 #1c2040;
   transition: transform 80ms;
+  order: 99;
 }
+/* 북마크 버튼 — 본/안본 배지와 함께 우측 정렬 */
+.row .row-actions { order: 100; flex-shrink: 0 !important; margin-left: 6px; display: flex !important; }
+.row .bookmark-btn { display: inline-flex !important; opacity: .55 !important; }
+.row .bookmark-btn:hover, .row .bookmark-btn.on { opacity: 1 !important; }
 .pk-read-badge:hover { transform: translate(-1px,-1px); }
 .pk-read-badge[data-read="1"] {
   background: #2c8844;
@@ -188,17 +193,17 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 mark, mark.hl-mark, mark.clip-mark,
 .inline-article mark, .article-content mark,
 body mark {
-  background: #ffe44d !important;
-  background-color: #ffe44d !important;
-  color: #1c2040 !important;
-  padding: 1px 3px !important;
-  margin: 0 1px !important;
+  background: rgba(255,224,80,.42) !important;
+  background-color: rgba(255,224,80,.42) !important;
+  color: inherit !important;
+  padding: 0 2px !important;
+  margin: 0 !important;
   border-radius: 0 !important;
-  box-shadow: inset 0 -5px 0 rgba(212,160,0,.55) !important;
-  font-weight: 700 !important;
-  -webkit-text-fill-color: #1c2040 !important;
+  box-shadow: inset 0 -3px 0 rgba(240,192,0,.35) !important;
+  font-weight: inherit !important;
+  -webkit-text-fill-color: inherit !important;
 }
-mark.hl-mark::selection { background: #ffd000 !important; }
+mark.hl-mark::selection { background: rgba(255,208,0,.55) !important; }
 
 /* ══════════════════════════════════════
    row-excerpt → 사용자 메모 입력란
@@ -734,13 +739,19 @@ html, body {
   align-self: center !important;
 }
 
-/* 포켓볼 아이콘 (JS 주입) */
+/* 포켓볼 아이콘 (JS 주입) — 클릭으로 중요도 순환 */
 .pk-row-ball {
   flex-shrink: 0 !important;
-  width: 26px !important;
-  height: 26px !important;
+  width: 28px !important;
+  height: 28px !important;
   align-self: center !important;
+  cursor: pointer !important;
+  transition: transform 100ms;
 }
+.pk-row-ball:hover { transform: scale(1.18); }
+.pk-row-ball[data-ball="0"] { filter: drop-shadow(0 0 0 transparent); }
+.pk-row-ball[data-ball="1"] { filter: drop-shadow(0 0 4px rgba(58,110,200,.55)); }
+.pk-row-ball[data-ball="2"] { filter: drop-shadow(0 0 5px rgba(208,168,0,.7)); }
 .pk-row-ball svg { display: block !important; }
 
 /* row-body */

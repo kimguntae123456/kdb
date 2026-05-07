@@ -300,30 +300,58 @@
   /* ══════════════════════════════════════
      5. 각 row에 번호 + 포켓볼 주입
   ══════════════════════════════════════ */
+  const BALL_KEY = 'pk-balls';
+  function loadBalls() {
+    try { return JSON.parse(localStorage.getItem(BALL_KEY) || '{}'); }
+    catch (_) { return {}; }
+  }
+  function saveBalls(b) {
+    try { localStorage.setItem(BALL_KEY, JSON.stringify(b)); } catch (_) {}
+  }
+  function ballHTML(kind) {
+    return kind === 2 ? ultraBallSVG
+         : kind === 1 ? greatBallSVG
+         : ballSVG('#e04040');
+  }
+  function ballLabel(kind) {
+    return kind === 2 ? '하이퍼볼 (최우선)'
+         : kind === 1 ? '슈퍼볼 (중요)'
+         : '몬스터볼 (일반)';
+  }
+
   function injectRowDecorations() {
     const rows = document.querySelectorAll('.row');
+    const balls = loadBalls();
     rows.forEach((row, i) => {
-      if (row.querySelector('.pk-row-num')) return; // 이미 주입됨
+      if (row.querySelector('.pk-row-num')) return;
 
       const num = String(i + 1).padStart(2, '0');
-
-      // 번호
       const numEl = document.createElement('div');
       numEl.className = 'pk-row-num';
       numEl.textContent = num;
 
-      // 포켓볼 (i에 따라 종류 다르게)
       const ballEl = document.createElement('div');
       ballEl.className = 'pk-row-ball';
-      if (i < 3) {
-        ballEl.innerHTML = ballSVG('#e04040');
-      } else if (i < 6) {
-        ballEl.innerHTML = greatBallSVG;
-      } else {
-        ballEl.innerHTML = ultraBallSVG;
-      }
+      const id = `${pageKey()}::row-${i}`;
+      const initKind = balls[id] != null
+        ? balls[id]
+        : (i < 3 ? 0 : i < 6 ? 1 : 2);
+      ballEl.dataset.ball = String(initKind);
+      ballEl.innerHTML = ballHTML(initKind);
+      ballEl.title = ballLabel(initKind) + ' — 클릭해 변경';
 
-      // row 맨 앞에 삽입
+      ballEl.addEventListener('click', e => {
+        e.stopPropagation();
+        const cur = parseInt(ballEl.dataset.ball || '0', 10);
+        const next = (cur + 1) % 3;
+        ballEl.dataset.ball = String(next);
+        ballEl.innerHTML = ballHTML(next);
+        ballEl.title = ballLabel(next) + ' — 클릭해 변경';
+        const b = loadBalls();
+        b[id] = next;
+        saveBalls(b);
+      });
+
       row.insertBefore(ballEl, row.firstChild);
       row.insertBefore(numEl, row.firstChild);
     });
@@ -1129,6 +1157,72 @@
   }
 
   /* ══════════════════════════════════════
+     13. 단축키: Cmd+U=형광펜, Cmd+E=클립
+  ══════════════════════════════════════ */
+  function getSelectionInfo() {
+    const sel = window.getSelection();
+    const text = sel ? sel.toString().trim() : '';
+    if (!text) return null;
+    /* 가장 가까운 .ia-title 또는 row-title을 글 제목으로 추출 */
+    let node = sel.anchorNode;
+    if (node && node.nodeType === 3) node = node.parentNode;
+    const article = node && node.closest && node.closest('.inline-article');
+    let title = '';
+    if (article) {
+      const t = article.querySelector('.ia-title');
+      if (t) title = t.textContent.trim();
+    }
+    if (!title) {
+      const card = node && node.closest && node.closest('.card-row');
+      const rt = card && card.querySelector('.row-title');
+      if (rt) title = rt.textContent.trim();
+    }
+    return { text, title };
+  }
+
+  function bindShortcuts() {
+    document.addEventListener('keydown', e => {
+      const isMac = navigator.platform.toLowerCase().includes('mac');
+      const cmd = isMac ? e.metaKey : e.ctrlKey;
+      if (!cmd) return;
+      const k = e.key.toLowerCase();
+      if (k !== 'u' && k !== 'e') return;
+      const info = getSelectionInfo();
+      if (!info) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const safe = (s) => s.replace(/['"\\]/g, '');
+      if (k === 'u' && typeof window.addHighlight === 'function') {
+        window.addHighlight(info.text, info.title);
+        flashToast('🖍 형광펜 표시됨');
+      } else if (k === 'e' && typeof window.addClip === 'function') {
+        window.addClip(info.text, info.title);
+        flashToast('📎 클립 저장됨');
+      }
+      window.getSelection().removeAllRanges();
+      const pop = document.querySelector('.clip-popover');
+      if (pop) pop.remove();
+    });
+  }
+  function flashToast(msg) {
+    let t = document.getElementById('pk-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'pk-toast';
+      t.style.cssText = `position:fixed;top:24px;left:50%;transform:translateX(-50%);
+        background:#1c2040;color:#f0c000;padding:10px 18px;
+        border:3px solid #f0c000;box-shadow:4px 4px 0 #d42b2b;
+        z-index:9999;font-weight:700;letter-spacing:.5px;
+        opacity:0;transition:opacity 200ms;`;
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._tm);
+    t._tm = setTimeout(() => { t.style.opacity = '0'; }, 1400);
+  }
+
+  /* ══════════════════════════════════════
      INIT
   ══════════════════════════════════════ */
   function init() {
@@ -1155,6 +1249,7 @@
     injectWalker();
     buildTweaksPanel();
     initTweaksProtocol();
+    bindShortcuts();
 
     /* 폰트 전면 강제 — 마지막에 한 번 + 향후 변경 감시 */
     forceFontAll();
