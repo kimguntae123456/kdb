@@ -3,8 +3,6 @@
    pokemon-theme.html과 100% 동일한 비주얼
 ═══════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 /* ── Galmuri11 (본문 픽셀 한글 폰트) ── */
 @font-face {
   font-family: 'Galmuri11';
@@ -60,7 +58,7 @@
   --pk-red2:     #9a1818;
   --pk-blue:     #3a6ec8;
   --pk-green:    #2c8844;
-  --pk-font:        'Press Start 2P', monospace;
+  --pk-font:        'Galmuri11', 'Pretendard', sans-serif;
   --read-font:      'Galmuri11', 'Pretendard', 'Noto Sans KR', sans-serif;
   --read-font-cnd:  'Galmuri11 Condensed', 'Galmuri11', sans-serif;
   --read-font-bold: 'Galmuri11', sans-serif;

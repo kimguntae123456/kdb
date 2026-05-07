@@ -756,17 +756,17 @@
       position:fixed;bottom:80px;left:16px;z-index:500;
       background:#f5edd8;border:3px solid #1c2040;box-shadow:4px 4px 0 #1c2040;
       padding:14px 14px 16px;width:210px;display:none;
-      font-family:'Press Start 2P',monospace;
+      font-family:'Galmuri11',sans-serif;
     `;
     panel.innerHTML = `
       <div style="font-size:.36rem;color:#d42b2b;letter-spacing:1px;margin-bottom:10px;border-bottom:2px solid #1c2040;padding-bottom:6px;">⚙ TWEAKS</div>
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
         <span style="font-size:.27rem;color:#1c2040;flex:1;">WALKER</span>
-        <button id="pk-next-walker" style="font-family:'Press Start 2P',monospace;font-size:.25rem;padding:3px 7px;border:2px solid #1c2040;background:#e8dfc8;cursor:pointer;box-shadow:2px 2px 0 #1c2040;">교체</button>
+        <button id="pk-next-walker" style="font-family:'Galmuri11',sans-serif;font-size:.25rem;padding:3px 7px;border:2px solid #1c2040;background:#e8dfc8;cursor:pointer;box-shadow:2px 2px 0 #1c2040;">교체</button>
       </div>
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
         <span style="font-size:.27rem;color:#1c2040;flex:1;">SHINY</span>
-        <button id="pk-shiny-btn" style="font-family:'Press Start 2P',monospace;font-size:.25rem;padding:3px 7px;border:2px solid #1c2040;background:#e8dfc8;cursor:pointer;box-shadow:2px 2px 0 #1c2040;">OFF</button>
+        <button id="pk-shiny-btn" style="font-family:'Galmuri11',sans-serif;font-size:.25rem;padding:3px 7px;border:2px solid #1c2040;background:#e8dfc8;cursor:pointer;box-shadow:2px 2px 0 #1c2040;">OFF</button>
       </div>
     `;
     document.body.appendChild(panel);
@@ -828,7 +828,8 @@
   ══════════════════════════════════════ */
   const READ_FONT      = "'Galmuri11','Pretendard','Noto Sans KR',sans-serif";
   const READ_FONT_CND  = "'Galmuri11 Condensed','Galmuri11',sans-serif";
-  const PIXEL_FONT     = "'Press Start 2P',monospace";
+  /* 전면 Galmuri 대체 — 픽셀 라벨도 Galmuri11 Bold로 */
+  const PIXEL_FONT     = "'Galmuri11','Pretendard',sans-serif";
 
   const PIXEL_SELECTORS = [
     '.pk-row-num',
@@ -873,6 +874,7 @@
     if (!el || el.nodeType !== 1) return;
     if (isPixelEl(el)) {
       el.style.setProperty('font-family', PIXEL_FONT, 'important');
+      el.style.setProperty('font-weight', '700', 'important');
       return;
     }
     if (isBoldEl(el)) {
