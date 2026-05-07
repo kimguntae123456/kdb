@@ -446,7 +446,7 @@
         <button class="pk-filter-btn active" data-filter="all">전체</button>
         <button class="pk-filter-btn" data-filter="unread">안 본 글만</button>
         <button class="pk-filter-btn" data-filter="read">본 글만</button>
-        <button class="pk-filter-btn pk-reset-btn" data-action="reset" title="이 페이지의 본/안본 기록 전부 초기화">↺ 일괄 해제</button>
+        <button class="pk-filter-btn pk-reset-btn" data-action="reset" title="이 페이지의 본/안본 체크 전부 해제">↺ 전체 체크 해제</button>
       </div>
     `;
     head.insertAdjacentElement('afterend', wrap);

@@ -167,12 +167,14 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 }
 .pk-filter-btn.pk-reset-btn {
   margin-left: auto;
-  background: #1c2040;
-  color: #fff8d8;
+  background: #d42b2b;
+  color: #fff;
   border-color: #1c2040;
+  font-size: .92rem;
+  padding: 6px 14px;
 }
-.pk-filter-btn.pk-reset-btn:hover { background: #2a3060; color: #fff; }
-.pk-filter-btn.pk-reset-btn.active { background: #1c2040; color: #fff8d8; }
+.pk-filter-btn.pk-reset-btn:hover { background: #b51f1f; color: #fff; }
+.pk-filter-btn.pk-reset-btn.active { background: #d42b2b; color: #fff; }
 
 /* 사이드바 카테고리별 진척률 */
 .pk-nav-prog {
