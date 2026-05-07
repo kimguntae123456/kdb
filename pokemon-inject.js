@@ -823,6 +823,54 @@
   }
 
   /* ══════════════════════════════════════
+     12. 폰트 강제 적용 (인라인 style + !important)
+         — 외부 CSS로 못 이기는 인라인 <style> .ia-* !important 무력화
+  ══════════════════════════════════════ */
+  const READ_FONT = "'PF Stardust','Pretendard','Noto Sans KR',sans-serif";
+  const PIXEL_FONT = "'Press Start 2P',monospace";
+  const PIXEL_SELECTORS = [
+    '.pk-row-num',
+    '#pk-stats-bar', '#pk-stats-bar *',
+    '#pk-type-row', '#pk-type-row *',
+    '#pk-hp-row', '#pk-hp-row *',
+    '.pk-hp-label', '.pk-hp-num',
+    '.pk-type', '.pk-nav-section',
+    '#pk-tweaks', '#pk-tweaks *',
+    '.eyebrow',
+    '.pk-battle-lv', '.pk-battle-types', '.pk-battle-types *',
+    '.pk-mindmap-header', '.pk-mindmap-header *',
+    '.pk-mm-del', '.pk-mm-hint'
+  ].join(',');
+
+  function isPixelEl(el) {
+    return el.matches && el.matches(PIXEL_SELECTORS);
+  }
+  function applyFont(el) {
+    if (!el || el.nodeType !== 1) return;
+    if (isPixelEl(el)) {
+      el.style.setProperty('font-family', PIXEL_FONT, 'important');
+    } else {
+      el.style.setProperty('font-family', READ_FONT, 'important');
+    }
+  }
+  function forceFontAll() {
+    applyFont(document.body);
+    document.querySelectorAll('body *').forEach(applyFont);
+  }
+  function observeFont() {
+    const mo = new MutationObserver(muts => {
+      muts.forEach(m => {
+        m.addedNodes.forEach(n => {
+          if (n.nodeType !== 1) return;
+          applyFont(n);
+          n.querySelectorAll && n.querySelectorAll('*').forEach(applyFont);
+        });
+      });
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+  }
+
+  /* ══════════════════════════════════════
      INIT
   ══════════════════════════════════════ */
   function init() {
@@ -844,6 +892,13 @@
     injectWalker();
     buildTweaksPanel();
     initTweaksProtocol();
+
+    /* 폰트 전면 강제 — 마지막에 한 번 + 향후 변경 감시 */
+    forceFontAll();
+    observeFont();
+    // 늦게 렌더되는 콘텐츠 대비 두 번 더 재시도
+    setTimeout(forceFontAll, 300);
+    setTimeout(forceFontAll, 1500);
   }
 
   if (document.readyState === 'loading') {
