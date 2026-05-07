@@ -330,6 +330,236 @@
   }
 
   /* ══════════════════════════════════════
+     5b. row-excerpt → 사용자 메모 입력란
+  ══════════════════════════════════════ */
+  function pageKey() {
+    return decodeURIComponent(location.pathname).replace(/\/+/g, '_').replace(/^_|_$/g, '') || 'root';
+  }
+  function rowKey(row) {
+    return row.id || ('row-' + [...row.parentNode.children].indexOf(row));
+  }
+  function injectRowNotes() {
+    const rows = document.querySelectorAll('.row');
+    rows.forEach(row => {
+      const ex = row.querySelector('.row-excerpt');
+      if (!ex || ex.dataset.pkNote) return;
+      ex.dataset.pkNote = '1';
+      ex.classList.add('pk-note');
+      ex.setAttribute('contenteditable', 'true');
+      ex.setAttribute('spellcheck', 'false');
+      const k = `pk-note::${pageKey()}::${rowKey(row)}`;
+      const saved = localStorage.getItem(k);
+      ex.textContent = saved || '';
+      ex.addEventListener('input', () => {
+        try { localStorage.setItem(k, ex.textContent); } catch (_) {}
+      });
+      // row 클릭 시 펼침 동작과 충돌 방지
+      ex.addEventListener('click', e => e.stopPropagation());
+      ex.addEventListener('mousedown', e => e.stopPropagation());
+    });
+  }
+
+  /* ══════════════════════════════════════
+     5c. 마인드맵 패드 (글마다)
+  ══════════════════════════════════════ */
+  function buildMindmap(article, rowIdx) {
+    if (article.querySelector('.pk-mindmap')) return;
+    const map = document.createElement('div');
+    map.className = 'pk-mindmap';
+    map.innerHTML = `
+      <div class="pk-mindmap-header">
+        <span>▶ MIND-MAP MEMO</span>
+        <span>
+          <button class="pk-mm-add">+ 노드</button>
+          <button class="pk-mm-clear">초기화</button>
+        </span>
+      </div>
+      <div class="pk-mindmap-canvas">
+        <svg class="pk-mm-edges"></svg>
+        <div class="pk-mm-hint">캔버스 더블클릭=노드 추가 · 노드 더블클릭=수정 · Shift+클릭 두 노드=연결</div>
+      </div>
+    `;
+    article.appendChild(map);
+
+    const canvas = map.querySelector('.pk-mindmap-canvas');
+    const svg = map.querySelector('svg.pk-mm-edges');
+    const storeKey = `pk-mm::${pageKey()}::${rowIdx}`;
+
+    /** state: { nodes: [{id, x, y, t}], edges: [[a,b]] } */
+    let state = { nodes: [], edges: [] };
+    try {
+      const raw = localStorage.getItem(storeKey);
+      if (raw) state = JSON.parse(raw);
+    } catch (_) {}
+
+    const save = () => {
+      try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (_) {}
+    };
+
+    let selectedForEdge = null;
+
+    const renderEdges = () => {
+      const rect = canvas.getBoundingClientRect();
+      svg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
+      svg.innerHTML = '';
+      state.edges.forEach(([a, b]) => {
+        const na = canvas.querySelector(`[data-id="${a}"]`);
+        const nb = canvas.querySelector(`[data-id="${b}"]`);
+        if (!na || !nb) return;
+        const ra = na.getBoundingClientRect();
+        const rb = nb.getBoundingClientRect();
+        const x1 = ra.left - rect.left + ra.width / 2;
+        const y1 = ra.top  - rect.top  + ra.height / 2;
+        const x2 = rb.left - rect.left + rb.width / 2;
+        const y2 = rb.top  - rect.top  + rb.height / 2;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+        line.setAttribute('stroke', '#d42b2b');
+        line.setAttribute('stroke-width', '2.5');
+        line.setAttribute('stroke-dasharray', '6 4');
+        svg.appendChild(line);
+      });
+    };
+
+    const makeNode = (n) => {
+      const el = document.createElement('div');
+      el.className = 'pk-mm-node';
+      el.dataset.id = n.id;
+      el.style.left = n.x + 'px';
+      el.style.top  = n.y + 'px';
+      el.textContent = n.t || '메모';
+      const del = document.createElement('div');
+      del.className = 'pk-mm-del';
+      del.textContent = 'X';
+      del.title = '삭제';
+      del.addEventListener('click', e => {
+        e.stopPropagation();
+        state.nodes = state.nodes.filter(x => x.id !== n.id);
+        state.edges = state.edges.filter(([a, b]) => a !== n.id && b !== n.id);
+        save();
+        el.remove();
+        renderEdges();
+      });
+      el.appendChild(del);
+
+      /* 더블클릭 = 편집 */
+      el.addEventListener('dblclick', e => {
+        e.stopPropagation();
+        el.setAttribute('contenteditable', 'true');
+        el.focus();
+        document.getSelection().selectAllChildren(el);
+      });
+      el.addEventListener('blur', () => {
+        el.removeAttribute('contenteditable');
+        const txt = el.textContent.replace(/X$/, '').trim();
+        n.t = txt;
+        save();
+      });
+
+      /* Shift+클릭 = 엣지 연결 */
+      el.addEventListener('click', e => {
+        if (!e.shiftKey) return;
+        e.stopPropagation();
+        if (selectedForEdge && selectedForEdge !== n.id) {
+          const pair = [selectedForEdge, n.id].sort();
+          const exists = state.edges.some(([a, b]) => {
+            const s = [a, b].sort();
+            return s[0] === pair[0] && s[1] === pair[1];
+          });
+          if (exists) {
+            state.edges = state.edges.filter(([a, b]) => {
+              const s = [a, b].sort();
+              return !(s[0] === pair[0] && s[1] === pair[1]);
+            });
+          } else {
+            state.edges.push([selectedForEdge, n.id]);
+          }
+          selectedForEdge = null;
+          [...canvas.querySelectorAll('.pk-mm-node')].forEach(x => x.style.outline = '');
+          save(); renderEdges();
+        } else {
+          selectedForEdge = n.id;
+          el.style.outline = '3px solid #d42b2b';
+        }
+      });
+
+      /* 드래그 */
+      let dragging = false, dx = 0, dy = 0;
+      el.addEventListener('mousedown', e => {
+        if (el.getAttribute('contenteditable') === 'true') return;
+        if (e.target === del) return;
+        dragging = true;
+        const r = el.getBoundingClientRect();
+        const c = canvas.getBoundingClientRect();
+        dx = e.clientX - r.left;
+        dy = e.clientY - r.top;
+        el.classList.add('dragging');
+        e.preventDefault();
+      });
+      window.addEventListener('mousemove', e => {
+        if (!dragging) return;
+        const c = canvas.getBoundingClientRect();
+        const x = Math.max(0, Math.min(c.width  - el.offsetWidth,  e.clientX - c.left - dx));
+        const y = Math.max(0, Math.min(c.height - el.offsetHeight, e.clientY - c.top  - dy));
+        el.style.left = x + 'px';
+        el.style.top  = y + 'px';
+        n.x = x; n.y = y;
+        renderEdges();
+      });
+      window.addEventListener('mouseup', () => {
+        if (!dragging) return;
+        dragging = false;
+        el.classList.remove('dragging');
+        save();
+      });
+
+      canvas.appendChild(el);
+    };
+
+    state.nodes.forEach(makeNode);
+    requestAnimationFrame(renderEdges);
+
+    /* 캔버스 더블클릭 → 새 노드 */
+    canvas.addEventListener('dblclick', e => {
+      if (e.target !== canvas && e.target !== svg) return;
+      const c = canvas.getBoundingClientRect();
+      const n = {
+        id: 'n' + Date.now() + Math.floor(Math.random() * 999),
+        x: e.clientX - c.left - 40,
+        y: e.clientY - c.top  - 14,
+        t: '메모'
+      };
+      state.nodes.push(n);
+      save();
+      makeNode(n);
+    });
+
+    /* 헤더 버튼 */
+    map.querySelector('.pk-mm-add').addEventListener('click', () => {
+      const c = canvas.getBoundingClientRect();
+      const n = {
+        id: 'n' + Date.now() + Math.floor(Math.random() * 999),
+        x: 30 + Math.random() * (c.width - 160),
+        y: 30 + Math.random() * (c.height - 80),
+        t: '메모'
+      };
+      state.nodes.push(n);
+      save();
+      makeNode(n);
+    });
+    map.querySelector('.pk-mm-clear').addEventListener('click', () => {
+      if (!confirm('이 글의 마인드맵을 모두 지울까요?')) return;
+      state = { nodes: [], edges: [] };
+      save();
+      [...canvas.querySelectorAll('.pk-mm-node')].forEach(x => x.remove());
+      renderEdges();
+    });
+
+    window.addEventListener('resize', renderEdges);
+  }
+
+  /* ══════════════════════════════════════
      6. battle banner — inline-article 열릴 때
   ══════════════════════════════════════ */
   function injectBattleBanner(article) {
@@ -498,7 +728,11 @@
           if (row.classList.contains('expanded')) {
             const art = row.nextElementSibling;
             if (art && art.classList.contains('inline-article')) {
-              setTimeout(() => injectBattleBanner(art), 30);
+              setTimeout(() => {
+                injectBattleBanner(art);
+                const idx = [...row.parentNode.children].indexOf(row);
+                buildMindmap(art, row.id || ('row-' + idx));
+              }, 30);
             }
           }
         }
@@ -601,6 +835,7 @@
       injectPageHead();
       injectStatsBar();
       injectRowDecorations();
+      injectRowNotes();
       injectDivider();
       fixCloseButtons();
       observeRows();
