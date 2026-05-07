@@ -10,156 +10,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
 <link rel="stylesheet" href="styles.css">
-<style>
-/* ── 인라인 편집 ── */
-.row-title:hover, .ia-title:hover, .ia-section-h:hover, .ia-para-title:hover {
-  cursor: text; background: color-mix(in oklab, var(--accent-soft) 50%, transparent);
-  border-radius: 4px; transition: background 150ms;
-}
-[contenteditable="true"] { outline: 2px solid var(--accent) !important; border-radius: 4px; padding: 4px 8px; background: var(--card); }
-
-/* ── 접기/펼치기 ── */
-.inline-article { display: none !important; }
-.row.expanded + .inline-article { display: block !important; animation: ia-in 200ms ease-out; }
-@keyframes ia-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ── 본문 기본 ── */
-.article-content { word-break: keep-all; text-wrap: pretty; }
-.article-content p {
-  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
-  margin-bottom: 1.35em; word-break: keep-all;
-}
-.article-content p:last-child { margin-bottom: 0; }
-.article-content ul { padding-left: 1.5em; margin: 0.8em 0; }
-.article-content ul li {
-  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
-  margin-bottom: 0.5em; word-break: keep-all;
-}
-.article-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1.2em 0; }
-.article-content table th { background: var(--paper-2); padding: 10px 14px; font-weight: 700; text-align: left; border-bottom: 2px solid var(--rule); }
-.article-content table td { padding: 10px 14px; border-bottom: 1px solid var(--rule-2); vertical-align: top; line-height: 1.7; }
-
-/* ── 빈 소제목 숨김 ── */
-.ia-section-h:empty, .ia-para-title:empty, .ia-sub-title:empty, .ia-tag-title:empty { display: none; }
-
-/* ── 소제목 계층: section-h(H2) > para-title(H3) > sub-title(①) > tag-title([태그]) ── */
-.ia-section-h {
-  font-family: 'Noto Serif KR',serif; font-size: 1.3rem; font-weight: 900;
-  letter-spacing: -0.8px; line-height: 1.3;
-  margin: 48px 0 18px !important; padding: 0 0 10px;
-  border-bottom: 2px solid var(--accent); color: var(--ink);
-}
-.ia-section-h::before { content: ''; width: 28px; height: 2px; background: var(--accent); }
-.ia-para-title, h3.ia-para-title {
-  font-family: 'Noto Serif KR',serif !important; font-size: 1.18rem !important; font-weight: 800 !important;
-  letter-spacing: -0.5px; line-height: 1.35;
-  margin: 36px 0 14px !important; padding-left: 14px;
-  border-left: 4px solid var(--accent); color: var(--ink);
-}
-.ia-sub-title {
-  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 700;
-  margin: 28px 0 10px; color: var(--ink); line-height: 1.4;
-  display: flex; align-items: baseline; gap: 10px;
-}
-.ia-sub-title .sub-num {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 28px; height: 28px; background: var(--accent); color: var(--paper);
-  border-radius: 50%; font-size: 0.82rem; font-weight: 800; flex-shrink: 0;
-  font-family: 'Pretendard',sans-serif;
-}
-.ia-tag-title {
-  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 800;
-  margin: 24px 0 10px; color: var(--ink); line-height: 1.4;
-  display: flex; align-items: center; gap: 10px; letter-spacing: -0.3px;
-}
-.tag-label {
-  display: inline-block; padding: 4px 12px;
-  background: var(--accent); color: var(--paper); border-radius: 4px;
-  font-size: 0.7rem; font-weight: 800; letter-spacing: 1.5px;
-  font-family: 'Pretendard',sans-serif; white-space: nowrap; flex-shrink: 0;
-  text-transform: uppercase;
-}
-
-/* ── 용어박스 (grid) ── */
-.term-box {
-  display: grid; grid-template-columns: auto 1fr; gap: 6px 16px;
-  padding: 14px 18px 14px 20px; margin: 14px 0;
-  background: color-mix(in oklab, var(--paper-2) 70%, transparent);
-  border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
-  align-items: baseline;
-}
-.term-name { font-size: 0.9rem; font-weight: 800; color: var(--ink); letter-spacing: -0.3px; white-space: nowrap; }
-.term-def { font-size: 0.9rem; color: var(--ink-3); line-height: 1.75; }
-
-/* ── Q&A ── */
-.qa-q {
-  font-family: 'Noto Serif KR',serif; font-size: 1.05rem; font-weight: 700;
-  line-height: 1.55; color: var(--ink);
-  border-top: 2px solid var(--ink); padding: 20px 0 14px 44px;
-  margin-top: 36px; position: relative;
-}
-.qa-q::before {
-  content: 'Q'; position: absolute; left: 0; top: 20px;
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 30px; height: 30px; background: var(--ink); color: var(--paper);
-  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
-  font-family: 'Pretendard',sans-serif;
-}
-.qa-a {
-  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
-  padding: 14px 0 14px 44px; border-bottom: 1px solid var(--rule);
-  margin-bottom: 20px; position: relative; word-break: keep-all;
-}
-.qa-a::before {
-  content: 'A'; position: absolute; left: 0; top: 16px;
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 30px; height: 30px; background: var(--accent); color: var(--paper);
-  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
-  font-family: 'Pretendard',sans-serif;
-}
-
-/* ── 설정 패널 ── */
-.settings-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 300; display: none; }
-.settings-overlay.open { display: block; }
-.settings-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; z-index: 301; width: min(400px, 90vw); box-shadow: var(--shadow-2); }
-.settings-panel h3 { font-family: 'Noto Serif KR',serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; }
-.setting-row { margin-bottom: 16px; }
-.setting-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
-.setting-options { display: flex; gap: 6px; flex-wrap: wrap; }
-.setting-btn { padding: 6px 14px; border-radius: var(--r-pill); border: 1px solid var(--rule); font-size: 0.82rem; cursor: pointer; transition: all 120ms; background: var(--card); }
-.setting-btn:hover { background: var(--paper-2); }
-.setting-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-
-/* ── 클립 FAB ── */
-.clips-fab { position: fixed; right: 22px; bottom: 22px; z-index: 90; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 10px 16px 10px 12px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.18); display: none; align-items: center; gap: 8px; }
-.clips-fab.show { display: inline-flex; }
-.clips-fab:hover { transform: translateY(-2px); }
-.clips-fab .num { background: var(--accent); color: white; border-radius: 999px; padding: 2px 8px; font-size: 0.74rem; }
-@media (max-width: 880px) { .clips-fab { bottom: 76px; right: 14px; } }
-
-/* ── 클립 드로어 ── */
-.clips-drawer-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 200; display: none; }
-.clips-drawer-overlay.open { display: block; }
-.clips-drawer { position: fixed; top: 0; right: 0; width: min(440px, 100vw); height: 100vh; background: var(--paper); z-index: 201; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(0,0,0,0.18); transform: translateX(100%); transition: transform 240ms cubic-bezier(.2,.7,.2,1); }
-.clips-drawer.open { transform: translateX(0); }
-.cd-head { padding: 22px 24px 16px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; gap: 12px; }
-.cd-head h2 { font-family: 'Noto Serif KR',serif; font-size: 1.4rem; font-weight: 800; }
-.cd-head .cd-count { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
-.cd-list { overflow-y: auto; flex: 1; padding: 10px 0 80px; }
-.cd-empty { padding: 60px 24px; text-align: center; color: var(--muted); }
-.clip-item { padding: 16px 24px; border-bottom: 1px solid var(--rule-2); }
-.clip-item .ci-text { font-family: 'Noto Serif KR',serif; font-size: 0.95rem; line-height: 1.7; border-left: 2px solid var(--accent); padding-left: 12px; margin-top: 8px; }
-.clip-item .ci-tools { display: flex; gap: 8px; margin-top: 10px; }
-.clip-item .ci-tools button { font-size: 0.72rem; color: var(--muted); padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--rule); background: var(--card); }
-.clip-item .ci-tools button:hover { background: var(--paper-2); color: var(--ink); }
-
-/* ── 클립 팝오버 ── */
-.clip-popover { position: absolute; z-index: 300; background: var(--ink); color: var(--paper); border-radius: 8px; padding: 6px; display: flex; gap: 4px; box-shadow: 0 8px 28px rgba(0,0,0,0.25); transform: translate(-50%,-100%); margin-top: -8px; }
-.clip-popover::after { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px; background: var(--ink); }
-.clip-popover button { background: transparent; color: var(--paper); font-size: 0.78rem; padding: 6px 12px; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; white-space: nowrap; }
-.clip-popover button:hover { background: rgba(255,255,255,0.12); }
-mark.clip-mark { background: oklch(0.92 0.1 85 / 0.7); color: inherit; padding: 0 1px; border-radius: 2px; }
-</style>
 </head>
 <body data-fs="m" class="density-magazine theme-white mode-magazine">
 <div class="app">
@@ -170,82 +20,244 @@ mark.clip-mark { background: oklch(0.92 0.1 85 / 0.7); color: inherit; padding: 
     </div>
     <div class="nav-list">
       <a href="index.html" class="nav-item"><span>← 전체 카테고리</span></a>
-      <a href="bookmarks.html" class="nav-item active"><span>📌 내 북마크</span></a>
+      <a href="bookmarks.html" class="nav-item active"><span>📌 내 북마크 / 클립</span></a>
+      <a href="pt.html" class="nav-item"><span>🎤 PT 카드 모드</span></a>
     </div>
   </aside>
   <div class="content">
     <div class="topbar">
       <div class="search">
         <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
-        <input type="text" placeholder="북마크 검색…" id="bmSearch">
+        <input type="text" placeholder="클립·북마크 검색…" id="bmSearch">
       </div>
     </div>
     <header class="page-head">
       <div class="eyebrow">📌 My Library</div>
-      <h2>내 북마크</h2>
+      <h2>내 북마크 / 클립</h2>
       <div class="ph-sub" id="bmCount">저장한 글 0편</div>
+      <a href="pt.html" class="pt-cta">🎤 PT 카드 모드로 보기 →</a>
     </header>
+
+    <!-- Bookmarks section -->
     <div class="timeline" id="bmList">
-      <div class="empty" id="bmEmpty">
+      <div class="empty" id="bmEmpty" style="display:none">
         <div class="e-mark">¶</div>
         <div class="e-msg">아직 저장한 글이 없습니다.<br>카테고리 페이지에서 ♡ 버튼을 눌러 북마크하세요.</div>
       </div>
+    </div>
+
+    <!-- Clips section with folders -->
+    <div class="page-head" style="margin-top:48px">
+      <div class="eyebrow">📝 발췌 클립</div>
+      <h2 id="clipsHeading">내 발췌 (0개)</h2>
+      <div class="ph-sub">폴더로 분류해서 PT 면접 주제별로 정리하세요.</div>
+    </div>
+
+    <div class="bm-layout">
+      <aside class="folder-rail">
+        <div class="folder-rail-head">
+          <span class="frh-label">폴더</span>
+          <button class="folder-add-btn" id="folderAddBtn" title="새 폴더">+</button>
+        </div>
+        <ul class="folder-list" id="folderList"></ul>
+      </aside>
+      <div class="clip-pane" id="clipPane"></div>
     </div>
   </div>
 </div>
 <nav class="mobile-tabs">
   <a href="index.html" class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lab">홈</span></a>
   <a href="bookmarks.html" class="tab active">📌<span class="lab">북마크</span></a>
+  <a href="pt.html" class="tab">🎤<span class="lab">PT</span></a>
 </nav>
-<script>
-const bookmarks = new Set(JSON.parse(localStorage.getItem('ns_bookmarks') || '[]'));
-const clips = JSON.parse(localStorage.getItem('ns_clips') || '[]');
-const bmList = document.getElementById('bmList');
-const bmEmpty = document.getElementById('bmEmpty');
-const bmCount = document.getElementById('bmCount');
-const bmSearch = document.getElementById('bmSearch');
 
-function render() {
+<script src="app.js"></script>
+<script>
+// State
+let activeFolderId = 'all'; // 'all' | 'unfiled' | folder.id
+const FOLDER_COLORS = ['oklch(0.55 0.13 35)','oklch(0.6 0.13 200)','oklch(0.6 0.13 145)','oklch(0.65 0.15 90)','oklch(0.55 0.16 290)','oklch(0.6 0.13 15)'];
+
+const $ = s => document.querySelector(s);
+const folderListEl = $('#folderList');
+const clipPaneEl = $('#clipPane');
+const bmListEl = $('#bmList');
+const bmEmpty = $('#bmEmpty');
+const bmCount = $('#bmCount');
+const bmSearch = $('#bmSearch');
+const clipsHeading = $('#clipsHeading');
+
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+function clipCount(folderId) {
+  if (folderId === 'all') return clips.length;
+  if (folderId === 'unfiled') return clips.filter(c => !c.folderId).length;
+  return clips.filter(c => c.folderId === folderId).length;
+}
+
+function renderFolders() {
+  const items = [
+    {id: 'all', name: '전체', color: 'var(--ink-3)', sys: true},
+    {id: 'unfiled', name: '미분류', color: 'var(--muted)', sys: true},
+    ...clipFolders
+  ];
+  folderListEl.innerHTML = items.map(f => `
+    <li class="folder-item ${activeFolderId === f.id ? 'active' : ''}" data-id="${f.id}">
+      <span class="fi-dot" style="background:${f.color}"></span>
+      <span class="fi-name" data-id="${f.id}">${escapeHtml(f.name)}</span>
+      <span class="fi-count">${clipCount(f.id)}</span>
+      ${f.sys ? '' : `<span class="fi-tools"><button data-action="rename" data-id="${f.id}" title="이름변경">✎</button><button data-action="delete" data-id="${f.id}" title="삭제">✕</button></span>`}
+    </li>
+  `).join('');
+
+  folderListEl.querySelectorAll('.folder-item').forEach(li => {
+    li.addEventListener('click', (e) => {
+      if (e.target.closest('.fi-tools') || e.target.closest('[contenteditable="true"]')) return;
+      activeFolderId = li.dataset.id;
+      renderFolders();
+      renderClips();
+    });
+  });
+  folderListEl.querySelectorAll('[data-action="rename"]').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = b.dataset.id;
+      const span = folderListEl.querySelector(`.fi-name[data-id="${id}"]`);
+      span.contentEditable = 'true'; span.focus();
+      // select all
+      const r = document.createRange(); r.selectNodeContents(span);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      const finish = () => {
+        span.contentEditable = 'false';
+        renameFolder(id, span.textContent.trim() || '폴더');
+        renderFolders();
+      };
+      span.addEventListener('blur', finish, {once: true});
+      span.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); span.blur(); } });
+    });
+  });
+  folderListEl.querySelectorAll('[data-action="delete"]').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = b.dataset.id;
+      const f = clipFolders.find(x => x.id === id);
+      if (!confirm(`"${f?.name}" 폴더를 삭제할까요? (안의 클립은 미분류로 이동)`)) return;
+      deleteFolder(id);
+      if (activeFolderId === id) activeFolderId = 'all';
+      renderFolders(); renderClips();
+    });
+  });
+}
+
+function getFolderName(id) {
+  if (!id) return null;
+  return clipFolders.find(f => f.id === id)?.name || null;
+}
+function getFolderColor(id) {
+  if (!id) return 'var(--muted)';
+  return clipFolders.find(f => f.id === id)?.color || 'var(--muted)';
+}
+
+function renderClips() {
+  const q = (bmSearch?.value || '').toLowerCase();
+  let list = clips;
+  if (activeFolderId === 'unfiled') list = list.filter(c => !c.folderId);
+  else if (activeFolderId !== 'all') list = list.filter(c => c.folderId === activeFolderId);
+  if (q) list = list.filter(c => (c.text + ' ' + (c.title||'')).toLowerCase().includes(q));
+
+  clipsHeading.textContent = `내 발췌 (${clips.length}개)${activeFolderId !== 'all' ? ` · 표시 ${list.length}` : ''}`;
+
+  if (!list.length) {
+    clipPaneEl.innerHTML = `<div class="cd-empty" style="padding:48px 24px;text-align:center;color:var(--muted)">
+      <div style="font-size:2.5rem;color:var(--rule);margin-bottom:12px">¶</div>
+      <div>${q ? '검색 결과 없음' : '이 폴더에 클립이 없습니다.<br>본문에서 텍스트를 드래그해 클립하세요.'}</div></div>`;
+    return;
+  }
+
+  const folderOptions = ['<option value="">미분류</option>', ...clipFolders.map(f => `<option value="${f.id}">${escapeHtml(f.name)}</option>`)].join('');
+
+  clipPaneEl.innerHTML = list.map(c => {
+    const fname = getFolderName(c.folderId);
+    const fcolor = getFolderColor(c.folderId);
+    return `
+    <div class="bm-clip" data-id="${c.id}">
+      <div class="bc-meta">
+        <span>${escapeHtml(c.title || '')}</span>
+        ${fname ? `<span class="bc-folder-chip"><span class="chip-dot" style="background:${fcolor}"></span>${escapeHtml(fname)}</span>` : '<span class="bc-folder-chip" style="background:transparent;border:1px dashed var(--rule);color:var(--muted)">미분류</span>'}
+      </div>
+      <div class="bc-text">${escapeHtml(c.text)}</div>
+      <div class="bc-tools">
+        <select data-clip="${c.id}" class="bc-folder-select">
+          ${folderOptions.replace(`value="${c.folderId||''}"`, `value="${c.folderId||''}" selected`)}
+        </select>
+        <button data-act="copy" data-clip="${c.id}">복사</button>
+        <button data-act="del" data-clip="${c.id}">삭제</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  clipPaneEl.querySelectorAll('.bc-folder-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const id = Number(sel.dataset.clip);
+      moveClipToFolder(id, sel.value || null);
+      renderFolders(); renderClips();
+    });
+  });
+  clipPaneEl.querySelectorAll('[data-act="copy"]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = Number(b.dataset.clip);
+      const c = clips.find(c => c.id === id);
+      if (c) navigator.clipboard?.writeText(c.text);
+      b.textContent = '복사됨'; setTimeout(() => b.textContent = '복사', 1000);
+    });
+  });
+  clipPaneEl.querySelectorAll('[data-act="del"]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = Number(b.dataset.clip);
+      if (confirm('이 클립을 삭제할까요?')) {
+        removeClip(id);
+        renderFolders(); renderClips();
+      }
+    });
+  });
+}
+
+function renderBookmarks() {
   const q = (bmSearch?.value || '').toLowerCase();
   const filtered = [...bookmarks].filter(b => !q || b.toLowerCase().includes(q));
-  bmCount.textContent = `저장한 글 ${bookmarks.size}편${q ? ` · 검색 ${filtered.length}편` : ''}`;
+  bmCount.textContent = `저장한 글 ${bookmarks.size}편${q ? ` · 검색 ${filtered.length}` : ''}`;
   bmEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
-
-  // Remove existing rows
-  bmList.querySelectorAll('.bm-row').forEach(r => r.remove());
-
+  bmListEl.querySelectorAll('.bm-row').forEach(r => r.remove());
   filtered.forEach(title => {
     const row = document.createElement('div');
     row.className = 'row bm-row';
     row.style.cursor = 'default';
-    row.innerHTML = `<div class="row-body"><h3 class="row-title">${title}</h3></div><div class="row-actions"><button class="bookmark-btn on" onclick="removeBookmark('${title.replace(/'/g,"\\'")}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button></div>`;
-    bmList.appendChild(row);
+    row.innerHTML = `<div class="row-body"><h3 class="row-title">${escapeHtml(title)}</h3></div><div class="row-actions"><button class="bookmark-btn on" data-title="${escapeHtml(title)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button></div>`;
+    bmListEl.appendChild(row);
+    row.querySelector('.bookmark-btn').addEventListener('click', () => {
+      bookmarks.delete(title);
+      localStorage.setItem('ns_bookmarks', JSON.stringify([...bookmarks]));
+      syncPush?.();
+      renderBookmarks();
+    });
   });
 }
 
-function removeBookmark(title) {
-  bookmarks.delete(title);
-  localStorage.setItem('ns_bookmarks', JSON.stringify([...bookmarks]));
-  render();
-}
+$('#folderAddBtn').addEventListener('click', () => {
+  const name = prompt('새 폴더 이름:');
+  if (!name) return;
+  const used = clipFolders.length;
+  const f = createFolder(name.trim(), FOLDER_COLORS[used % FOLDER_COLORS.length]);
+  activeFolderId = f.id;
+  renderFolders(); renderClips();
+});
 
-bmSearch?.addEventListener('input', render);
+bmSearch.addEventListener('input', () => { renderBookmarks(); renderClips(); });
 
-// Show clips section
-if (clips.length > 0) {
-  const clipsSection = document.createElement('div');
-  clipsSection.innerHTML = `<div class="page-head" style="margin-top:40px"><div class="eyebrow">📝 발췌</div><h2>내 발췌 (${clips.length}개)</h2></div>`;
-  clips.forEach(c => {
-    const item = document.createElement('div');
-    item.className = 'clip-item';
-    item.style.margin = '0 36px';
-    item.innerHTML = `<div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">${c.title || ''}</div><div class="ci-text">${c.text}</div><div class="ci-tools"><button onclick="navigator.clipboard?.writeText(\`${c.text.replace(/`/g,'')}\`)">복사</button></div>`;
-    clipsSection.appendChild(item);
-  });
-  bmList.parentElement.appendChild(clipsSection);
-}
-
-render();
+document.addEventListener('DOMContentLoaded', () => {
+  renderBookmarks();
+  renderFolders();
+  renderClips();
+});
 </script>
 </body>
 </html>

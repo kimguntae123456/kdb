@@ -24,6 +24,10 @@ let bookmarks = new Set(JSON.parse(localStorage.getItem('ns_bookmarks') || '[]')
 let clips = JSON.parse(localStorage.getItem('ns_clips') || '[]');
 let highlights = JSON.parse(localStorage.getItem('ns_highlights') || '[]');
 let memos = JSON.parse(localStorage.getItem('ns_memos') || '[]');
+let clipFolders = JSON.parse(localStorage.getItem('ns_clip_folders') || '[]');
+let summaryOverrides = JSON.parse(localStorage.getItem('ns_summary_overrides') || '{}');
+// Migration: ensure each clip has folderId field
+clips.forEach(c => { if (c.folderId === undefined) c.folderId = null; });
 
 const SVG_CLIP = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg>';
 
@@ -178,10 +182,30 @@ function updateClipsFab() {
   }
 }
 function addClip(text, title) {
-  clips.unshift({id: Date.now(), text, title, createdAt: Date.now()});
+  clips.unshift({id: Date.now(), text, title, folderId: null, createdAt: Date.now()});
   localStorage.setItem('ns_clips', JSON.stringify(clips));
   updateClipsFab();
   syncPush();
+}
+
+// ── Clip Folders ──
+function saveFolders() { localStorage.setItem('ns_clip_folders', JSON.stringify(clipFolders)); syncPush(); }
+function saveClips() { localStorage.setItem('ns_clips', JSON.stringify(clips)); syncPush(); }
+function createFolder(name, color) {
+  const f = {id: 'f' + Date.now(), name: name || '새 폴더', color: color || 'oklch(0.55 0.13 35)', createdAt: Date.now()};
+  clipFolders.push(f);
+  saveFolders();
+  return f;
+}
+function renameFolder(id, name) { const f = clipFolders.find(f => f.id === id); if (f) { f.name = name; saveFolders(); } }
+function deleteFolder(id) {
+  clipFolders = clipFolders.filter(f => f.id !== id);
+  clips.forEach(c => { if (c.folderId === id) c.folderId = null; });
+  saveFolders(); saveClips();
+}
+function moveClipToFolder(clipId, folderId) {
+  const c = clips.find(c => c.id === clipId);
+  if (c) { c.folderId = folderId; saveClips(); }
 }
 function removeClip(id) {
   clips = clips.filter(c => c.id !== id);
@@ -524,6 +548,8 @@ function getSyncData() {
     clips,
     highlights,
     memos,
+    clipFolders,
+    summaryOverrides,
     edits: JSON.parse(localStorage.getItem('ns_edits') || '{}'),
     idxEdits: JSON.parse(localStorage.getItem('ns_idx_edits') || '{}'),
     settings: { density, theme, mode, fs: fsSizes[fsIdx] },
@@ -537,6 +563,8 @@ function applySyncData(data) {
   if (data.clips) { clips = data.clips; localStorage.setItem('ns_clips', JSON.stringify(clips)); }
   if (data.highlights) { highlights = data.highlights; localStorage.setItem('ns_highlights', JSON.stringify(highlights)); }
   if (data.memos) { memos = data.memos; localStorage.setItem('ns_memos', JSON.stringify(memos)); }
+  if (data.clipFolders) { clipFolders = data.clipFolders; localStorage.setItem('ns_clip_folders', JSON.stringify(clipFolders)); }
+  if (data.summaryOverrides) { summaryOverrides = data.summaryOverrides; localStorage.setItem('ns_summary_overrides', JSON.stringify(summaryOverrides)); }
   if (data.edits) localStorage.setItem('ns_edits', JSON.stringify(data.edits));
   if (data.idxEdits) localStorage.setItem('ns_idx_edits', JSON.stringify(data.idxEdits));
   if (data.settings) {
@@ -656,6 +684,161 @@ function initSyncUI() {
   });
 }
 
+// ── Readability Enhancements (auto-injected on category pages) ──
+function getArticleId(article) {
+  // Stable id from parent card-row index
+  const card = article.previousElementSibling;
+  if (!card?.classList.contains('card-row')) return null;
+  const all = [...document.querySelectorAll('.card-row')];
+  return 'art-' + all.indexOf(card);
+}
+
+function autoSummaryFor(section) {
+  // Grab first paragraph after the section heading, take first sentence
+  let node = section.nextElementSibling;
+  while (node && !['P','UL','DIV'].includes(node.tagName)) node = node.nextElementSibling;
+  if (!node) return '';
+  const txt = node.textContent.trim();
+  if (!txt) return '';
+  // First sentence: split by . or 다. or 음. patterns
+  const m = txt.match(/^.{20,160}?(?:[\.。](?=\s|$)|다\.|음\.|함\.)/);
+  let s = (m ? m[0] : txt.substring(0, 140)).trim();
+  if (s.length > 160) s = s.substring(0, 157) + '...';
+  return s;
+}
+
+function injectSectionSummaries(article) {
+  const artId = getArticleId(article);
+  if (!artId) return;
+  const sections = article.querySelectorAll('.ia-section-h');
+  sections.forEach((sec, idx) => {
+    if (sec.nextElementSibling?.classList.contains('auto-summary')) return;
+    const key = `${artId}::${idx}`;
+    const override = summaryOverrides[key];
+    const text = override !== undefined ? override : autoSummaryFor(sec);
+    if (!text) return;
+    const box = document.createElement('div');
+    box.className = 'auto-summary';
+    box.dataset.summaryKey = key;
+    box.innerHTML = `<span class="as-label">요약</span><span class="as-text" contenteditable="false">${esc(text)}</span><button class="as-edit" title="수정">✎</button>`;
+    sec.insertAdjacentElement('afterend', box);
+
+    const txtEl = box.querySelector('.as-text');
+    const editBtn = box.querySelector('.as-edit');
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const editing = txtEl.contentEditable === 'true';
+      if (!editing) {
+        txtEl.contentEditable = 'true';
+        txtEl.focus();
+        editBtn.textContent = '✓';
+      } else {
+        txtEl.contentEditable = 'false';
+        editBtn.textContent = '✎';
+        summaryOverrides[key] = txtEl.textContent.trim();
+        localStorage.setItem('ns_summary_overrides', JSON.stringify(summaryOverrides));
+        syncPush();
+      }
+    });
+    txtEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); editBtn.click(); }
+      if (e.key === 'Escape') { txtEl.textContent = override !== undefined ? override : autoSummaryFor(sec); editBtn.click(); }
+    });
+  });
+}
+
+function injectTOC(article) {
+  if (article.querySelector('.toc-rail')) return;
+  const sections = article.querySelectorAll('.ia-section-h, .ia-para-title');
+  if (sections.length < 2) return;
+  const rail = document.createElement('nav');
+  rail.className = 'toc-rail';
+  rail.innerHTML = '<div class="toc-head">목차</div><ul class="toc-list"></ul>';
+  const list = rail.querySelector('.toc-list');
+  sections.forEach((s, i) => {
+    const id = 'toc-' + getArticleId(article) + '-' + i;
+    s.id = id;
+    const li = document.createElement('li');
+    li.className = 'toc-item ' + (s.classList.contains('ia-section-h') ? 'toc-h2' : 'toc-h3');
+    li.innerHTML = `<a href="#${id}">${esc(s.textContent.trim().substring(0, 50))}</a>`;
+    li.querySelector('a').addEventListener('click', (e) => {
+      e.preventDefault();
+      const top = s.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({top, behavior: 'smooth'});
+    });
+    list.appendChild(li);
+  });
+  article.insertBefore(rail, article.firstChild);
+
+  // Active section tracking on scroll
+  const items = [...list.querySelectorAll('.toc-item')];
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        const idx = [...sections].indexOf(en.target);
+        items.forEach((it, i) => it.classList.toggle('active', i === idx));
+      }
+    });
+  }, {rootMargin: '-80px 0px -70% 0px'});
+  sections.forEach(s => observer.observe(s));
+}
+
+function injectKPIHighlights(article) {
+  // Highlight numeric data in p/li (e.g., "87%", "5.6조원", "2만달러")
+  const re = /(\d{1,4}(?:,\d{3})*(?:\.\d+)?\s?(?:%|조원|억원|억달러|만달러|만원|천억|조|억|만|조달러|배|위|개|건|개사|GW|MW|kW|t|kg|km|개국|년|개월|일|주|시간|회|차|호))/g;
+  article.querySelectorAll('.article-content p, .article-content li, .article-content td').forEach(el => {
+    if (el.dataset.kpiDone) return;
+    if (el.querySelector('input,textarea,button,svg,mark,strong.kpi')) return;
+    el.dataset.kpiDone = '1';
+    // Walk text nodes only
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    let n;
+    while (n = walker.nextNode()) nodes.push(n);
+    nodes.forEach(node => {
+      if (!re.test(node.textContent)) return;
+      re.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let last = 0; let m;
+      const t = node.textContent;
+      while ((m = re.exec(t)) !== null) {
+        if (m.index > last) frag.appendChild(document.createTextNode(t.substring(last, m.index)));
+        const strong = document.createElement('strong');
+        strong.className = 'kpi';
+        strong.textContent = m[0];
+        frag.appendChild(strong);
+        last = m.index + m[0].length;
+      }
+      if (last < t.length) frag.appendChild(document.createTextNode(t.substring(last)));
+      node.parentNode.replaceChild(frag, node);
+      re.lastIndex = 0;
+    });
+  });
+}
+
+function enhanceArticle(article) {
+  if (article.dataset.enhanced) return;
+  article.dataset.enhanced = '1';
+  injectTOC(article);
+  injectSectionSummaries(article);
+  injectKPIHighlights(article);
+}
+
+function initReadabilityEnhancements() {
+  // Enhance any already-expanded article (rare) and on-demand expand
+  document.querySelectorAll('.row').forEach(row => {
+    row.addEventListener('click', () => {
+      const art = row.nextElementSibling;
+      if (art?.classList.contains('inline-article')) {
+        // Defer until after expand animation begins
+        setTimeout(() => enhanceArticle(art), 60);
+      }
+    });
+  });
+  // Eager pass for any open articles
+  document.querySelectorAll('.row.expanded + .inline-article').forEach(enhanceArticle);
+}
+
 // ── Util ──
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
@@ -673,6 +856,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileTabs();
   initSidebarGroups();
   initSyncUI();
+  initReadabilityEnhancements();
   applyState();
   applyHighlightsToDOM();
   // Auto pull on load
