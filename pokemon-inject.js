@@ -424,6 +424,13 @@
 
     wrap.querySelectorAll('.pk-filter-btn').forEach(b => {
       b.addEventListener('click', () => {
+        /* 활성 버튼 다시 클릭 → 전체로 리셋(취소) */
+        if (b.classList.contains('active') && b.dataset.filter !== 'all') {
+          wrap.querySelectorAll('.pk-filter-btn').forEach(x => x.classList.remove('active'));
+          wrap.querySelector('[data-filter="all"]').classList.add('active');
+          applyFilter('all');
+          return;
+        }
         wrap.querySelectorAll('.pk-filter-btn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
         applyFilter(b.dataset.filter);
@@ -456,37 +463,91 @@
     bar.querySelector('.pk-prog-fill').style.width = pct + '%';
   }
 
-  /* 사이드바 카테고리 진척률 (페이지 무관 — localStorage 스캔) */
+  /* href를 pageKey() 형식으로 정규화 */
+  function hrefToKey(href) {
+    if (!href) return '';
+    try {
+      const u = new URL(href, location.href);
+      return decodeURIComponent(u.pathname).replace(/\/+/g, '_').replace(/^_|_$/g, '') || 'root';
+    } catch (_) { return ''; }
+  }
+
+  /* 사이드바 카테고리 진척률 — href 기반 정확 매칭 */
   function injectSidebarProgress() {
     const navItems = document.querySelectorAll('.sidebar .nav-item');
     if (!navItems.length) return;
     const read = loadRead();
-    /* {prefix: count} 집계 */
     const readByPrefix = {};
     Object.keys(read).forEach(k => {
       const [prefix] = k.split('::row-');
       readByPrefix[prefix] = (readByPrefix[prefix] || 0) + 1;
     });
+    /* nav-group-toggle (예: "가계")은 자식 sub들의 합계로 */
     navItems.forEach(item => {
       if (item.querySelector('.pk-nav-prog')) return;
-      const link = item.getAttribute('href') || item.querySelector('a')?.getAttribute('href');
       const countEl = item.querySelector('.count');
       const total = countEl ? parseInt(countEl.textContent.replace(/[^0-9]/g, ''), 10) : 0;
       if (!total) return;
-      /* prefix 매칭: nav-item 텍스트에 가장 가까운 키 찾기 */
-      const navTxt = (item.textContent || '').trim();
-      const matchedPrefix = Object.keys(readByPrefix).find(p =>
-        navTxt && p && (
-          decodeURIComponent(p).includes(navTxt.replace(/\d+|\s/g, '').slice(0, 4)) ||
-          (link && p.includes(decodeURIComponent(link).replace(/[\/\.html]/g, '')))
-        )
-      );
-      const cnt = matchedPrefix ? readByPrefix[matchedPrefix] : 0;
-      const pct = Math.round(cnt * 100 / total);
+
+      let cnt = 0;
+
+      /* a.nav-item: href 직접 매칭 */
+      if (item.tagName === 'A' && item.getAttribute('href')) {
+        const key = hrefToKey(item.getAttribute('href'));
+        cnt = readByPrefix[key] || 0;
+      } else if (item.classList.contains('nav-group-toggle')) {
+        /* group toggle: 형제(group-items) 안의 a.nav-item.sub 들 합산 */
+        const group = item.parentElement;
+        const subs = group.querySelectorAll('a.nav-item.sub');
+        subs.forEach(s => {
+          const k = hrefToKey(s.getAttribute('href'));
+          cnt += readByPrefix[k] || 0;
+        });
+      }
+
+      const pct = total ? Math.round(cnt * 100 / total) : 0;
       const prog = document.createElement('div');
       prog.className = 'pk-nav-prog';
-      prog.innerHTML = `<div class="pk-nav-prog-bar"><div class="pk-nav-prog-fill" style="width:${pct}%"></div></div><span>${pct}%</span>`;
+      prog.innerHTML = `<div class="pk-nav-prog-bar"><div class="pk-nav-prog-fill" style="width:${pct}%"></div></div><span>${cnt}/${total} ${pct}%</span>`;
       item.appendChild(prog);
+    });
+  }
+
+  /* nav-item 안의 ?? mojibake → 카테고리 이모지 복원 */
+  function fixNavMojibake() {
+    const EMOJI_BY_KEYWORD = [
+      ['가계',     '👨‍👩‍👧'],
+      ['공급망',   '🔗'],
+      ['글로벌',   '🌍'],
+      ['관세',     '🌍'],
+      ['금융업',   '🏦'],
+      ['디지털',   '💻'],
+      ['벤처',     '🚀'],
+      ['부동산',   '🏠'],
+      ['산업 과제','🏛️'],
+      ['산업과제', '🏛️'],
+      ['산업별',   '🏭'],
+      ['시사',     '📰'],
+      ['자본시장', '📈'],
+      ['정책금융', '🏛️'],
+      ['중동',     '🕌'],
+      ['지역균형', '🗺️'],
+      ['ESG',      '🌱'],
+      ['북마크',   '📌'],
+      ['PT',       '🎤'],
+      ['전체 카테고리', '📚']
+    ];
+    const spans = document.querySelectorAll('.sidebar .nav-item span');
+    spans.forEach(s => {
+      const t = s.textContent;
+      if (!/\?{2,}/.test(t)) return;
+      for (const [kw, em] of EMOJI_BY_KEYWORD) {
+        if (t.includes(kw)) {
+          s.textContent = em + ' ' + kw;
+          return;
+        }
+      }
+      s.textContent = t.replace(/\?+\s*/g, '').trim();
     });
   }
 
@@ -1074,6 +1135,7 @@
     injectBrandMascot();
     injectNavSprites();
     injectNavSectionHeaders();
+    fixNavMojibake();
     injectSidebarProgress();
 
     const isArticlePage = !!document.querySelector('.timeline');
