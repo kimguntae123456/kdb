@@ -201,13 +201,13 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 mark, mark.hl-mark, mark.clip-mark,
 .inline-article mark, .article-content mark,
 body mark {
-  background: rgba(255,232,120,.22) !important;
-  background-color: rgba(255,232,120,.22) !important;
+  background: rgba(255,228,100,.32) !important;
+  background-color: rgba(255,228,100,.32) !important;
   color: inherit !important;
   padding: 0 2px !important;
   margin: 0 !important;
   border-radius: 0 !important;
-  box-shadow: inset 0 -2px 0 rgba(240,200,0,.18) !important;
+  box-shadow: inset 0 -2px 0 rgba(240,200,0,.26) !important;
   font-weight: inherit !important;
   -webkit-text-fill-color: inherit !important;
 }
@@ -217,12 +217,12 @@ mark.hl-mark::selection { background: rgba(255,208,0,.45) !important; }
 .article-content strong,
 .inline-article strong,
 body .ia-para-body strong, body strong {
-  background: rgba(255,232,120,.14) !important;
+  background: rgba(255,228,100,.20) !important;
   background-image: none !important;
   padding: 0 2px !important;
   color: inherit !important;
   font-weight: 700 !important;
-  box-shadow: inset 0 -1px 0 rgba(240,200,0,.12) !important;
+  box-shadow: inset 0 -1px 0 rgba(240,200,0,.18) !important;
 }
 
 /* ══════════════════════════════════════
