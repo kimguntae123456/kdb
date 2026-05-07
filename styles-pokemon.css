@@ -205,6 +205,18 @@ body mark {
 }
 mark.hl-mark::selection { background: rgba(255,208,0,.55) !important; }
 
+/* styles-v2.css 의 strong 자동 형광펜 — 옅게 */
+.article-content strong,
+.inline-article strong,
+body .ia-para-body strong, body strong {
+  background: rgba(255,224,80,.28) !important;
+  background-image: none !important;
+  padding: 0 2px !important;
+  color: inherit !important;
+  font-weight: 700 !important;
+  box-shadow: inset 0 -2px 0 rgba(240,192,0,.25) !important;
+}
+
 /* ══════════════════════════════════════
    row-excerpt → 사용자 메모 입력란
 ══════════════════════════════════════ */
