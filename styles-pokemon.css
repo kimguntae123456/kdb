@@ -203,17 +203,17 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 mark, mark.hl-mark, mark.clip-mark,
 .inline-article mark, .article-content mark,
 body mark {
-  background: rgba(255,228,100,.32) !important;
-  background-color: rgba(255,228,100,.32) !important;
+  background: rgba(255,150,60,.32) !important;
+  background-color: rgba(255,150,60,.32) !important;
   color: inherit !important;
   padding: 0 2px !important;
   margin: 0 !important;
   border-radius: 0 !important;
-  box-shadow: inset 0 -2px 0 rgba(240,200,0,.26) !important;
+  box-shadow: inset 0 -2px 0 rgba(230,110,30,.28) !important;
   font-weight: inherit !important;
   -webkit-text-fill-color: inherit !important;
 }
-mark.hl-mark::selection { background: rgba(255,208,0,.45) !important; }
+mark.hl-mark::selection { background: rgba(255,140,40,.45) !important; }
 
 /* styles-v2.css 의 strong 자동 형광펜 — 더 옅게 */
 .article-content strong,
