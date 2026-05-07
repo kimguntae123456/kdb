@@ -479,16 +479,23 @@ function initInlineEditing() {
     });
   }
 
+  const PAGE_NS = decodeURIComponent(location.pathname).replace(/\/+/g, '_').replace(/^_|_$/g, '') || 'root';
   document.querySelectorAll('.card-row').forEach((row, i) => {
-    const id = 'card-' + i;
+    const id = PAGE_NS + '::card-' + i;
+    const oldId = 'card-' + i;
     row.id = id;
     const rowTitle = row.querySelector('.row-title');
     const iaTitle = row.querySelector('.ia-title');
     if (rowTitle) makeEditable(rowTitle, id, 'title');
     if (iaTitle) makeEditable(iaTitle, id, 'title');
+    /* 신규 키 우선, 없으면 기존 글로벌 키는 무시 (다른 페이지 오염 방지) */
     if (edits[id]?.title) {
       if (rowTitle) rowTitle.textContent = edits[id].title;
       if (iaTitle) iaTitle.textContent = edits[id].title;
+    } else if (edits[oldId]) {
+      /* 1회성 정리: 글로벌 키 삭제 (모든 페이지가 공유하던 오염 제거) */
+      delete edits[oldId];
+      localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
     }
   });
 
