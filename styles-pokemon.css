@@ -215,16 +215,17 @@ body mark {
 }
 mark.hl-mark::selection { background: rgba(255,140,40,.45) !important; }
 
-/* styles-v2.css 의 strong 자동 형광펜 — 더 옅게 */
+/* strong 자동 형광 제거 — 사용자 형광펜과 헷갈림 방지 */
 .article-content strong,
 .inline-article strong,
 body .ia-para-body strong, body strong {
-  background: rgba(255,228,100,.20) !important;
+  background: none !important;
   background-image: none !important;
-  padding: 0 2px !important;
+  background-color: transparent !important;
+  padding: 0 !important;
   color: inherit !important;
   font-weight: 700 !important;
-  box-shadow: inset 0 -1px 0 rgba(240,200,0,.18) !important;
+  box-shadow: none !important;
 }
 
 /* ══════════════════════════════════════
