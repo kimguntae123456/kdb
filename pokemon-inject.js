@@ -826,8 +826,10 @@
      12. 폰트 강제 적용 (인라인 style + !important)
          — 외부 CSS로 못 이기는 인라인 <style> .ia-* !important 무력화
   ══════════════════════════════════════ */
-  const READ_FONT = "'PF Stardust','Pretendard','Noto Sans KR',sans-serif";
-  const PIXEL_FONT = "'Press Start 2P',monospace";
+  const READ_FONT      = "'Galmuri11','Pretendard','Noto Sans KR',sans-serif";
+  const READ_FONT_CND  = "'Galmuri11 Condensed','Galmuri11',sans-serif";
+  const PIXEL_FONT     = "'Press Start 2P',monospace";
+
   const PIXEL_SELECTORS = [
     '.pk-row-num',
     '#pk-stats-bar', '#pk-stats-bar *',
@@ -836,22 +838,53 @@
     '.pk-hp-label', '.pk-hp-num',
     '.pk-type', '.pk-nav-section',
     '#pk-tweaks', '#pk-tweaks *',
-    '.eyebrow',
     '.pk-battle-lv', '.pk-battle-types', '.pk-battle-types *',
     '.pk-mindmap-header', '.pk-mindmap-header *',
     '.pk-mm-del', '.pk-mm-hint'
   ].join(',');
 
-  function isPixelEl(el) {
-    return el.matches && el.matches(PIXEL_SELECTORS);
-  }
+  /* Bold(Galmuri11 700) 적용 대상 — 제목류 */
+  const BOLD_SELECTORS = [
+    '.row-title',
+    '.ia-title', '.ia-section-h', '.ia-para-title', '.ia-sub-title', '.ia-tag-title',
+    '.ph-title', 'h1', 'h2', 'h3', 'h4',
+    '.qa-q', '.pk-battle-name',
+    '.term-name', '.tag-label',
+    '.brand', '.cd-head h2', '.settings-panel h3',
+    'strong', 'b'
+  ].join(',');
+
+  /* Condensed 적용 대상 — 좁은 라벨/UI */
+  const COND_SELECTORS = [
+    '.nav-item', '.nav-item *',
+    '.eyebrow',
+    '.setting-label', '.setting-btn',
+    '.bookmark-btn', '.row-actions', '.row-actions *',
+    '.count', '.ph-sub',
+    '.clip-item .ci-meta', '.tag-label',
+    '.pk-mm-del'
+  ].join(',');
+
+  function isPixelEl(el) { return el.matches && el.matches(PIXEL_SELECTORS); }
+  function isBoldEl(el)  { return el.matches && el.matches(BOLD_SELECTORS); }
+  function isCondEl(el)  { return el.matches && el.matches(COND_SELECTORS); }
+
   function applyFont(el) {
     if (!el || el.nodeType !== 1) return;
     if (isPixelEl(el)) {
       el.style.setProperty('font-family', PIXEL_FONT, 'important');
-    } else {
-      el.style.setProperty('font-family', READ_FONT, 'important');
+      return;
     }
+    if (isBoldEl(el)) {
+      el.style.setProperty('font-family', READ_FONT, 'important');
+      el.style.setProperty('font-weight', '700', 'important');
+      return;
+    }
+    if (isCondEl(el)) {
+      el.style.setProperty('font-family', READ_FONT_CND, 'important');
+      return;
+    }
+    el.style.setProperty('font-family', READ_FONT, 'important');
   }
   function forceFontAll() {
     applyFont(document.body);

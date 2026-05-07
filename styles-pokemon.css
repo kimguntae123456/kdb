@@ -5,20 +5,28 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* ── PF스타더스트 3.0 (본문용 가독성 폰트) ── */
+/* ── Galmuri11 (본문 픽셀 한글 폰트) ── */
 @font-face {
-  font-family: 'PF Stardust';
-  src: url('fonts/PFStardust-Regular.ttf') format('truetype'),
-       url('../fonts/PFStardust-Regular.ttf') format('truetype');
+  font-family: 'Galmuri11';
+  src: url('fonts/Galmuri11.woff2') format('woff2'),
+       url('../fonts/Galmuri11.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'PF Stardust';
-  src: url('fonts/PFStardust-Bold.ttf') format('truetype'),
-       url('../fonts/PFStardust-Bold.ttf') format('truetype');
+  font-family: 'Galmuri11';
+  src: url('fonts/Galmuri11-Bold.woff2') format('woff2'),
+       url('../fonts/Galmuri11-Bold.woff2') format('woff2');
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Galmuri11 Condensed';
+  src: url('fonts/Galmuri11-Condensed.woff2') format('woff2'),
+       url('../fonts/Galmuri11-Condensed.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -52,8 +60,10 @@
   --pk-red2:     #9a1818;
   --pk-blue:     #3a6ec8;
   --pk-green:    #2c8844;
-  --pk-font:     'Press Start 2P', monospace;
-  --read-font:   'PF Stardust', 'Pretendard', 'Noto Sans KR', sans-serif;
+  --pk-font:        'Press Start 2P', monospace;
+  --read-font:      'Galmuri11', 'Pretendard', 'Noto Sans KR', sans-serif;
+  --read-font-cnd:  'Galmuri11 Condensed', 'Galmuri11', sans-serif;
+  --read-font-bold: 'Galmuri11', sans-serif;
 }
 
 /* ══════════════════════════════════════
