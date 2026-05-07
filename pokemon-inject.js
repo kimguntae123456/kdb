@@ -369,8 +369,13 @@
     try { localStorage.setItem(READ_KEY, JSON.stringify(r)); } catch (_) {}
   }
   function rowReadId(row) {
-    const idx = [...row.parentNode.children].indexOf(row);
-    return `${pageKey()}::row-${idx}`;
+    let key = row.id;
+    if (!key) {
+      const tl = row.closest('.timeline');
+      const rows = tl ? [...tl.querySelectorAll('.row')] : [...document.querySelectorAll('.row')];
+      key = `row-${rows.indexOf(row)}`;
+    }
+    return `${pageKey()}::${key}`;
   }
   function injectReadBadges() {
     const rows = document.querySelectorAll('.row');
