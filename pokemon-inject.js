@@ -330,6 +330,167 @@
   }
 
   /* ══════════════════════════════════════
+     5a. 본/안본 추적 + 필터 + 진척률
+  ══════════════════════════════════════ */
+  const READ_KEY = 'pk-read';
+  function loadRead() {
+    try { return JSON.parse(localStorage.getItem(READ_KEY) || '{}'); }
+    catch (_) { return {}; }
+  }
+  function saveRead(r) {
+    try { localStorage.setItem(READ_KEY, JSON.stringify(r)); } catch (_) {}
+  }
+  function rowReadId(row) {
+    const idx = [...row.parentNode.children].indexOf(row);
+    return `${pageKey()}::row-${idx}`;
+  }
+  function injectReadBadges() {
+    const rows = document.querySelectorAll('.row');
+    if (!rows.length) return;
+    const read = loadRead();
+    rows.forEach(row => {
+      if (row.querySelector('.pk-read-badge')) return;
+      const id = rowReadId(row);
+      const badge = document.createElement('span');
+      badge.className = 'pk-read-badge';
+      badge.title = '본/안본 토글';
+      const isRead = !!read[id];
+      badge.textContent = isRead ? '✓' : '?';
+      badge.dataset.read = isRead ? '1' : '0';
+      if (isRead) row.classList.add('pk-row-read');
+      badge.addEventListener('click', e => {
+        e.stopPropagation();
+        const r = loadRead();
+        if (r[id]) {
+          delete r[id];
+          badge.textContent = '?';
+          badge.dataset.read = '0';
+          row.classList.remove('pk-row-read');
+        } else {
+          r[id] = Date.now();
+          badge.textContent = '✓';
+          badge.dataset.read = '1';
+          row.classList.add('pk-row-read');
+        }
+        saveRead(r);
+        updateProgress();
+      });
+      row.appendChild(badge);
+    });
+
+    /* row 펼침 시 자동 읽음 */
+    rows.forEach(row => {
+      row.addEventListener('click', () => {
+        setTimeout(() => {
+          if (!row.classList.contains('expanded')) return;
+          const r = loadRead();
+          const id = rowReadId(row);
+          if (!r[id]) {
+            r[id] = Date.now();
+            saveRead(r);
+            const badge = row.querySelector('.pk-read-badge');
+            if (badge) {
+              badge.textContent = '✓';
+              badge.dataset.read = '1';
+            }
+            row.classList.add('pk-row-read');
+            updateProgress();
+          }
+        }, 80);
+      });
+    });
+  }
+
+  function injectProgressAndFilter() {
+    if (document.getElementById('pk-progress-bar')) return;
+    const head = document.querySelector('.page-head');
+    const tl = document.querySelector('.timeline');
+    if (!head || !tl) return;
+    const wrap = document.createElement('div');
+    wrap.id = 'pk-progress-bar';
+    wrap.innerHTML = `
+      <div class="pk-prog-info">
+        <span class="pk-prog-label">진척률</span>
+        <div class="pk-prog-track"><div class="pk-prog-fill"></div></div>
+        <span class="pk-prog-num">0 / 0 (0%)</span>
+      </div>
+      <div class="pk-prog-filters">
+        <button class="pk-filter-btn active" data-filter="all">전체</button>
+        <button class="pk-filter-btn" data-filter="unread">안 본 글만</button>
+        <button class="pk-filter-btn" data-filter="read">본 글만</button>
+      </div>
+    `;
+    head.insertAdjacentElement('afterend', wrap);
+
+    wrap.querySelectorAll('.pk-filter-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        wrap.querySelectorAll('.pk-filter-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        applyFilter(b.dataset.filter);
+      });
+    });
+  }
+  function applyFilter(mode) {
+    const rows = document.querySelectorAll('.card-row');
+    rows.forEach(card => {
+      const row = card.querySelector('.row');
+      if (!row) return;
+      const isRead = row.classList.contains('pk-row-read');
+      let show = true;
+      if (mode === 'read') show = isRead;
+      if (mode === 'unread') show = !isRead;
+      card.style.display = show ? '' : 'none';
+    });
+  }
+  function updateProgress() {
+    const rows = document.querySelectorAll('.row');
+    if (!rows.length) return;
+    const read = loadRead();
+    let cnt = 0;
+    rows.forEach(row => { if (read[rowReadId(row)]) cnt++; });
+    const total = rows.length;
+    const pct = total ? Math.round(cnt * 100 / total) : 0;
+    const bar = document.getElementById('pk-progress-bar');
+    if (!bar) return;
+    bar.querySelector('.pk-prog-num').textContent = `${cnt} / ${total} (${pct}%)`;
+    bar.querySelector('.pk-prog-fill').style.width = pct + '%';
+  }
+
+  /* 사이드바 카테고리 진척률 (페이지 무관 — localStorage 스캔) */
+  function injectSidebarProgress() {
+    const navItems = document.querySelectorAll('.sidebar .nav-item');
+    if (!navItems.length) return;
+    const read = loadRead();
+    /* {prefix: count} 집계 */
+    const readByPrefix = {};
+    Object.keys(read).forEach(k => {
+      const [prefix] = k.split('::row-');
+      readByPrefix[prefix] = (readByPrefix[prefix] || 0) + 1;
+    });
+    navItems.forEach(item => {
+      if (item.querySelector('.pk-nav-prog')) return;
+      const link = item.getAttribute('href') || item.querySelector('a')?.getAttribute('href');
+      const countEl = item.querySelector('.count');
+      const total = countEl ? parseInt(countEl.textContent.replace(/[^0-9]/g, ''), 10) : 0;
+      if (!total) return;
+      /* prefix 매칭: nav-item 텍스트에 가장 가까운 키 찾기 */
+      const navTxt = (item.textContent || '').trim();
+      const matchedPrefix = Object.keys(readByPrefix).find(p =>
+        navTxt && p && (
+          decodeURIComponent(p).includes(navTxt.replace(/\d+|\s/g, '').slice(0, 4)) ||
+          (link && p.includes(decodeURIComponent(link).replace(/[\/\.html]/g, '')))
+        )
+      );
+      const cnt = matchedPrefix ? readByPrefix[matchedPrefix] : 0;
+      const pct = Math.round(cnt * 100 / total);
+      const prog = document.createElement('div');
+      prog.className = 'pk-nav-prog';
+      prog.innerHTML = `<div class="pk-nav-prog-bar"><div class="pk-nav-prog-fill" style="width:${pct}%"></div></div><span>${pct}%</span>`;
+      item.appendChild(prog);
+    });
+  }
+
+  /* ══════════════════════════════════════
      5b. row-excerpt → 사용자 메모 입력란
   ══════════════════════════════════════ */
   function pageKey() {
@@ -826,10 +987,11 @@
      12. 폰트 강제 적용 (인라인 style + !important)
          — 외부 CSS로 못 이기는 인라인 <style> .ia-* !important 무력화
   ══════════════════════════════════════ */
-  const READ_FONT      = "'Galmuri11','Pretendard','Noto Sans KR',sans-serif";
-  const READ_FONT_CND  = "'Galmuri11 Condensed','Galmuri11',sans-serif";
+  const EMOJI_FB = "'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Twemoji Mozilla'";
+  const READ_FONT      = `'Galmuri11','Pretendard','Noto Sans KR',${EMOJI_FB},sans-serif`;
+  const READ_FONT_CND  = `'Galmuri11 Condensed','Galmuri11',${EMOJI_FB},sans-serif`;
   /* 전면 Galmuri 대체 — 픽셀 라벨도 Galmuri11 Bold로 */
-  const PIXEL_FONT     = "'Galmuri11','Pretendard',sans-serif";
+  const PIXEL_FONT     = `'Galmuri11','Pretendard',${EMOJI_FB},sans-serif`;
 
   const PIXEL_SELECTORS = [
     '.pk-row-num',
@@ -912,6 +1074,7 @@
     injectBrandMascot();
     injectNavSprites();
     injectNavSectionHeaders();
+    injectSidebarProgress();
 
     const isArticlePage = !!document.querySelector('.timeline');
     if (isArticlePage) {
@@ -919,6 +1082,9 @@
       injectStatsBar();
       injectRowDecorations();
       injectRowNotes();
+      injectReadBadges();
+      injectProgressAndFilter();
+      updateProgress();
       injectDivider();
       fixCloseButtons();
       observeRows();

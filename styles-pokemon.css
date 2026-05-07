@@ -87,6 +87,102 @@ html, body, body * {
 body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
 /* ══════════════════════════════════════
+   본/안본 배지 + 진척률 + 필터
+══════════════════════════════════════ */
+.pk-read-badge {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff8d8;
+  border: 2px solid #1c2040;
+  color: #1c2040;
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: pointer;
+  margin-left: auto;
+  user-select: none;
+  box-shadow: 2px 2px 0 #1c2040;
+  transition: transform 80ms;
+}
+.pk-read-badge:hover { transform: translate(-1px,-1px); }
+.pk-read-badge[data-read="1"] {
+  background: #2c8844;
+  color: #fff;
+  border-color: #1c2040;
+}
+.row.pk-row-read { opacity: .55; }
+.row.pk-row-read .row-title { text-decoration: line-through; text-decoration-color: rgba(28,32,64,.4); }
+
+#pk-progress-bar {
+  margin: 12px 32px 0;
+  background: #f5edd8;
+  border: 3px solid #1c2040;
+  box-shadow: 4px 4px 0 #1c2040;
+  padding: 12px 14px;
+}
+.pk-prog-info {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.pk-prog-label, .pk-prog-num {
+  font-weight: 700;
+  font-size: .85rem;
+  color: #1c2040;
+  white-space: nowrap;
+}
+.pk-prog-track {
+  flex: 1;
+  height: 14px;
+  background: #fff;
+  border: 2px solid #1c2040;
+  position: relative;
+  overflow: hidden;
+}
+.pk-prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2c8844 0%, #f0c000 70%, #d42b2b 100%);
+  width: 0;
+  transition: width 200ms;
+}
+.pk-prog-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.pk-filter-btn {
+  font-weight: 700;
+  font-size: .82rem;
+  padding: 5px 12px;
+  background: #fff8d8;
+  border: 2px solid #1c2040;
+  color: #1c2040;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #1c2040;
+}
+.pk-filter-btn:hover { background: #fff; }
+.pk-filter-btn.active {
+  background: #d42b2b;
+  color: #fff;
+}
+
+/* 사이드바 카테고리별 진척률 */
+.pk-nav-prog {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%;
+  margin-top: 4px;
+  font-size: .68rem;
+  color: #b8c8e8;
+}
+.pk-nav-prog-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.25);
+  position: relative;
+}
+.pk-nav-prog-fill {
+  height: 100%;
+  background: #f0c000;
+}
+.sidebar .nav-item { flex-wrap: wrap !important; }
+
+/* ══════════════════════════════════════
    형광펜 (mark.hl-mark) — 진한 노랑 강제
 ══════════════════════════════════════ */
 mark, mark.hl-mark, mark.clip-mark,
