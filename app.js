@@ -231,30 +231,65 @@ function removeHighlight(id) {
   syncPush();
 }
 function applyHighlightsToDOM() {
-  // re-apply highlight marks to visible article content
   document.querySelectorAll('mark.hl-mark').forEach(m => {
-    const text = m.textContent;
-    m.replaceWith(document.createTextNode(text));
+    const parent = m.parentNode;
+    while (m.firstChild) parent.insertBefore(m.firstChild, m);
+    parent.removeChild(m);
+    parent.normalize?.();
   });
   if (!highlights.length) return;
-  document.querySelectorAll('.article-content').forEach(content => {
-    highlights.forEach(h => {
-      const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
-      let node;
-      while (node = walker.nextNode()) {
-        const idx = node.textContent.indexOf(h.text);
-        if (idx === -1) continue;
-        const range = document.createRange();
-        range.setStart(node, idx);
-        range.setEnd(node, idx + h.text.length);
-        const mark = document.createElement('mark');
-        mark.className = 'hl-mark';
-        mark.dataset.hlId = h.id;
-        range.surroundContents(mark);
-        break;
-      }
-    });
+  document.querySelectorAll('.article-content, .inline-article').forEach(content => {
+    highlights.forEach(h => highlightTextInRoot(content, h.text, h.id));
   });
+}
+function highlightTextInRoot(root, search, hlId) {
+  if (!search) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => n.parentNode.closest('mark.hl-mark') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+  });
+  const nodes = [];
+  let n;
+  while (n = walker.nextNode()) nodes.push(n);
+  if (!nodes.length) return;
+  const flat = nodes.map(t => t.textContent).join('');
+  const idx = flat.indexOf(search);
+  if (idx === -1) return;
+  const end = idx + search.length;
+  let pos = 0, startNode = null, startOff = 0, endNode = null, endOff = 0;
+  for (const t of nodes) {
+    const len = t.textContent.length;
+    if (!startNode && pos + len > idx) { startNode = t; startOff = idx - pos; }
+    if (!endNode && pos + len >= end) { endNode = t; endOff = end - pos; break; }
+    pos += len;
+  }
+  if (!startNode || !endNode) return;
+  try {
+    const range = document.createRange();
+    range.setStart(startNode, startOff);
+    range.setEnd(endNode, endOff);
+    if (startNode === endNode) {
+      const mark = document.createElement('mark');
+      mark.className = 'hl-mark';
+      mark.dataset.hlId = hlId;
+      range.surroundContents(mark);
+      return;
+    }
+    /* multi-node: wrap each text segment within range individually */
+    const between = nodes.slice(nodes.indexOf(startNode), nodes.indexOf(endNode) + 1);
+    between.forEach(t => {
+      let s = 0, e = t.textContent.length;
+      if (t === startNode) s = startOff;
+      if (t === endNode) e = endOff;
+      if (s >= e) return;
+      const piece = t.splitText(s);
+      if (e - s < piece.textContent.length) piece.splitText(e - s);
+      const mark = document.createElement('mark');
+      mark.className = 'hl-mark';
+      mark.dataset.hlId = hlId;
+      piece.parentNode.insertBefore(mark, piece);
+      mark.appendChild(piece);
+    });
+  } catch (_) {}
 }
 
 // ── Memos ──
@@ -340,19 +375,22 @@ function initDrawer() {
 
 // ── Text selection popover (clip / highlight / memo) ──
 let clipPopover = null;
-const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (/Mac/.test(navigator.platform) && navigator.maxTouchPoints > 1 && !('chrome' in window) && !matchMedia('(pointer: fine)').matches);
 
 function showPopover(sel) {
   if (clipPopover) { clipPopover.remove(); clipPopover = null; }
   if (!sel || sel.isCollapsed) return;
   const text = sel.toString().trim();
-  if (text.length < 4) return;
+  if (text.length < 2) return;
   const range = sel.getRangeAt(0);
-  const art = range.commonAncestorContainer.closest?.('.inline-article') ||
-              range.commonAncestorContainer.parentElement?.closest?.('.inline-article');
+  const cac = range.commonAncestorContainer;
+  const cacEl = cac.nodeType === 1 ? cac : cac.parentElement;
+  const art = cacEl?.closest('.inline-article, .row-excerpt, .row-body, .article-content');
   if (!art) return;
   const rect = range.getBoundingClientRect();
-  const title = art.querySelector('.ia-title')?.textContent || '';
+  const card = cacEl.closest('.card-row') || art;
+  const title = card.querySelector('.ia-title, .row-title')?.textContent || '';
   const safeText = text.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
   const safeTitle = title.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
 
