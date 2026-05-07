@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>논술 리더 — POKÉMON EDITION</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Serif+KR:wght@400;700;900&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+/* ═══════════════════════════════════════════════
+   POKÉMON PIXEL THEME — 논술 리더
+   Sprites: raw.githubusercontent.com/PokeAPI/sprites
+   Palette: Game Boy Pocket warm + classic Pokémon Red
+═══════════════════════════════════════════════ */
+
+:root {
+  --bg:       #e8dfc8;
+  --paper:    #f5edd8;
+  --card:     #faf5e8;
+  --navy:     #1c2040;
+  --navy2:    #2e3566;
+  --red:      #d42b2b;
+  --red2:     #9a1818;
+  --yellow:   #f0c000;
+  --blue:     #3a6ec8;
+  --green:    #2c8844;
+  --white:    #f8f4e8;
+  --border:   3px solid var(--navy);
+  --shadow:   4px 4px 0 var(--navy);
+  --font-pk:  'Press Start 2P', monospace;
+  --font-body:'Pretendard', sans-serif;
+  --font-serif:'Noto Serif KR', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow-x: hidden; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  background-image:
+    repeating-linear-gradient(0deg,  transparent, transparent 15px, rgba(28,32,64,.05) 15px, rgba(28,32,64,.05) 16px),
+    repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(28,32,64,.05) 15px, rgba(28,32,64,.05) 16px);
+  font-family: var(--font-body);
+  color: var(--navy);
+  min-height: 100vh;
+}
+
+img { image-rendering: pixelated; image-rendering: crisp-edges; }
+
+/* ═══════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════ */
+.app { display: grid; grid-template-columns: 272px 1fr; min-height: 100vh; }
+
+/* ═══════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════ */
+.sidebar {
+  background: var(--navy);
+  border-right: 4px solid var(--yellow);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--yellow) var(--navy2);
+}
+
+/* Brand */
+.brand {
+  background: var(--red);
+  padding: 16px 14px 14px;
+  border-bottom: 4px solid var(--yellow);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.brand::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+  background: repeating-linear-gradient(90deg,var(--yellow) 0 10px,transparent 10px 20px);
+}
+.brand-logo {
+  font-family: var(--font-pk);
+  font-size: .55rem;
+  color: #fff;
+  text-shadow: 2px 2px 0 var(--red2);
+  line-height: 1.9;
+  letter-spacing: .5px;
+}
+.brand-sub {
+  font-family: var(--font-pk);
+  font-size: .3rem;
+  color: var(--yellow);
+  letter-spacing: 2px;
+  margin-top: 3px;
+}
+.brand-pokemon {
+  position: absolute;
+  right: 10px; bottom: 10px;
+  width: 52px; height: 52px;
+}
+
+/* Nav sections */
+.nav-section {
+  font-family: var(--font-pk);
+  font-size: .28rem;
+  color: var(--yellow);
+  letter-spacing: 2px;
+  padding: 10px 12px 4px;
+  border-top: 1px solid rgba(240,192,0,.2);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+/* Nav items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  color: #b8c8e8;
+  text-decoration: none;
+  font-size: .8rem;
+  font-weight: 600;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  transition: background 60ms, border-color 60ms;
+  position: relative;
+}
+.nav-item:hover  { background: rgba(240,192,0,.1); border-left-color: var(--yellow); color: #fff; }
+.nav-item.active { background: rgba(212,43,43,.25); border-left-color: var(--red);    color: #fff; }
+
+.nav-sprite {
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+  filter: drop-shadow(1px 1px 0 rgba(0,0,0,.6));
+}
+.nav-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-count {
+  font-family: var(--font-pk);
+  font-size: .28rem;
+  color: var(--yellow);
+  background: rgba(240,192,0,.12);
+  padding: 2px 5px;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   MAIN
+═══════════════════════════════════════════════ */
+.main { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* TOPBAR */
+.topbar {
+  background: var(--navy);
+  border-bottom: 3px solid var(--yellow);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 60;
+}
+.search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--paper);
+  border: 3px solid var(--yellow);
+  box-shadow: 3px 3px 0 var(--yellow);
+  padding: 5px 12px;
+}
+.search-box input {
+  border: none; background: transparent;
+  font-family: var(--font-pk); font-size: .38rem;
+  color: var(--navy); outline: none; width: 100%;
+  letter-spacing: 1px;
+}
+.search-box input::placeholder { color: #aaa; }
+.icon-btn {
+  background: var(--red); border: 3px solid var(--navy);
+  color: #fff; width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: 3px 3px 0 var(--navy);
+  transition: transform 60ms, box-shadow 60ms; flex-shrink: 0;
+}
+.icon-btn:hover { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--navy); }
+
+/* PAGE HEAD — battle info screen style */
+.page-head {
+  background: var(--navy2);
+  border-bottom: 4px solid var(--navy);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.page-head::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 5px;
+  background: repeating-linear-gradient(90deg,
+    var(--red) 0 16px, var(--yellow) 16px 32px,
+    var(--blue) 32px 48px, var(--green) 48px 64px);
+}
+/* Decorative pixels */
+.page-head::before {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 120px; height: 120px;
+  background:
+    radial-gradient(circle at 70% 30%, rgba(240,192,0,.12) 30%, transparent 70%);
+}
+
+.head-sprite-wrap {
+  flex-shrink: 0;
+  position: relative;
+}
+.head-sprite {
+  width: 96px; height: 96px;
+  animation: float 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(240,192,0,.5));
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+.head-info { flex: 1; }
+.head-eyebrow {
+  font-family: var(--font-pk); font-size: .32rem;
+  color: var(--yellow); letter-spacing: 2px; margin-bottom: 6px;
+}
+.head-title {
+  font-family: var(--font-pk); font-size: 1.1rem;
+  color: #fff; line-height: 1.4;
+  text-shadow: 3px 3px 0 var(--red2);
+}
+.head-types { display: flex; gap: 6px; margin: 8px 0; }
+.type-badge {
+  font-family: var(--font-pk); font-size: .26rem;
+  padding: 3px 9px; color: #fff; letter-spacing: 1px;
+  border: 2px solid rgba(0,0,0,.25); text-shadow: 1px 1px 0 rgba(0,0,0,.3);
+}
+.type-grass   { background:#5ab030; }
+.type-fire    { background:#e04020; }
+.type-water   { background:#3060c0; }
+.type-electric{ background:#d0a800; color:#333; }
+.type-psychic { background:#b03060; }
+.type-dragon  { background:#5030e0; }
+.type-steel   { background:#9090b0; color:#333; }
+.type-normal  { background:#908858; }
+.type-dark    { background:#403830; }
+.type-ghost   { background:#604870; }
+
+/* HP bar */
+.hp-row { display:flex; align-items:center; gap:8px; margin-top:6px; }
+.hp-label { font-family:var(--font-pk); font-size:.28rem; color:var(--yellow); flex-shrink:0; }
+.hp-track {
+  flex:1; height:12px; background:var(--navy);
+  border:2px solid var(--yellow); overflow:hidden; max-width:200px;
+}
+.hp-fill { height:100%; background:linear-gradient(90deg,#1ca040,#60d870); transition:width .6s; }
+.hp-fill.yellow { background:linear-gradient(90deg,#d0a000,#f8d840); }
+.hp-fill.red    { background:linear-gradient(90deg,#c02020,#f04040); }
+.hp-num { font-family:var(--font-pk); font-size:.28rem; color:#ccc; flex-shrink:0; }
+
+/* STATS BAR */
+.stats-bar {
+  background: var(--navy);
+  border-bottom: 3px solid var(--yellow);
+  display: flex; gap: 0;
+}
+.stat-pill {
+  flex:1; padding:12px 8px; text-align:center;
+  border-right:1px solid rgba(240,192,0,.2);
+}
+.stat-pill:last-child { border-right:none; }
+.stat-val { font-family:var(--font-pk); font-size:1rem; color:var(--yellow); display:block; text-shadow:2px 2px 0 var(--red2); }
+.stat-lbl { font-family:var(--font-pk); font-size:.24rem; color:#8898c0; letter-spacing:1px; margin-top:3px; display:block; }
+
+/* ═══════════════════════════════════════════════
+   TIMELINE
+═══════════════════════════════════════════════ */
+.timeline { padding: 20px 32px; counter-reset: row; }
+
+.card-row { display: contents; }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 6px;
+  border-bottom: 2px solid rgba(28,32,64,.15);
+  cursor: pointer;
+  transition: background 60ms;
+  counter-increment: row;
+  position: relative;
+}
+.row:hover { background: rgba(240,192,0,.07); margin: 0 -6px; padding-left: 12px; padding-right: 12px; }
+.row.expanded { background: rgba(212,43,43,.06); }
+
+/* Row number */
+.row-num {
+  font-family: var(--font-pk);
+  font-size: .36rem;
+  color: var(--red);
+  flex-shrink: 0;
+  width: 30px;
+  text-align: right;
+}
+
+/* Pokéball SVG icon */
+.row-ball { flex-shrink:0; width:22px; height:22px; }
+
+.row-body { flex:1; min-width:0; }
+.row-title {
+  font-family: var(--font-body);
+  font-size: .96rem; font-weight: 700;
+  color: var(--navy); line-height: 1.45;
+  word-break: keep-all; text-wrap: pretty;
+}
+.row:hover .row-title { color: var(--red2); }
+.row-excerpt {
+  font-size: .84rem; color: #667; line-height: 1.6; margin-top:3px;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.row-excerpt:empty { display:none; }
+
+.row-actions { flex-shrink:0; }
+.bm-btn {
+  background:none; border:none; cursor:pointer;
+  opacity:.38; transition:opacity 100ms, transform 100ms; padding:4px;
+}
+.bm-btn:hover { opacity:1; transform:scale(1.2); }
+.bm-btn.on { opacity:1; }
+.bm-btn.on path { fill:var(--red); }
+
+/* ── INLINE ARTICLE ── */
+.inline-article {
+  display: none;
+  margin: 0 -32px;
+  background: var(--card);
+  border-top: 4px solid var(--navy);
+  border-bottom: 4px solid var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+.inline-article::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:7px;
+  background:repeating-linear-gradient(90deg,
+    var(--red) 0 20px,var(--yellow) 20px 40px,
+    var(--blue) 40px 60px,var(--green) 60px 80px);
+}
+
+.row.expanded + .inline-article { display:block; animation: ia-in 180ms ease-out; }
+@keyframes ia-in { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
+
+/* Battle banner */
+.ia-battle {
+  background: var(--navy);
+  padding: 28px 32px 14px;
+  display: flex; align-items: center; justify-content: space-between; gap:20px;
+  border-bottom: 3px solid var(--yellow);
+}
+.ia-enemy {
+  display:flex; align-items:center; gap:16px;
+}
+.ia-enemy-sprite {
+  width:80px; height:80px;
+  animation: battle-bob 1s steps(2) infinite;
+  filter: drop-shadow(2px 2px 0 rgba(0,0,0,.4));
+}
+@keyframes battle-bob {
+  0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)}
+}
+.ia-enemy-info {}
+.ia-enemy-name {
+  font-family:var(--font-pk); font-size:.42rem; color:#fff;
+  text-shadow:2px 2px 0 var(--red2); margin-bottom:5px; line-height:1.5;
+  max-width:520px; word-break:keep-all;
+}
+.ia-enemy-lv {
+  font-family:var(--font-pk); font-size:.28rem; color:var(--yellow); margin-bottom:6px;
+}
+
+.ia-close {
+  position:absolute; top:10px; right:14px;
+  background:var(--red); border:3px solid var(--navy);
+  color:#fff; width:36px; height:36px;
+  font-family:var(--font-pk); font-size:.5rem;
+  cursor:pointer; box-shadow:3px 3px 0 var(--navy);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform 60ms, box-shadow 60ms;
+}
+.ia-close:hover { transform:translate(2px,2px); box-shadow:1px 1px 0 var(--navy); }
+
+/* Article body */
+.ia-body { padding:28px 40px 36px; }
+
+.ia-kicker {
+  font-family:var(--font-pk); font-size:.3rem;
+  color:var(--red); letter-spacing:2px; margin-bottom:10px;
+}
+.ia-title {
+  font-family:var(--font-serif); font-size:1.5rem; font-weight:900;
+  color:var(--navy); line-height:1.3; margin-bottom:20px;
+  word-break:keep-all; padding-right:36px;
+}
+.article-content {
+  font-size:.93rem; line-height:1.9; color:#334; word-break:keep-all;
+}
+.article-content p { margin-bottom:1.1em; text-wrap:pretty; }
+.article-content ul { padding-left:1.5em; margin:.6em 0; }
+.article-content li { margin-bottom:.45em; }
+.article-content strong { color:var(--navy2); }
+.article-content h3 {
+  font-family:var(--font-serif); font-size:1.1rem; font-weight:900;
+  color:var(--navy2); margin:1.8em 0 .5em;
+  padding:8px 12px 8px 16px;
+  background:rgba(28,32,64,.06);
+  border-left:5px solid var(--red);
+}
+
+/* Text dialog box (pixel) */
+.pk-dialog {
+  background:var(--white); border:var(--border);
+  box-shadow:var(--shadow); padding:14px 18px;
+  margin:16px 0;
+  font-family:var(--font-pk); font-size:.35rem;
+  color:var(--navy); line-height:2;
+  position:relative;
+}
+.pk-dialog::before {
+  content:'▼';
+  position:absolute; bottom:8px; right:12px;
+  font-size:.3rem; color:var(--navy); animation:blink 1s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ═══════════════════════════════════════════════
+   WALKING POKEMON
+═══════════════════════════════════════════════ */
+.walker {
+  position:fixed; bottom:16px; right:16px; z-index:200;
+  width:56px; pointer-events:none;
+  animation:walk-r 12s linear infinite;
+}
+@keyframes walk-r {
+  0%   { right:16px;           transform:scaleX(1);  }
+  44%  { right:calc(100vw - 72px); transform:scaleX(1);  }
+  45%  { right:calc(100vw - 72px); transform:scaleX(-1); }
+  89%  { right:16px;           transform:scaleX(-1); }
+  90%  { right:16px;           transform:scaleX(1);  }
+  100% { right:16px;           transform:scaleX(1);  }
+}
+
+/* ═══════════════════════════════════════════════
+   PIXEL DECORATIONS
+═══════════════════════════════════════════════ */
+/* Dotted separator */
+.pk-divider {
+  border:none;
+  height:6px;
+  background:repeating-linear-gradient(90deg,
+    var(--navy) 0 6px, transparent 6px 12px);
+  margin: 0 0 20px;
+  opacity:.25;
+}
+
+/* ═══════════════════════════════════════════════
+   TWEAKS PANEL
+═══════════════════════════════════════════════ */
+#tweaks {
+  position:fixed; bottom:80px; left:16px; z-index:500;
+  background:var(--paper); border:var(--border); box-shadow:var(--shadow);
+  padding:14px 14px 16px; width:210px; display:none;
+}
+#tweaks.open { display:block; }
+.tweaks-head {
+  font-family:var(--font-pk); font-size:.38rem; color:var(--red);
+  letter-spacing:1px; margin-bottom:10px;
+  border-bottom:2px solid var(--navy); padding-bottom:6px;
+}
+.tweak-row { display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+.tweak-lbl { font-family:var(--font-pk); font-size:.27rem; color:var(--navy); flex:1; }
+.tweak-opt {
+  font-family:var(--font-pk); font-size:.25rem;
+  padding:3px 7px; border:2px solid var(--navy); background:var(--bg); cursor:pointer;
+  box-shadow:2px 2px 0 var(--navy); transition:background 60ms;
+}
+.tweak-opt:hover { background:var(--yellow); }
+.tweak-opt.on    { background:var(--red); color:#fff; box-shadow:none; }
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media (max-width:860px) {
+  .app { grid-template-columns:1fr; }
+  .sidebar { display:none; }
+  .timeline { padding:16px 18px; }
+  .page-head { padding:16px 18px; }
+  .inline-article { margin:0 -18px; }
+  .ia-body { padding:20px 22px 28px; }
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width:7px; }
+::-webkit-scrollbar-track { background:var(--navy); }
+::-webkit-scrollbar-thumb { background:var(--yellow); border:2px solid var(--navy); }
+</style>
+</head>
+<body>
+
+<!-- Walking Pokémon -->
+<img class="walker" id="walker" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="">
+
+<!-- Tweaks -->
+<div id="tweaks">
+  <div class="tweaks-head">⚙ TWEAKS</div>
+  <div class="tweak-row">
+    <span class="tweak-lbl">WALKER</span>
+    <button class="tweak-opt" onclick="nextWalker()">교체</button>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-lbl">GEN</span>
+    <button class="tweak-opt on" id="gen-1-btn" onclick="setGen(1)">GEN1</button>
+    <button class="tweak-opt" id="gen-2-btn" onclick="setGen(2)">GEN2</button>
+  </div>
+  <div class="tweak-row">
+    <span class="tweak-lbl">SHINY</span>
+    <button class="tweak-opt" id="shiny-btn" onclick="toggleShiny()">OFF</button>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- ════════════ SIDEBAR ════════════ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <img class="brand-pokemon" id="brand-pkmn"
+        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png"
+        alt="Eevee">
+      <div class="brand-logo">논술 리더</div>
+      <div class="brand-sub">POKÉMON EDITION v2</div>
+    </div>
+
+    <div class="nav-section">▶ MENU</div>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="">
+      <span class="nav-label">← 전체 카테고리</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png" alt="">
+      <span class="nav-label">내 북마크</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png" alt="">
+      <span class="nav-label">PT 카드 모드</span>
+    </a>
+
+    <div class="nav-section">▶ CATEGORY DEX</div>
+
+    <!-- 카테고리별 포켓몬 매핑 -->
+    <a class="nav-item active" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" alt="이상해씨">
+      <span class="nav-label">🌱 ESG</span>
+      <span class="nav-count">20</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/113.png" alt="럭키">
+      <span class="nav-label">가계</span>
+      <span class="nav-count">22</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/248.png" alt="마기라스">
+      <span class="nav-label">공급망</span>
+      <span class="nav-count">12</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/249.png" alt="루기아">
+      <span class="nav-label">글로벌</span>
+      <span class="nav-count">35</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/149.png" alt="망나뇽">
+      <span class="nav-label">금융업</span>
+      <span class="nav-count">31</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/137.png" alt="폴리곤">
+      <span class="nav-label">디지털</span>
+      <span class="nav-count">24</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png" alt="리자몽">
+      <span class="nav-label">벤처</span>
+      <span class="nav-count">41</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/79.png" alt="야돈">
+      <span class="nav-label">부동산</span>
+      <span class="nav-count">4</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/376.png" alt="메타그로스">
+      <span class="nav-label">산업 과제</span>
+      <span class="nav-count">35</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/130.png" alt="갸라도스">
+      <span class="nav-label">산업별</span>
+      <span class="nav-count">146</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png" alt="뮤">
+      <span class="nav-label">시사</span>
+      <span class="nav-count">27</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/243.png" alt="라이코">
+      <span class="nav-label">자본시장</span>
+      <span class="nav-count">30</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png" alt="뮤츠">
+      <span class="nav-label">정책금융</span>
+      <span class="nav-count">23</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/59.png" alt="윈디">
+      <span class="nav-label">중동이슈</span>
+      <span class="nav-count">28</span>
+    </a>
+    <a class="nav-item" href="#">
+      <img class="nav-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png" alt="이브이">
+      <span class="nav-label">지역균형</span>
+      <span class="nav-count">10</span>
+    </a>
+  </aside>
+
+  <!-- ════════════ MAIN ════════════ -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="search-box">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="SEARCH ESSAYS...">
+      </div>
+      <button class="icon-btn" title="폰트 크기">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+      </button>
+      <button class="icon-btn" title="설정">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+
+    <!-- PAGE HEAD -->
+    <div class="page-head">
+      <div class="head-sprite-wrap">
+        <img class="head-sprite" id="head-sprite"
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
+          alt="이상해씨">
+      </div>
+      <div class="head-info">
+        <div class="head-eyebrow">NO.001 · ESG 카테고리</div>
+        <div class="head-title">ESG</div>
+        <div class="head-types">
+          <span class="type-badge type-grass">GRASS</span>
+          <span class="type-badge type-water">WATER</span>
+        </div>
+        <div class="hp-row">
+          <span class="hp-label">HP</span>
+          <div class="hp-track"><div class="hp-fill" style="width:71%"></div></div>
+          <span class="hp-num">20/28</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+      <div class="stat-pill"><span class="stat-val">20</span><span class="stat-lbl">ESSAYS</span></div>
+      <div class="stat-pill"><span class="stat-val">41</span><span class="stat-lbl">CATEGORIES</span></div>
+      <div class="stat-pill"><span class="stat-val">489</span><span class="stat-lbl">TOTAL</span></div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="timeline">
+      <hr class="pk-divider">
+
+      <!-- Article data -->
+      <div id="rows-container"></div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const SPRITE = (n, shiny=false, gen=1) => {
+  if (gen === 1) {
+    return shiny
+      ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${n}.png`
+      : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${n}.png`;
+  }
+  return shiny
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${n}.png`
+    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${n}.png`;
+};
+
+const articles = [
+  {
+    id: 1,
+    title: "(가칭) '탄소중립 산업전환법(GX 추진법)' 제정",
+    excerpt: "탄소중립을 향한 산업 전환의 법적 토대 마련과 정책금융 역할 분석",
+    pkmn: 3,   // 이상해꽃
+    pkname: "이상해꽃",
+    lv: 45,
+    types: [['grass','GRASS'],['poison','POISON']],
+    hp: 80,
+    content: `<p>한국의 탄소중립 목표 달성을 위해 산업 전환을 법적으로 뒷받침하는 <strong>'탄소중립 산업전환법(GX 추진법)'</strong>의 제정이 논의되고 있습니다. 단순한 환경 규제를 넘어 산업 경쟁력과 일자리를 동시에 지키는 전략적 전환의 프레임워크입니다.</p>
+<h3>핵심 내용</h3>
+<p>GX(Green Transformation) 추진법은 ① 탄소집약 산업의 전환 지원, ② 녹색 투자 유인 체계 구축, ③ 정책금융과의 연계를 3대 축으로 합니다. KDB산업은행의 역할로는 전환 자금 공급을 위한 <strong>GX 특별금융 플랫폼</strong> 구축이 핵심입니다.</p>
+<h3>KDB의 역할</h3>
+<p>정책금융기관으로서 산업은행은 민간이 기피하는 고위험·장기 친환경 전환 프로젝트에 <strong>인내 자본(Patient Capital)</strong>을 공급하고, ESG 채권 시장의 앵커 투자자로 기능해야 합니다.</p>`
+  },
+  {
+    id: 2,
+    title: "CBAM의 본질과 경제적 목적",
+    excerpt: "EU 탄소국경조정제도(CBAM)가 한국 수출 기업에 미치는 영향과 대응 전략",
+    pkmn: 9,   // 거북왕
+    pkname: "거북왕",
+    lv: 52,
+    types: [['water','WATER']],
+    hp: 65,
+    content: `<p>EU의 탄소국경조정제도(CBAM)는 2026년 본격 시행을 앞두고 있습니다. EU로 수입되는 제품의 탄소 함량에 상응하는 비용을 부과하는 제도로, 한국의 주요 수출 품목인 철강·알루미늄·비료·전력·시멘트 등이 직접 영향을 받습니다.</p>
+<h3>한국 기업의 영향</h3>
+<p>CBAM 적용 시 한국 철강 수출의 EU 가격 경쟁력이 약화될 위험이 있습니다. 그러나 이를 역기회로 삼아 저탄소 공정 전환을 조기에 완료하면 오히려 <strong>경쟁 우위</strong>를 확보할 수 있습니다.</p>`
+  },
+  {
+    id: 3,
+    title: "ESG 전환 대응전략",
+    excerpt: "기업과 금융기관의 ESG 전환 로드맵과 정책금융의 역할",
+    pkmn: 152,  // 치코리타
+    pkname: "치코리타",
+    lv: 38,
+    types: [['grass','GRASS']],
+    hp: 90,
+    content: `<p>ESG(환경·사회·지배구조) 경영은 선택이 아닌 필수가 된 시대입니다. 글로벌 자본시장은 ESG를 투자 결정의 핵심 기준으로 삼고 있습니다.</p>
+<h3>단계별 전환 로드맵</h3>
+<p>① <strong>진단</strong>: 현재 탄소 발자국·사회적 가치·지배구조 현황 파악. ② <strong>목표 설정</strong>: SBTi 기반의 중장기 목표 수립. ③ <strong>실행</strong>: 재생에너지 전환, 공급망 ESG 관리. ④ <strong>공시</strong>: TCFD/ISSB 기준에 따른 투명한 공시.</p>
+<h3>정책금융의 역할</h3>
+<p>KDB산업은행은 ESG 전환 자금 공급자이자 <strong>ESG 채권 시장의 마켓메이커</strong>로 기능해야 합니다.</p>`
+  },
+  {
+    id: 4,
+    title: "EU 탄소국경조정제도(CBAM) 다운스트림 확대가 對EU 수출에 미치는 파급효과와 대응 전략",
+    excerpt: "",
+    pkmn: 100,  // 홍수몬
+    pkname: "홍수몬",
+    lv: 61,
+    types: [['electric','ELECTRIC']],
+    hp: 45,
+    content: `<p>CBAM의 적용 범위가 다운스트림(downstream)으로 확대될 경우, 한국 수출 기업의 부담은 기하급수적으로 증가합니다.</p>
+<h3>파급 경로</h3>
+<p><strong>1차</strong>: 철강, 알루미늄, 비료, 시멘트, 전력, 수소. <strong>2차</strong>: 자동차, 조선, 가전, 반도체 패키징. <strong>3차 확대 시</strong>: 사실상 전 제조업 영향권.</p>`
+  },
+  {
+    id: 5,
+    title: "K-GX 이행에 따른 산업 영향과 정책금융 지원 방향",
+    excerpt: "한국형 녹색전환(K-GX) 전략 수립과 KDB의 금융 지원 모델",
+    pkmn: 448,  // 루카리오
+    pkname: "루카리오",
+    lv: 70,
+    types: [['fighting','FIGHT'],['steel','STEEL']],
+    hp: 78,
+    content: `<p>정부는 2026년 상반기 발표를 목표로 <strong>한국형 녹색전환(K-GX)</strong> 전략을 수립 중이며, 이는 대폭 상향된 온실가스 감축 목표와 규제 도입을 핵심으로 합니다.</p>
+<h3>KDB 금융 지원 모델</h3>
+<p>① K-GX 이행 기업 대상 우대금리 전환자금 패키지 ② 녹색 프로젝트 파이낸싱(Green PF) ③ ESG 연계 대출(Sustainability Linked Loan) 확대가 3대 축입니다.</p>`
+  },
+  {
+    id: 6,
+    title: "기후 리스크와 금융안정: 기후 스트레스 테스트 도입 논의",
+    excerpt: "중앙은행·감독기관의 기후 리스크 관리 동향과 국내 적용 방안",
+    pkmn: 131,  // 라프라스
+    pkname: "라프라스",
+    lv: 55,
+    types: [['water','WATER'],['ice','ICE']],
+    hp: 55,
+    content: `<p>글로벌 중앙은행 및 금융감독기관들은 <strong>기후 스트레스 테스트</strong>를 금융 시스템 안정 관리의 핵심 도구로 도입하고 있습니다.</p>
+<h3>NGFS 프레임워크</h3>
+<p>기후 리스크는 물리적 리스크(Physical Risk)와 전환 리스크(Transition Risk) 두 축으로 분류됩니다. 은행은 여신 포트폴리오의 탄소 집약도를 분석하고, 시나리오별 손실 추정치를 산출해야 합니다.</p>`
+  },
+];
+
+// Pokéball SVG
+const ballSVG = (fill='#e04040') => `<svg viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="11" cy="11" r="10" fill="#fff" stroke="#1c2040" stroke-width="1.5"/>
+  <path d="M1 11 Q1 1 11 1 Q21 1 21 11Z" fill="${fill}"/>
+  <line x1="1" y1="11" x2="21" y2="11" stroke="#1c2040" stroke-width="1.5"/>
+  <circle cx="11" cy="11" r="3.5" fill="#fff" stroke="#1c2040" stroke-width="1.5"/>
+  <circle cx="11" cy="11" r="1.8" fill="#1c2040"/>
+</svg>`;
+
+const greatBall = `<svg viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="11" cy="11" r="10" fill="#fff" stroke="#1c2040" stroke-width="1.5"/>
+  <path d="M1 11 Q1 1 11 1 Q21 1 21 11Z" fill="#3a6ec8"/>
+  <rect x="5" y="5" width="12" height="3" fill="#e04040" rx="1"/>
+  <line x1="1" y1="11" x2="21" y2="11" stroke="#1c2040" stroke-width="1.5"/>
+  <circle cx="11" cy="11" r="3.5" fill="#fff" stroke="#1c2040" stroke-width="1.5"/>
+  <circle cx="11" cy="11" r="1.8" fill="#3a6ec8"/>
+</svg>`;
+
+// HP color
+function hpColor(pct) {
+  if (pct > 50) return '';
+  if (pct > 20) return 'yellow';
+  return 'red';
+}
+
+// Type badge HTML
+function typeBadges(types) {
+  return types.map(([cls,label]) => `<span class="type-badge type-${cls}">${label}</span>`).join('');
+}
+
+// Render rows
+function renderRows() {
+  const container = document.getElementById('rows-container');
+  container.innerHTML = '';
+
+  articles.forEach((a, i) => {
+    const ball = i < 3 ? ballSVG() : (i < 5 ? greatBall : ballSVG('#f0c000'));
+    const hpPct = a.hp;
+    const hpCls = hpColor(hpPct);
+    const num = String(i+1).padStart(2,'0');
+    const spriteUrl = SPRITE(a.pkmn, shiny, gen);
+
+    const rowEl = document.createElement('div');
+    rowEl.className = 'card-row';
+    rowEl.innerHTML = `
+      <div class="row" onclick="toggleRow(this)">
+        <div class="row-num">${num}</div>
+        <div class="row-ball">${ball}</div>
+        <div class="row-body">
+          <h3 class="row-title">${a.title}</h3>
+          ${a.excerpt ? `<p class="row-excerpt">${a.excerpt}</p>` : ''}
+        </div>
+        <div class="row-actions">
+          <button class="bm-btn" onclick="event.stopPropagation();this.classList.toggle('on')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c2040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="inline-article">
+        <button class="ia-close" onclick="closeArticle(this)">✕</button>
+        <div class="ia-battle">
+          <div class="ia-enemy">
+            <img class="ia-enemy-sprite" src="${spriteUrl}" alt="${a.pkname}">
+            <div class="ia-enemy-info">
+              <div class="ia-enemy-name">${a.title}</div>
+              <div class="ia-enemy-lv">Lv.${a.lv} · ${a.pkname}</div>
+              <div style="display:flex;gap:5px;margin-bottom:8px">${typeBadges(a.types)}</div>
+              <div class="hp-row">
+                <span class="hp-label">HP</span>
+                <div class="hp-track"><div class="hp-fill ${hpCls}" style="width:${hpPct}%"></div></div>
+                <span class="hp-num">${hpPct}/100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ia-body">
+          <div class="ia-kicker">▶ ESG · 논술 요약</div>
+          <h2 class="ia-title">${a.title}</h2>
+          <div class="article-content">${a.content}</div>
+        </div>
+      </div>
+    `;
+    container.appendChild(rowEl);
+  });
+}
+
+function toggleRow(row) {
+  const wasOpen = row.classList.contains('expanded');
+  document.querySelectorAll('.row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!wasOpen) row.classList.add('expanded');
+  // smooth scroll into view
+  if (!wasOpen) {
+    setTimeout(() => {
+      const art = row.nextElementSibling;
+      if (art) {
+        const top = art.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }, 50);
+  }
+}
+
+function closeArticle(btn) {
+  btn.closest('.inline-article').previousElementSibling.classList.remove('expanded');
+}
+
+// ── WALKER ──
+const walkers = [25,133,1,4,7,39,143,54,52,35,94,130,149,151,6,9,3,248,79,137,59,150,151,243];
+let wi = 0;
+let shiny = false;
+let gen = 1;
+
+function updateWalker() {
+  document.getElementById('walker').src = SPRITE(walkers[wi], shiny, gen);
+}
+function nextWalker() {
+  wi = (wi + 1) % walkers.length;
+  updateWalker();
+}
+function setGen(g) {
+  gen = g;
+  document.getElementById('gen-1-btn').classList.toggle('on', g===1);
+  document.getElementById('gen-2-btn').classList.toggle('on', g===2);
+  updateWalker();
+  renderRows();
+}
+function toggleShiny() {
+  shiny = !shiny;
+  document.getElementById('shiny-btn').textContent = shiny ? 'ON' : 'OFF';
+  document.getElementById('shiny-btn').classList.toggle('on', shiny);
+  // update brand pokemon too
+  document.getElementById('brand-pkmn').src = SPRITE(133, shiny, gen);
+  document.getElementById('head-sprite').src = SPRITE(1, shiny, gen);
+  updateWalker();
+  renderRows();
+}
+
+// ── SEARCH ──
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  document.querySelectorAll('.row').forEach(row => {
+    const txt = row.querySelector('.row-title').textContent.toLowerCase();
+    row.parentElement.style.display = txt.includes(q) ? '' : 'none';
+  });
+});
+
+// ── TWEAKS PROTOCOL ──
+window.addEventListener('message', e => {
+  if (e.data?.type === '__activate_edit_mode')   document.getElementById('tweaks').classList.add('open');
+  if (e.data?.type === '__deactivate_edit_mode') document.getElementById('tweaks').classList.remove('open');
+});
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+// ── INIT ──
+wi = Math.floor(Math.random() * walkers.length);
+updateWalker();
+renderRows();
+</script>
+</body>
+</html>
