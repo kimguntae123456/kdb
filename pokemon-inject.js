@@ -419,9 +419,72 @@
     if (document.getElementById('pk-walker')) return;
     const img = document.createElement('img');
     img.id = 'pk-walker';
-    img.src = SP(WALKERS[walkerIdx]);
+    img.src = shiny ? SP_SH(WALKERS[walkerIdx]) : SP(WALKERS[walkerIdx]);
     img.alt = '';
+    img.title = '드래그해서 옮겨보세요!';
     document.body.appendChild(img);
+
+    /* ── 저장된 위치 복원 ── */
+    try {
+      const saved = JSON.parse(localStorage.getItem('pk-walker-pos') || 'null');
+      if (saved && typeof saved.x === 'number') {
+        img.style.left = Math.min(window.innerWidth - 80, Math.max(0, saved.x)) + 'px';
+        img.style.top  = Math.min(window.innerHeight - 80, Math.max(0, saved.y)) + 'px';
+      }
+    } catch (_) {}
+
+    /* ── 드래그 ── */
+    let dragging = false, dx = 0, dy = 0, moved = false;
+    const onDown = e => {
+      dragging = true; moved = false;
+      const r = img.getBoundingClientRect();
+      const p = e.touches ? e.touches[0] : e;
+      dx = p.clientX - r.left; dy = p.clientY - r.top;
+      e.preventDefault();
+    };
+    const onMove = e => {
+      if (!dragging) return;
+      const p = e.touches ? e.touches[0] : e;
+      const x = Math.max(0, Math.min(window.innerWidth  - img.offsetWidth,  p.clientX - dx));
+      const y = Math.max(0, Math.min(window.innerHeight - img.offsetHeight, p.clientY - dy));
+      img.style.left = x + 'px';
+      img.style.top  = y + 'px';
+      moved = true;
+    };
+    const onUp = () => {
+      if (!dragging) return;
+      dragging = false;
+      if (moved) {
+        try {
+          localStorage.setItem('pk-walker-pos', JSON.stringify({
+            x: parseInt(img.style.left, 10),
+            y: parseInt(img.style.top, 10)
+          }));
+        } catch (_) {}
+      } else {
+        // 클릭(이동 X) → 즉시 랜덤 교체
+        swapWalker();
+      }
+    };
+    img.addEventListener('mousedown', onDown);
+    img.addEventListener('touchstart', onDown, { passive: false });
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('mouseup', onUp);
+    window.addEventListener('touchend', onUp);
+
+    /* ── 랜덤 자동 교체 (8초마다) ── */
+    function swapWalker() {
+      let next;
+      do { next = Math.floor(Math.random() * WALKERS.length); }
+      while (next === walkerIdx && WALKERS.length > 1);
+      walkerIdx = next;
+      img.classList.remove('pk-swap');
+      void img.offsetWidth;
+      img.src = shiny ? SP_SH(WALKERS[walkerIdx]) : SP(WALKERS[walkerIdx]);
+      img.classList.add('pk-swap');
+    }
+    setInterval(swapWalker, 8000);
   }
 
   /* ══════════════════════════════════════
