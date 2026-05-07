@@ -819,7 +819,6 @@ function injectKPIHighlights(article) {
 function enhanceArticle(article) {
   if (article.dataset.enhanced) return;
   article.dataset.enhanced = '1';
-  injectTOC(article);
   injectSectionSummaries(article);
   injectKPIHighlights(article);
 }
