@@ -217,11 +217,60 @@ function removeClip(id) {
 
 // ── Highlights ──
 function addHighlight(text, title) {
-  highlights.unshift({id: Date.now(), text, title, createdAt: Date.now()});
+  const id = Date.now();
+  highlights.unshift({id, text, title, createdAt: id});
   localStorage.setItem('ns_highlights', JSON.stringify(highlights));
   updateClipsFab();
-  applyHighlightsToDOM();
+  /* 1차 시도: 라이브 Range 직접 wrap (가장 안정적) */
+  const r = window.__pendingHlRange;
+  window.__pendingHlRange = null;
+  let wrapped = false;
+  if (r) {
+    try { wrapped = wrapLiveRange(r, id); } catch (_) { wrapped = false; }
+  }
+  /* 2차 시도: 텍스트 매칭 기반 재적용 */
+  if (!wrapped) applyHighlightsToDOM();
   syncPush();
+}
+function wrapLiveRange(range, hlId) {
+  if (!range || range.collapsed) return false;
+  const root = range.commonAncestorContainer.nodeType === 1
+    ? range.commonAncestorContainer
+    : range.commonAncestorContainer.parentElement;
+  if (!root) return false;
+  /* 단일 텍스트 노드인 경우 */
+  if (range.startContainer === range.endContainer && range.startContainer.nodeType === 3) {
+    const t = range.startContainer;
+    const s = range.startOffset, e = range.endOffset;
+    if (s >= e) return false;
+    const piece = t.splitText(s);
+    if (e - s < piece.textContent.length) piece.splitText(e - s);
+    const m = document.createElement('mark');
+    m.className = 'hl-mark'; m.dataset.hlId = hlId;
+    piece.parentNode.insertBefore(m, piece);
+    m.appendChild(piece);
+    return true;
+  }
+  /* 멀티 노드: range 내 텍스트 노드 수집 후 각각 래핑 */
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => range.intersectsNode(n) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+  });
+  const texts = [];
+  let n; while (n = walker.nextNode()) texts.push(n);
+  if (!texts.length) return false;
+  texts.forEach(t => {
+    let s = 0, e = t.textContent.length;
+    if (t === range.startContainer) s = range.startOffset;
+    if (t === range.endContainer) e = range.endOffset;
+    if (s >= e) return;
+    const piece = t.splitText(s);
+    if (e - s < piece.textContent.length) piece.splitText(e - s);
+    const m = document.createElement('mark');
+    m.className = 'hl-mark'; m.dataset.hlId = hlId;
+    piece.parentNode.insertBefore(m, piece);
+    m.appendChild(piece);
+  });
+  return true;
 }
 function removeHighlight(id) {
   highlights = highlights.filter(h => h.id !== id);
@@ -435,7 +484,7 @@ function showPopover(sel) {
 
   pop.innerHTML =
     `<button onclick="addClip('${safeText}','${safeTitle}');this.parentElement.remove();window.getSelection().removeAllRanges()">${SVG_CLIP} 클립</button>` +
-    `<button onclick="addHighlight('${safeText}','${safeTitle}');this.parentElement.remove();window.getSelection().removeAllRanges()" class="pop-hl">` +
+    `<button onclick="window.__pendingHlRange=window.getSelection().rangeCount?window.getSelection().getRangeAt(0).cloneRange():null;addHighlight('${safeText}','${safeTitle}');this.parentElement.remove();window.getSelection().removeAllRanges()" class="pop-hl">` +
       `<svg width="14" height="14" viewBox="0 0 24 24" fill="oklch(0.85 0.18 90)" stroke="none"><rect x="1" y="6" width="22" height="12" rx="2"/></svg> 형광펜</button>` +
     `<button onclick="startMemo('${safeText}','${safeTitle}');this.parentElement.remove()" class="pop-memo">` +
       `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 메모</button>` +
