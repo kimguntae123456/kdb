@@ -252,9 +252,35 @@ function highlightTextInRoot(root, search, hlId) {
   while (n = walker.nextNode()) nodes.push(n);
   if (!nodes.length) return;
   const flat = nodes.map(t => t.textContent).join('');
-  const idx = flat.indexOf(search);
-  if (idx === -1) return;
-  const end = idx + search.length;
+  /* 공백/줄바꿈 차이 허용 매칭: search의 공백류를 \s+ 로 */
+  const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = escapeRe(search.trim()).replace(/\s+/g, '\\s+');
+  let idx = -1, end = -1;
+  const re = new RegExp(pattern);
+  const m = re.exec(flat);
+  if (m) { idx = m.index; end = idx + m[0].length; }
+  else {
+    /* fallback: 공백 모두 제거하고 매칭 */
+    const stripIdx = flat.replace(/\s+/g, '').indexOf(search.replace(/\s+/g, ''));
+    if (stripIdx !== -1) {
+      const stripSearch = search.replace(/\s+/g, '');
+      let acc = '', wsBefore = 0;
+      for (let i = 0; i < flat.length; i++) {
+        if (/\s/.test(flat[i])) { wsBefore++; continue; }
+        if (acc.length === stripIdx) { idx = i; break; }
+        acc += flat[i];
+      }
+      if (idx !== -1) {
+        let collected = 0, j = idx;
+        while (j < flat.length && collected < stripSearch.length) {
+          if (!/\s/.test(flat[j])) collected++;
+          j++;
+        }
+        end = j;
+      }
+    }
+  }
+  if (idx === -1 || end === -1) return;
   let pos = 0, startNode = null, startOff = 0, endNode = null, endOff = 0;
   for (const t of nodes) {
     const len = t.textContent.length;
