@@ -165,6 +165,14 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   background: #d42b2b;
   color: #fff;
 }
+.pk-filter-btn.pk-reset-btn {
+  margin-left: auto;
+  background: #1c2040;
+  color: #fff8d8;
+  border-color: #1c2040;
+}
+.pk-filter-btn.pk-reset-btn:hover { background: #2a3060; color: #fff; }
+.pk-filter-btn.pk-reset-btn.active { background: #1c2040; color: #fff8d8; }
 
 /* 사이드바 카테고리별 진척률 */
 .pk-nav-prog {
@@ -193,28 +201,28 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 mark, mark.hl-mark, mark.clip-mark,
 .inline-article mark, .article-content mark,
 body mark {
-  background: rgba(255,224,80,.42) !important;
-  background-color: rgba(255,224,80,.42) !important;
+  background: rgba(255,232,120,.22) !important;
+  background-color: rgba(255,232,120,.22) !important;
   color: inherit !important;
   padding: 0 2px !important;
   margin: 0 !important;
   border-radius: 0 !important;
-  box-shadow: inset 0 -3px 0 rgba(240,192,0,.35) !important;
+  box-shadow: inset 0 -2px 0 rgba(240,200,0,.18) !important;
   font-weight: inherit !important;
   -webkit-text-fill-color: inherit !important;
 }
-mark.hl-mark::selection { background: rgba(255,208,0,.55) !important; }
+mark.hl-mark::selection { background: rgba(255,208,0,.45) !important; }
 
-/* styles-v2.css 의 strong 자동 형광펜 — 옅게 */
+/* styles-v2.css 의 strong 자동 형광펜 — 더 옅게 */
 .article-content strong,
 .inline-article strong,
 body .ia-para-body strong, body strong {
-  background: rgba(255,224,80,.28) !important;
+  background: rgba(255,232,120,.14) !important;
   background-image: none !important;
   padding: 0 2px !important;
   color: inherit !important;
   font-weight: 700 !important;
-  box-shadow: inset 0 -2px 0 rgba(240,192,0,.25) !important;
+  box-shadow: inset 0 -1px 0 rgba(240,200,0,.12) !important;
 }
 
 /* ══════════════════════════════════════

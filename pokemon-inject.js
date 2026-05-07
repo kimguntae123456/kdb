@@ -446,12 +446,29 @@
         <button class="pk-filter-btn active" data-filter="all">전체</button>
         <button class="pk-filter-btn" data-filter="unread">안 본 글만</button>
         <button class="pk-filter-btn" data-filter="read">본 글만</button>
+        <button class="pk-filter-btn pk-reset-btn" data-action="reset" title="이 페이지의 본/안본 기록 전부 초기화">↺ 일괄 해제</button>
       </div>
     `;
     head.insertAdjacentElement('afterend', wrap);
 
     wrap.querySelectorAll('.pk-filter-btn').forEach(b => {
       b.addEventListener('click', () => {
+        if (b.dataset.action === 'reset') {
+          if (!confirm('이 페이지의 본/안본 기록을 전부 초기화할까요?')) return;
+          const r = loadRead();
+          const prefix = pageKey() + '::row-';
+          Object.keys(r).forEach(k => { if (k.startsWith(prefix)) delete r[k]; });
+          saveRead(r);
+          document.querySelectorAll('.row').forEach(row => {
+            row.classList.remove('pk-row-read');
+            const badge = row.querySelector('.pk-read-badge');
+            if (badge) { badge.textContent = '?'; badge.dataset.read = '0'; }
+          });
+          updateProgress();
+          document.querySelectorAll('.sidebar .pk-nav-prog').forEach(el => el.remove());
+          injectSidebarProgress();
+          return;
+        }
         /* 활성 버튼 다시 클릭 → 전체로 리셋(취소) */
         if (b.classList.contains('active') && b.dataset.filter !== 'all') {
           wrap.querySelectorAll('.pk-filter-btn').forEach(x => x.classList.remove('active'));
@@ -459,7 +476,9 @@
           applyFilter('all');
           return;
         }
-        wrap.querySelectorAll('.pk-filter-btn').forEach(x => x.classList.remove('active'));
+        wrap.querySelectorAll('.pk-filter-btn').forEach(x => {
+          if (x.dataset.action !== 'reset') x.classList.remove('active');
+        });
         b.classList.add('active');
         applyFilter(b.dataset.filter);
       });
