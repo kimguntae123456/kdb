@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>내 북마크 — 논술 리더</title>
+<meta name="theme-color" content="#f4ede0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-fs="m" class="density-magazine theme-white mode-magazine">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">논술 리더</div>
+      <div class="sub">Essay Reader</div>
+    </div>
+    <div class="nav-list">
+      <a href="index.html" class="nav-item"><span>← 전체 카테고리</span></a>
+      <a href="bookmarks.html" class="nav-item active"><span>📌 내 북마크 / 클립</span></a>
+      <a href="pt.html" class="nav-item"><span>🎤 PT 카드 모드</span></a>
+    </div>
+  </aside>
+  <div class="content">
+    <div class="topbar">
+      <div class="search">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" placeholder="클립·북마크 검색…" id="bmSearch">
+      </div>
+    </div>
+    <header class="page-head">
+      <div class="eyebrow">📌 My Library</div>
+      <h2>내 북마크 / 클립</h2>
+      <div class="ph-sub" id="bmCount">저장한 글 0편</div>
+      <a href="pt.html" class="pt-cta">🎤 PT 카드 모드로 보기 →</a>
+    </header>
+
+    <!-- Bookmarks section -->
+    <div class="timeline" id="bmList">
+      <div class="empty" id="bmEmpty" style="display:none">
+        <div class="e-mark">¶</div>
+        <div class="e-msg">아직 저장한 글이 없습니다.<br>카테고리 페이지에서 ♡ 버튼을 눌러 북마크하세요.</div>
+      </div>
+    </div>
+
+    <!-- Clips section with folders -->
+    <div class="page-head" style="margin-top:48px">
+      <div class="eyebrow">📝 발췌 클립</div>
+      <h2 id="clipsHeading">내 발췌 (0개)</h2>
+      <div class="ph-sub">폴더로 분류해서 PT 면접 주제별로 정리하세요.</div>
+    </div>
+
+    <div class="bm-layout">
+      <aside class="folder-rail">
+        <div class="folder-rail-head">
+          <span class="frh-label">폴더</span>
+          <button class="folder-add-btn" id="folderAddBtn" title="새 폴더">+</button>
+        </div>
+        <ul class="folder-list" id="folderList"></ul>
+      </aside>
+      <div class="clip-pane" id="clipPane"></div>
+    </div>
+  </div>
+</div>
+<nav class="mobile-tabs">
+  <a href="index.html" class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lab">홈</span></a>
+  <a href="bookmarks.html" class="tab active">📌<span class="lab">북마크</span></a>
+  <a href="pt.html" class="tab">🎤<span class="lab">PT</span></a>
+</nav>
+
+<script src="app.js"></script>
+<script>
+// State
+let activeFolderId = 'all'; // 'all' | 'unfiled' | folder.id
+const FOLDER_COLORS = ['oklch(0.55 0.13 35)','oklch(0.6 0.13 200)','oklch(0.6 0.13 145)','oklch(0.65 0.15 90)','oklch(0.55 0.16 290)','oklch(0.6 0.13 15)'];
+
+const $ = s => document.querySelector(s);
+const folderListEl = $('#folderList');
+const clipPaneEl = $('#clipPane');
+const bmListEl = $('#bmList');
+const bmEmpty = $('#bmEmpty');
+const bmCount = $('#bmCount');
+const bmSearch = $('#bmSearch');
+const clipsHeading = $('#clipsHeading');
+
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+function clipCount(folderId) {
+  if (folderId === 'all') return clips.length;
+  if (folderId === 'unfiled') return clips.filter(c => !c.folderId).length;
+  return clips.filter(c => c.folderId === folderId).length;
+}
+
+function renderFolders() {
+  const items = [
+    {id: 'all', name: '전체', color: 'var(--ink-3)', sys: true},
+    {id: 'unfiled', name: '미분류', color: 'var(--muted)', sys: true},
+    ...clipFolders
+  ];
+  folderListEl.innerHTML = items.map(f => `
+    <li class="folder-item ${activeFolderId === f.id ? 'active' : ''}" data-id="${f.id}">
+      <span class="fi-dot" style="background:${f.color}"></span>
+      <span class="fi-name" data-id="${f.id}">${escapeHtml(f.name)}</span>
+      <span class="fi-count">${clipCount(f.id)}</span>
+      ${f.sys ? '' : `<span class="fi-tools"><button data-action="rename" data-id="${f.id}" title="이름변경">✎</button><button data-action="delete" data-id="${f.id}" title="삭제">✕</button></span>`}
+    </li>
+  `).join('');
+
+  folderListEl.querySelectorAll('.folder-item').forEach(li => {
+    li.addEventListener('click', (e) => {
+      if (e.target.closest('.fi-tools') || e.target.closest('[contenteditable="true"]')) return;
+      activeFolderId = li.dataset.id;
+      renderFolders();
+      renderClips();
+    });
+  });
+  folderListEl.querySelectorAll('[data-action="rename"]').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = b.dataset.id;
+      const span = folderListEl.querySelector(`.fi-name[data-id="${id}"]`);
+      span.contentEditable = 'true'; span.focus();
+      // select all
+      const r = document.createRange(); r.selectNodeContents(span);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      const finish = () => {
+        span.contentEditable = 'false';
+        renameFolder(id, span.textContent.trim() || '폴더');
+        renderFolders();
+      };
+      span.addEventListener('blur', finish, {once: true});
+      span.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); span.blur(); } });
+    });
+  });
+  folderListEl.querySelectorAll('[data-action="delete"]').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = b.dataset.id;
+      const f = clipFolders.find(x => x.id === id);
+      if (!confirm(`"${f?.name}" 폴더를 삭제할까요? (안의 클립은 미분류로 이동)`)) return;
+      deleteFolder(id);
+      if (activeFolderId === id) activeFolderId = 'all';
+      renderFolders(); renderClips();
+    });
+  });
+}
+
+function getFolderName(id) {
+  if (!id) return null;
+  return clipFolders.find(f => f.id === id)?.name || null;
+}
+function getFolderColor(id) {
+  if (!id) return 'var(--muted)';
+  return clipFolders.find(f => f.id === id)?.color || 'var(--muted)';
+}
+
+function renderClips() {
+  const q = (bmSearch?.value || '').toLowerCase();
+  let list = clips;
+  if (activeFolderId === 'unfiled') list = list.filter(c => !c.folderId);
+  else if (activeFolderId !== 'all') list = list.filter(c => c.folderId === activeFolderId);
+  if (q) list = list.filter(c => (c.text + ' ' + (c.title||'')).toLowerCase().includes(q));
+
+  clipsHeading.textContent = `내 발췌 (${clips.length}개)${activeFolderId !== 'all' ? ` · 표시 ${list.length}` : ''}`;
+
+  if (!list.length) {
+    clipPaneEl.innerHTML = `<div class="cd-empty" style="padding:48px 24px;text-align:center;color:var(--muted)">
+      <div style="font-size:2.5rem;color:var(--rule);margin-bottom:12px">¶</div>
+      <div>${q ? '검색 결과 없음' : '이 폴더에 클립이 없습니다.<br>본문에서 텍스트를 드래그해 클립하세요.'}</div></div>`;
+    return;
+  }
+
+  const folderOptions = ['<option value="">미분류</option>', ...clipFolders.map(f => `<option value="${f.id}">${escapeHtml(f.name)}</option>`)].join('');
+
+  clipPaneEl.innerHTML = list.map(c => {
+    const fname = getFolderName(c.folderId);
+    const fcolor = getFolderColor(c.folderId);
+    return `
+    <div class="bm-clip" data-id="${c.id}">
+      <div class="bc-meta">
+        <span>${escapeHtml(c.title || '')}</span>
+        ${fname ? `<span class="bc-folder-chip"><span class="chip-dot" style="background:${fcolor}"></span>${escapeHtml(fname)}</span>` : '<span class="bc-folder-chip" style="background:transparent;border:1px dashed var(--rule);color:var(--muted)">미분류</span>'}
+      </div>
+      <div class="bc-text">${escapeHtml(c.text)}</div>
+      <div class="bc-tools">
+        <select data-clip="${c.id}" class="bc-folder-select">
+          ${folderOptions.replace(`value="${c.folderId||''}"`, `value="${c.folderId||''}" selected`)}
+        </select>
+        <button data-act="copy" data-clip="${c.id}">복사</button>
+        <button data-act="del" data-clip="${c.id}">삭제</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  clipPaneEl.querySelectorAll('.bc-folder-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const id = Number(sel.dataset.clip);
+      moveClipToFolder(id, sel.value || null);
+      renderFolders(); renderClips();
+    });
+  });
+  clipPaneEl.querySelectorAll('[data-act="copy"]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = Number(b.dataset.clip);
+      const c = clips.find(c => c.id === id);
+      if (c) navigator.clipboard?.writeText(c.text);
+      b.textContent = '복사됨'; setTimeout(() => b.textContent = '복사', 1000);
+    });
+  });
+  clipPaneEl.querySelectorAll('[data-act="del"]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = Number(b.dataset.clip);
+      if (confirm('이 클립을 삭제할까요?')) {
+        removeClip(id);
+        renderFolders(); renderClips();
+      }
+    });
+  });
+}
+
+function renderBookmarks() {
+  const q = (bmSearch?.value || '').toLowerCase();
+  const filtered = [...bookmarks].filter(b => !q || b.toLowerCase().includes(q));
+  bmCount.textContent = `저장한 글 ${bookmarks.size}편${q ? ` · 검색 ${filtered.length}` : ''}`;
+  bmEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
+  bmListEl.querySelectorAll('.bm-row').forEach(r => r.remove());
+  filtered.forEach(title => {
+    const row = document.createElement('div');
+    row.className = 'row bm-row';
+    row.style.cursor = 'default';
+    row.innerHTML = `<div class="row-body"><h3 class="row-title">${escapeHtml(title)}</h3></div><div class="row-actions"><button class="bookmark-btn on" data-title="${escapeHtml(title)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button></div>`;
+    bmListEl.appendChild(row);
+    row.querySelector('.bookmark-btn').addEventListener('click', () => {
+      bookmarks.delete(title);
+      localStorage.setItem('ns_bookmarks', JSON.stringify([...bookmarks]));
+      syncPush?.();
+      renderBookmarks();
+    });
+  });
+}
+
+$('#folderAddBtn').addEventListener('click', () => {
+  const name = prompt('새 폴더 이름:');
+  if (!name) return;
+  const used = clipFolders.length;
+  const f = createFolder(name.trim(), FOLDER_COLORS[used % FOLDER_COLORS.length]);
+  activeFolderId = f.id;
+  renderFolders(); renderClips();
+});
+
+bmSearch.addEventListener('input', () => { renderBookmarks(); renderClips(); });
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderBookmarks();
+  renderFolders();
+  renderClips();
+});
+</script>
+</body>
+</html>

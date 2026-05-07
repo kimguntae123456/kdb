@@ -1,0 +1,4571 @@
+# KDB 논술 리더 — 사이트 전체 디자인 리뉴얼 자료
+
+GitHub Pages: https://kimguntae123456.github.io/kdb/
+GitHub Repo:  https://github.com/kimguntae123456/kdb
+
+## 사이트맵 (총 41개 카테고리 + 3개 고유 페이지)
+
+### 고유 페이지
+- `index.html` — 메인 (카테고리 그리드)
+- `bookmarks.html` — 북마크 + 클립 폴더 분류
+- `pt.html` — PT 발표용 카드 풀스크린 뷰
+
+### 카테고리 페이지 (모두 동일 구조 — `{카테고리}/index.html`)
+
+- `ESG/index.html`
+- `시사/index.html`
+- `산업_과제_산업_과제/index.html`
+- `벤처_창업_스케일업/index.html`
+- `벤처_투자_모험자본/index.html`
+- `산업_과제_생산적금융/index.html`
+- `가계_고령문제/index.html`
+- `가계_금융문제/index.html`
+- `가계_인력문제/index.html`
+- `공급망/index.html`
+- `금융업/index.html`
+- `부동산/index.html`
+- `산업별_AI_AI_도입/index.html`
+- `산업별_AI_도입/index.html`
+- `산업별_AI_일자리/index.html`
+- `글로벌_외화/index.html`
+- `디지털_기타/index.html`
+- `디지털_코인/index.html`
+- `산업별_로봇/index.html`
+- `산업별_방산/index.html`
+- `산업별_우주/index.html`
+- `산업별_원전/index.html`
+- `산업별_항공/index.html`
+- `산업별_조선_해운/index.html`
+- `글로벌_관세_통상_국제/index.html`
+- `산업별_건설_제조_기계_철강/index.html`
+- `산업별_화학_에너지/index.html`
+- `산업별_유통_서비스_컨텐츠/index.html`
+- `산업별_가전_스마트폰_디스플레이/index.html`
+- `산업별_반도체/index.html`
+- `산업별_자동차/index.html`
+- `산업별_바이오_헬스/index.html`
+- `산업별_이차전지/index.html`
+- `산업별_섬유패션산업/index.html`
+- `중동이슈/index.html`
+- `지역균형/index.html`
+- `자본시장_국장/index.html`
+- `자본시장_채권/index.html`
+- `정책금융_소상공인/index.html`
+- `정책금융_중소기업/index.html`
+- `정책금융_정책금융개선/index.html`
+
+## 공통 자산
+
+### styles.css
+```css
+/* =========================================================
+   메르 리더 — 매거진/리더 스타일
+   ========================================================= */
+
+:root {
+  /* Paper palette (warm) */
+  --paper: #f4ede0;
+  --paper-2: #ece3d2;
+  --paper-3: #e3d8c1;
+  --ink: #1a1614;
+  --ink-2: #3a322c;
+  --ink-3: #5b4f44;
+  --muted: #8a7d6d;
+  --muted-2: #a89c8a;
+  --rule: #d4c8b2;
+  --rule-2: #e3d8c1;
+  --card: #fbf6ec;
+
+  /* Accents (terracotta + supports) */
+  --accent: oklch(0.55 0.13 35);          /* terracotta */
+  --accent-soft: oklch(0.92 0.03 35);
+  --accent-ink: oklch(0.4 0.13 35);
+
+  /* Sector colors — single chroma family */
+  --c-geo:    oklch(0.55 0.10 25);   /* 지정학 */
+  --c-fin:    oklch(0.50 0.09 145);  /* 금융·통화 */
+  --c-us:     oklch(0.50 0.10 250);  /* 미국·글로벌 */
+  --c-realty: oklch(0.55 0.09 60);   /* 부동산 */
+  --c-tech:   oklch(0.50 0.12 290);  /* 기술·산업 */
+  --c-energy: oklch(0.52 0.11 110);  /* 에너지·자원 */
+  --c-cap:    oklch(0.55 0.10 200);  /* 자본시장 */
+  --c-heavy:  oklch(0.45 0.06 260);  /* 중후장대 */
+  --c-kr:     oklch(0.50 0.13 15);   /* 한국경제 */
+
+  /* Typography scale */
+  --fs-base: 17px;
+  --reading-fs: 19px;
+  --lh-tight: 1.3;
+  --lh-base: 1.6;
+  --lh-reading: 1.95;
+  --measure: 38rem;
+
+  /* Spacing */
+  --gap: 16px;
+  --pad: 20px;
+  --r-card: 4px;
+  --r-pill: 999px;
+
+  /* Shadows */
+  --shadow-1: 0 1px 0 var(--rule-2);
+  --shadow-2: 0 8px 30px -12px rgba(60, 40, 20, 0.18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body { min-height: 100vh; overflow-x: hidden; }
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+/* =========================================================
+   Layout — desktop sidebar + content; mobile bottom tabs
+   ========================================================= */
+
+.app {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+/* Sidebar (desktop) */
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  border-right: 1px solid var(--rule);
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  background: var(--paper);
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 18px;
+}
+.brand .mark {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.brand .sub {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.brand .meta {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.nav-list { display: flex; flex-direction: column; gap: 2px; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background 120ms;
+  border-left: 2px solid transparent;
+  padding-left: 12px;
+}
+.nav-item:hover { background: var(--paper-2); }
+.nav-item.active { background: var(--paper-2); border-left-color: var(--accent); color: var(--ink); font-weight: 600; }
+.nav-item .count { font-size: 0.75rem; color: var(--muted-2); font-variant-numeric: tabular-nums; }
+.nav-section-title {
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  padding: 8px 12px 4px;
+  font-weight: 700;
+}
+
+.sector-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--c, var(--muted));
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  font-size: 0.72rem;
+  color: var(--muted-2);
+  border-top: 1px solid var(--rule);
+  padding-top: 14px;
+  line-height: 1.5;
+}
+
+/* Content */
+.content {
+  min-width: 0; /* prevent grid blowout */
+  padding: 0 0 80px;
+}
+
+/* =========================================================
+   Top bar (search + actions)
+   ========================================================= */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 36px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.topbar .search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-pill);
+  padding: 9px 16px;
+  max-width: 520px;
+}
+.topbar .search input {
+  flex: 1; background: transparent; border: 0; outline: 0;
+  font: inherit; color: var(--ink);
+}
+.topbar .search input::placeholder { color: var(--muted-2); }
+.topbar .search .ico { color: var(--muted); flex-shrink: 0; }
+
+.topbar .actions { display: flex; gap: 4px; margin-left: auto; }
+.icon-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-2);
+  transition: background 120ms, color 120ms;
+  position: relative;
+}
+.icon-btn:hover { background: var(--paper-2); }
+.icon-btn.active { color: var(--accent); }
+.icon-btn .badge {
+  position: absolute; top: 6px; right: 6px;
+  background: var(--accent); color: white;
+  font-size: 0.6rem; font-weight: 700;
+  min-width: 14px; height: 14px;
+  border-radius: 999px; padding: 0 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   Hero / masthead
+   ========================================================= */
+
+.masthead {
+  padding: 56px 36px 36px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 24px;
+}
+.masthead .eyebrow {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.85rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.masthead h1 {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 18px;
+}
+.masthead .lede {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.1rem;
+  color: var(--ink-3);
+  max-width: 36rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+.masthead .stats {
+  margin-top: 26px;
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule-2);
+}
+.masthead .stat .n {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.6rem; font-weight: 800; line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.masthead .stat .l {
+  font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); margin-top: 6px;
+}
+
+/* =========================================================
+   Filter chips (tag bar / sort)
+   ========================================================= */
+
+.toolbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 36px 20px;
+  flex-wrap: wrap;
+}
+.chip {
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 120ms;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.chip:hover { background: var(--paper-2); }
+.chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.chip .x { opacity: 0.6; font-size: 0.85em; }
+
+.toolbar .spacer { flex: 1; }
+.toolbar .meta { font-size: 0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* =========================================================
+   Timeline list (article rows)
+   ========================================================= */
+
+.timeline {
+  padding: 0 36px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.day-group { margin-bottom: 8px; }
+.day-head {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 22px 0 8px;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border-bottom: 0;
+  /* NOT sticky — caused clipping behind rows */
+}
+.day-head .d {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.85rem; font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.day-head .w {
+  font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted-2);
+}
+.day-head .c { margin-left: auto; font-size: 0.7rem; color: var(--muted-2); }
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--rule-2);
+  cursor: pointer;
+  align-items: start;
+  transition: background 120ms;
+  position: relative;
+}
+.row:hover { background: color-mix(in oklab, var(--paper-2) 50%, transparent); }
+.row:hover .row-title { color: var(--accent-ink); }
+
+.row-meta-bottom {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 12px;
+}
+.row-meta-bottom .row-date {
+  font-size: 0.7rem; color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3px;
+}
+.row-meta-bottom .row-sector {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.7rem; letter-spacing: 0.3px;
+  color: var(--c, var(--accent));
+  font-weight: 700;
+}
+.row-meta-bottom .row-sector .emoji {
+  font-size: 0.95rem; line-height: 1;
+}
+.row-meta-bottom .row-tags {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  margin-left: auto;
+}
+.row-meta-bottom .row-tags .t {
+  font-size: 0.66rem; color: var(--muted); padding: 1px 7px;
+  background: var(--paper-2); border-radius: var(--r-pill);
+}
+
+.row-body { min-width: 0; }
+.row-title {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.32;
+  letter-spacing: -0.6px;
+  color: var(--ink);
+  margin-bottom: 8px;
+  text-wrap: pretty;
+  word-break: keep-all;
+  transition: color 150ms;
+}
+.row-excerpt {
+  font-size: 0.95rem;
+  color: var(--ink-3);
+  line-height: 1.65;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-wrap: pretty;
+  word-break: keep-all;
+}
+
+.row-actions {
+  display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+  padding-top: 4px;
+}
+.bookmark-btn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted-2);
+  border-radius: 50%;
+  transition: color 120ms, background 120ms;
+}
+.bookmark-btn:hover { background: var(--paper-2); color: var(--ink); }
+.bookmark-btn.on { color: var(--accent); }
+.bookmark-btn.on svg { fill: currentColor; }
+
+/* =========================================================
+   Article view (full-screen reader)
+   ========================================================= */
+
+.article-view {
+  position: fixed;
+  inset: 0;
+  background: var(--paper);
+  z-index: 200;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.article-topbar {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+  padding: 12px 24px;
+  display: flex; gap: 8px; align-items: center;
+}
+.article-topbar .progress {
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 60ms linear;
+}
+.article-topbar .crumb {
+  font-size: 0.78rem; color: var(--muted);
+  display: flex; align-items: center; gap: 8px;
+  margin-left: 4px;
+}
+
+.article {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 56px 32px 120px;
+  width: 100%;
+}
+
+.article .kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.article .kicker .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+.article h1.title {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  margin-bottom: 24px;
+  text-wrap: pretty;
+  color: var(--ink);
+}
+
+.article .byline {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 36px;
+  font-variant-numeric: tabular-nums;
+}
+.article .byline .sep { width: 3px; height: 3px; background: var(--muted-2); border-radius: 50%; }
+
+.article .lede {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  font-size: clamp(1.15rem, 1.8vw, 1.32rem);
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin-bottom: 36px;
+  text-wrap: pretty;
+  font-weight: 400;
+}
+
+/* drop cap on first letter of lede */
+.article .lede.dropcap::first-letter {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  font-size: 4.4em;
+  font-weight: 800;
+  float: left;
+  line-height: 0.85;
+  margin: 0.08em 0.12em 0 0;
+  color: var(--accent);
+}
+
+/* Body paragraphs with section-title */
+.article .section-h {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.74rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+  margin: 36px 0 12px;
+  display: flex; align-items: center; gap: 12px;
+}
+.article .section-h::before {
+  content: ''; width: 24px; height: 1px; background: var(--accent);
+}
+
+.article .para { margin: 24px 0; }
+.article .para-title {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.35;
+  margin-bottom: 14px;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.article .para-body {
+  font-size: var(--reading-fs);
+  line-height: var(--lh-reading);
+  color: var(--ink-2);
+  text-wrap: pretty;
+  word-break: keep-all;
+  letter-spacing: -0.01em;
+}
+
+/* margin-note (annotations) */
+.article .annotations { margin: 16px 0 8px; display: flex; flex-direction: column; gap: 10px; }
+.annotation {
+  position: relative;
+  padding: 14px 18px 14px 22px;
+  background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+  border-left: 2px solid var(--accent);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--ink-3);
+  border-radius: 0 6px 6px 0;
+}
+.annotation .ann-type {
+  display: inline-block;
+  font-size: 0.66rem; letter-spacing: 2px; text-transform: uppercase;
+  font-weight: 700; color: var(--accent);
+  margin-right: 8px;
+}
+.annotation .ann-target { font-weight: 700; color: var(--ink); margin-right: 4px; }
+
+/* Q&A — pull quote + boxed answer */
+.article .qa { margin: 56px 0 24px; }
+.article .pull-q {
+  font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  font-size: clamp(1.45rem, 2.6vw, 1.85rem);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 28px 0 24px;
+  position: relative;
+  text-wrap: pretty;
+}
+.article .pull-q::before {
+  content: '메르가 던지는 질문';
+  display: block;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.article .pull-a {
+  padding: 20px 4px 4px;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+.article .pull-a::before {
+  content: '나의 답';
+  display: block;
+  font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* tags + source */
+.article .article-foot {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+.article .article-foot .ftags {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+}
+.article .article-foot .ftags .t {
+  font-size: 0.78rem;
+  background: var(--paper-2);
+  color: var(--ink-3);
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+}
+.article .article-foot .ftags .t:hover { background: var(--paper-3); }
+.article .article-foot .src {
+  font-size: 0.85rem; color: var(--muted);
+}
+.article .article-foot .src a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Related */
+.article .related { margin-top: 64px; padding-top: 36px; border-top: 1px solid var(--rule); }
+.article .related h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.78rem; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--muted); font-weight: 700; margin-bottom: 16px;
+}
+.article .related .rel-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule-2);
+  cursor: pointer;
+  align-items: center;
+}
+.article .related .rel-row:hover .rel-title { color: var(--accent-ink); }
+.article .related .rel-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+  transition: color 150ms;
+}
+.article .related .rel-date {
+  font-size: 0.78rem; color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   Empty / no-results
+   ========================================================= */
+.empty {
+  text-align: center; padding: 80px 24px; color: var(--muted);
+}
+.empty .e-mark {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 3rem; font-weight: 700; color: var(--rule);
+  margin-bottom: 12px;
+}
+.empty .e-msg { font-size: 0.95rem; }
+
+/* =========================================================
+   Mobile bottom tabs + responsive
+   ========================================================= */
+.mobile-tabs { display: none; }
+
+@media (max-width: 880px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+
+  .mobile-tabs {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 80;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: color-mix(in oklab, var(--paper) 95%, transparent);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border-top: 1px solid var(--rule);
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  }
+  .mobile-tabs .tab {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px;
+    padding: 8px 4px;
+    color: var(--muted);
+    border-radius: 10px;
+    transition: color 120ms;
+  }
+  .mobile-tabs .tab.active { color: var(--ink); }
+  .mobile-tabs .tab svg { width: 22px; height: 22px; }
+  .mobile-tabs .tab .lab { font-size: 0.65rem; letter-spacing: 0.3px; font-weight: 600; }
+
+  .topbar { padding: 12px 16px; }
+  .topbar .actions .lab-only { display: none; }
+  .masthead { padding: 36px 20px 24px; }
+  .masthead .stats { gap: 18px; }
+  .toolbar { padding: 0 20px 16px; }
+  .timeline { padding: 0 20px; }
+
+  .row { grid-template-columns: 1fr auto; gap: 14px; padding: 18px 0; }
+  .row-meta { flex-direction: row; align-items: center; gap: 10px; padding-top: 0; margin-bottom: 4px; }
+  .row-meta { grid-column: 1 / -1; order: -1; }
+  .row-actions { padding-top: 0; }
+  .row-title { font-size: 1.18rem; }
+  .day-head { top: 60px; }
+  .day-head .d { font-size: 1.3rem; }
+
+  .article { padding: 28px 20px 100px; }
+  .article h1.title { font-size: 1.85rem; letter-spacing: -1px; }
+  .article .lede { font-size: 1.08rem; }
+  .article .lede.dropcap::first-letter { font-size: 3.4em; }
+  .article .para-body { font-size: 18px; line-height: 1.85; }
+  .article .pull-q { font-size: 1.3rem; }
+
+  .content { padding-bottom: 90px; }
+  .article-view { padding-bottom: 0; }
+
+  .topbar .actions { gap: 0; }
+  .icon-btn { width: 36px; height: 36px; }
+}
+
+@media (max-width: 520px) {
+  .masthead h1 { font-size: 2rem; }
+  .masthead .lede { font-size: 1rem; }
+  .article { padding: 24px 18px 100px; }
+  .article h1.title { font-size: 1.6rem; }
+  .article .lede.dropcap::first-letter { font-size: 3em; }
+  .row-title { font-size: 1.08rem; }
+  .row-excerpt { font-size: 0.88rem; }
+}
+
+/* =========================================================
+   Bookmarks page
+   ========================================================= */
+.page-head {
+  padding: 48px 36px 24px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 24px;
+}
+.page-head .eyebrow {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--accent); font-weight: 700; margin-bottom: 10px;
+}
+.page-head h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+}
+.page-head .ph-sub { color: var(--muted); margin-top: 10px; font-size: 0.9rem; }
+
+@media (max-width: 880px) {
+  .page-head { padding: 28px 20px 18px; }
+}
+
+/* =========================================================
+   Sectors grid (when "all sectors" clicked)
+   ========================================================= */
+.sector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  padding: 0 36px 40px;
+}
+.sector-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 22px 22px 20px;
+  cursor: pointer;
+  transition: transform 150ms, box-shadow 150ms, border-color 150ms;
+  position: relative;
+  overflow: hidden;
+}
+.sector-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--c);
+}
+.sector-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); border-color: var(--c); }
+.sector-card .emoji {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 12px;
+  display: block;
+}
+.sector-card .name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+.sector-card .sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 14px; }
+.sector-card .num {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 2.2rem; font-weight: 800; line-height: 1;
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.sector-card .num small {
+  font-size: 0.85rem; font-weight: 400; color: var(--muted);
+  margin-left: 6px;
+}
+@media (max-width: 880px) {
+  .sector-grid { grid-template-columns: 1fr; padding: 0 20px 40px; gap: 10px; }
+  .sector-card { padding: 18px; }
+}
+
+/* =========================================================
+   Density variants
+   ========================================================= */
+
+/* MAGAZINE (default) — already styled in .row above */
+
+/* COMPACT — single-line rows, max info density */
+body.density-compact .day-head { padding: 14px 0 6px; }
+body.density-compact .row {
+  padding: 12px 0;
+  align-items: center;
+}
+body.density-compact .row-title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1.4;
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+body.density-compact .row-excerpt { display: none; }
+body.density-compact .row-meta-bottom {
+  margin-top: 6px;
+}
+body.density-compact .row-meta-bottom .row-tags { display: none; }
+body.density-compact .bookmark-btn { width: 26px; height: 26px; }
+body.density-compact .bookmark-btn svg { width: 14px; height: 14px; }
+body.density-compact .timeline { max-width: 920px; }
+
+/* GRID — card grid, 2-3 cols */
+body.density-grid .timeline { max-width: 1280px; padding: 0 28px; }
+body.density-grid .day-head {
+  padding: 22px 0 10px;
+}
+body.density-grid .day-group { margin-bottom: 8px; }
+body.density-grid .day-group .row-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  padding-bottom: 4px;
+}
+body.density-grid .row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 18px 16px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  transition: transform 150ms, box-shadow 150ms, border-color 150ms;
+  align-items: stretch;
+  position: relative;
+  padding-left: 18px;
+}
+body.density-grid .row::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--c, var(--rule));
+}
+body.density-grid .row:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2);
+  background: var(--card);
+}
+body.density-grid .row-body { display: flex; flex-direction: column; gap: 8px; }
+body.density-grid .row-title {
+  font-size: 1.05rem;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+body.density-grid .row-excerpt {
+  font-size: 0.82rem;
+  -webkit-line-clamp: 2;
+  margin-bottom: 0;
+  color: var(--ink-3);
+}
+body.density-grid .row-meta-bottom {
+  margin-top: auto;
+}
+body.density-grid .row-meta-bottom .row-tags { display: none; }
+body.density-grid .row-actions {
+  position: absolute; top: 8px; right: 8px;
+  padding-top: 0;
+}
+body.density-grid .bookmark-btn { width: 28px; height: 28px; background: color-mix(in oklab, var(--card) 80%, transparent); }
+body.density-grid .bookmark-btn svg { width: 14px; height: 14px; }
+
+/* Mobile overrides for density modes */
+@media (max-width: 880px) {
+  body.density-compact .row { padding: 10px 0; }
+  body.density-compact .row-title { font-size: 0.95rem; }
+
+  body.density-grid .timeline { padding: 0 16px; }
+  body.density-grid .day-group .row-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  body.density-grid .row { padding: 14px 14px 12px; }
+  body.density-grid .row-title { font-size: 0.95rem; -webkit-line-clamp: 3; }
+  body.density-grid .row-excerpt { display: none; }
+}
+
+@media (max-width: 520px) {
+  body.density-grid .day-group .row-list { grid-template-columns: 1fr; }
+}
+/* =========================================================
+   Timeline rail (subtle accent, not a heavy bar)
+   ========================================================= */
+.timeline { position: relative; }
+.timeline::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--rule-2); pointer-events: none;
+}
+@media (max-width: 880px) { .timeline::before { display: none; } }
+.day-head { padding-left: 18px; position: relative; }
+.day-head::before {
+  content: ''; position: absolute; left: -4px; top: 50%;
+  transform: translateY(-50%); width: 9px; height: 9px;
+  border-radius: 50%; background: var(--paper); border: 2px solid var(--accent);
+}
+@media (max-width: 880px) {
+  .day-head { padding-left: 0; }
+  .day-head::before { display: none; }
+}
+.row { position: relative; padding-left: 18px; }
+@media (max-width: 880px) {
+  .row { padding-left: 0; }
+}
+
+/* magazine density (default): nothing extra */
+
+/* compact: single line, smaller meta */
+body.density-compact .timeline::before { display: none; }
+body.density-compact .day-head { padding-left: 0; }
+body.density-compact .day-head::before { display: none; }
+body.density-compact .row {
+  padding: 14px 0; padding-left: 0;
+  grid-template-columns: 1fr auto;
+}
+body.density-compact .row-title { font-size: 1.05rem; line-height: 1.4; margin-bottom: 4px; }
+body.density-compact .row-excerpt { display: none; }
+body.density-compact .row-meta-bottom { margin-top: 6px; }
+
+body.density-grid .timeline::before { display: none; }
+body.density-grid .day-head { padding-left: 0; }
+body.density-grid .day-head::before { display: none; }
+body.density-grid .row { padding-left: 18px; }
+
+/* =========================================================
+   Inline expand
+   ========================================================= */
+.row.expanded { background: color-mix(in oklab, var(--paper-2) 50%, transparent); }
+.inline-article {
+  grid-column: 1 / -1;
+  padding: 24px 24px 28px;
+  margin: 8px 0 16px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--c, var(--accent));
+  border-radius: 0 8px 8px 0;
+  position: relative;
+  animation: ia-in 200ms ease-out;
+}
+@keyframes ia-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.inline-article .ia-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; color: var(--muted);
+}
+.inline-article .ia-close:hover { background: var(--paper-2); color: var(--ink); }
+.inline-article .ia-kicker {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.66rem; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--accent); font-weight: 700; margin-bottom: 10px;
+}
+.inline-article .ia-kicker .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.inline-article .ia-byline {
+  font-size: 0.78rem; color: var(--muted);
+  display: flex; gap: 10px; align-items: center;
+  margin-bottom: 22px; font-variant-numeric: tabular-nums;
+}
+.inline-article .ia-byline .sep { width: 3px; height: 3px; background: var(--muted-2); border-radius: 50%; }
+.inline-article .ia-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  font-weight: 800; letter-spacing: -0.8px; line-height: 1.25;
+  margin-bottom: 12px; text-wrap: pretty; padding-right: 36px;
+}
+.inline-article .ia-lede {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.04rem; line-height: 1.7;
+  color: var(--ink-2); margin-bottom: 22px; text-wrap: pretty;
+}
+.inline-article .ia-lede.dropcap::first-letter {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 3.6em; font-weight: 800; float: left;
+  line-height: 0.85; margin: 0.08em 0.1em 0 0; color: var(--accent);
+}
+.inline-article .ia-section-h {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--muted); font-weight: 700;
+  margin: 22px 0 10px; display: flex; align-items: center; gap: 10px;
+}
+.inline-article .ia-section-h::before { content:''; width: 18px; height: 1px; background: var(--accent); }
+.inline-article .ia-para { margin: 16px 0; }
+.inline-article .ia-para-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.18rem; font-weight: 700; letter-spacing: -0.4px;
+  line-height: 1.35; margin-bottom: 10px; text-wrap: pretty;
+}
+.inline-article .ia-para-body {
+  font-size: var(--reading-fs); line-height: var(--lh-reading);
+  color: var(--ink-2); text-wrap: pretty; word-break: keep-all; letter-spacing: -0.01em;
+}
+.inline-article ::selection { background: oklch(0.85 0.13 80 / 0.5); }
+.inline-article .ia-pull-q {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.2rem; font-weight: 700; line-height: 1.45; letter-spacing: -0.3px;
+  color: var(--ink); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule);
+  padding: 18px 0 14px; margin-top: 28px; text-wrap: pretty;
+}
+.inline-article .ia-pull-q::before {
+  content: '메르가 던지는 질문';
+  display: block; font-family: 'Pretendard', sans-serif;
+  font-size: 0.66rem; letter-spacing: 2.5px; text-transform: uppercase;
+  font-weight: 700; color: var(--accent); margin-bottom: 10px;
+}
+.inline-article .ia-pull-a {
+  padding: 14px 0 0; font-size: 0.95rem; line-height: 1.7; color: var(--ink-2);
+}
+.inline-article .ia-pull-a::before {
+  content: '나의 답';
+  display: block; font-size: 0.66rem; letter-spacing: 2.5px; text-transform: uppercase;
+  font-weight: 700; color: var(--muted); margin-bottom: 6px;
+}
+.inline-article .ia-foot {
+  margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--rule);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.inline-article .ia-foot .src { font-size: 0.78rem; color: var(--muted); }
+.inline-article .ia-foot .src a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; }
+.annotation-inline {
+  margin: 12px 0;
+  padding: 10px 14px;
+  background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+  border-left: 2px solid var(--accent);
+  font-size: 0.86rem; line-height: 1.7; color: var(--ink-3);
+  border-radius: 0 4px 4px 0;
+}
+.annotation-inline .ann-type {
+  font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
+  font-weight: 700; color: var(--accent); margin-right: 6px;
+}
+.annotation-inline .ann-target { font-weight: 700; color: var(--ink); margin-right: 4px; }
+
+body.density-compact .inline-article { margin-left: 116px; margin-right: 0; }
+@media (max-width: 880px) {
+  body.density-compact .inline-article { margin-left: 36px; }
+  .inline-article { padding: 18px 18px 22px; }
+  .inline-article .ia-title { font-size: 1.25rem; padding-right: 30px; }
+  .inline-article .ia-lede { font-size: 0.98rem; }
+}
+body.density-grid .inline-article { grid-column: 1 / -1; }
+
+/* =========================================================
+   Drag-to-clip
+   ========================================================= */
+.clip-popover {
+  position: absolute; z-index: 300;
+  background: var(--ink); color: var(--paper);
+  border-radius: 8px; padding: 6px;
+  display: flex; gap: 4px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+  animation: cp-in 120ms ease-out;
+  transform: translate(-50%, -100%);
+  margin-top: -8px;
+}
+@keyframes cp-in { from { opacity: 0; } to { opacity: 1; } }
+.clip-popover::after {
+  content: ''; position: absolute;
+  bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg);
+  width: 10px; height: 10px; background: var(--ink);
+}
+.clip-popover button {
+  background: transparent; color: var(--paper);
+  font-size: 0.78rem; padding: 6px 12px; border-radius: 5px;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-weight: 600; white-space: nowrap;
+}
+.clip-popover button:hover { background: rgba(255,255,255,0.12); }
+mark.clip-mark {
+  background: oklch(0.92 0.1 85 / 0.7);
+  color: inherit; padding: 0 1px; border-radius: 2px;
+  border-bottom: 1px solid oklch(0.7 0.13 65 / 0.5);
+}
+
+/* =========================================================
+   Clips drawer
+   ========================================================= */
+.clips-fab {
+  position: fixed; right: 22px; bottom: 22px; z-index: 90;
+  background: var(--ink); color: var(--paper);
+  border-radius: 999px; padding: 10px 16px 10px 12px;
+  font-size: 0.85rem; font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: transform 150ms;
+}
+.clips-fab:hover { transform: translateY(-2px); }
+.clips-fab .num {
+  background: var(--accent); color: white;
+  border-radius: 999px; padding: 2px 8px;
+  font-size: 0.74rem; font-variant-numeric: tabular-nums;
+}
+@media (max-width: 880px) { .clips-fab { bottom: 76px; right: 14px; } }
+.clips-drawer-overlay {
+  position: fixed; inset: 0;
+  background: rgba(20, 18, 14, 0.4); z-index: 200;
+  animation: ov-in 150ms ease-out;
+}
+@keyframes ov-in { from { opacity: 0; } to { opacity: 1; } }
+.clips-drawer {
+  position: fixed; top: 0; right: 0;
+  width: min(440px, 100vw); height: 100vh;
+  background: var(--paper); z-index: 201;
+  display: flex; flex-direction: column;
+  box-shadow: -12px 0 40px rgba(0,0,0,0.18);
+  animation: cd-in 240ms cubic-bezier(.2,.7,.2,1);
+}
+@keyframes cd-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
+.clips-drawer .cd-head {
+  padding: 22px 24px 16px; border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center; gap: 12px;
+}
+.clips-drawer .cd-head h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1;
+}
+.clips-drawer .cd-head .cd-count {
+  font-size: 0.78rem; color: var(--muted);
+  margin-left: auto; padding-right: 4px;
+}
+.clips-drawer .cd-list { overflow-y: auto; flex: 1; padding: 10px 0 80px; }
+.clips-drawer .cd-empty {
+  padding: 60px 24px; text-align: center; color: var(--muted);
+}
+.clips-drawer .cd-empty .e-mark {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 2.6rem; color: var(--rule); font-weight: 700; margin-bottom: 10px;
+}
+.clip-item {
+  padding: 16px 24px; border-bottom: 1px solid var(--rule-2); position: relative;
+}
+.clip-item .ci-meta {
+  font-size: 0.7rem; color: var(--muted); letter-spacing: 0.3px;
+  margin-bottom: 6px; display: flex; gap: 8px; align-items: center;
+}
+.clip-item .ci-meta .sec {
+  font-weight: 700; color: var(--ink-3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+}
+.clip-item .ci-source {
+  font-size: 0.78rem; color: var(--ink-2); font-weight: 600;
+  margin-bottom: 8px; cursor: pointer; text-wrap: pretty;
+}
+.clip-item .ci-source:hover { color: var(--accent-ink); }
+.clip-item .ci-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.95rem; line-height: 1.7; color: var(--ink);
+  border-left: 2px solid var(--accent); padding-left: 12px; text-wrap: pretty;
+}
+.clip-item .ci-tools { display: flex; gap: 8px; margin-top: 10px; }
+.clip-item .ci-tools button {
+  font-size: 0.72rem; color: var(--muted);
+  padding: 4px 10px; border-radius: var(--r-pill);
+  border: 1px solid var(--rule); background: var(--card);
+}
+.clip-item .ci-tools button:hover { background: var(--paper-2); color: var(--ink); }
+.clip-item .ci-tools .del:hover { color: oklch(0.5 0.18 25); border-color: oklch(0.5 0.18 25); }
+
+body.mode-minimal .article-topbar { background: transparent; border-bottom: 0; }
+body.mode-minimal .article .kicker { color: var(--muted); }
+body.mode-minimal .article .pull-q::before { color: var(--muted); }
+body.mode-minimal .article .lede.dropcap::first-letter { color: var(--ink); }
+body.mode-minimal .annotation { border-left-color: var(--rule); }
+
+/* mode-newspaper: tighter, narrower headlines, stronger rules */
+body.mode-newspaper .row-title { font-size: 1.2rem; }
+body.mode-newspaper .row { padding: 16px 0; }
+body.mode-newspaper .row-excerpt { -webkit-line-clamp: 1; }
+body.mode-newspaper .article h1.title { letter-spacing: -2px; }
+
+/* font-size tweak: data attr on body */
+body[data-fs="s"]  { --reading-fs: 16.5px; --lh-reading: 1.85; }
+body[data-fs="m"]  { --reading-fs: 19px;   --lh-reading: 1.95; }
+body[data-fs="l"]  { --reading-fs: 21px;   --lh-reading: 2.0; }
+body[data-fs="xl"] { --reading-fs: 23.5px; --lh-reading: 2.05; }
+
+/* =========================================================
+   Theme: WHITE (clean, like the original blog)
+   ========================================================= */
+body.theme-white {
+  --paper:   #ffffff;
+  --paper-2: #f5f5f4;
+  --paper-3: #e7e5e4;
+  --ink:     #0a0a0a;
+  --ink-2:   #1f1f1f;
+  --ink-3:   #404040;
+  --muted:   #737373;
+  --muted-2: #a3a3a3;
+  --rule:    #e5e5e5;
+  --rule-2:  #f0f0ef;
+  --card:    #ffffff;
+
+  --accent: #c2410c;            /* warmer orange-red, more pop on white */
+  --accent-soft: #fff7ed;
+  --accent-ink: #9a3412;
+}
+body.theme-white .sidebar { background: var(--paper); }
+body.theme-white .topbar { background: color-mix(in oklab, var(--paper) 94%, transparent); }
+body.theme-white .day-head::before { background: var(--paper); border-color: var(--accent); }
+body.theme-white .row.expanded { background: #fafaf9; }
+body.theme-white .clip-mark { background: #fef3c7; padding: 0 2px; border-radius: 2px; }
+
+/* Theme: PAPER (warm, original) */
+body.theme-paper {
+  /* defaults already paper */
+}
+
+/* =========================================================
+   Sidebar: nav-group (collapsible)
+   ========================================================= */
+.nav-group { margin: 0; }
+.nav-group-toggle {
+  display: flex; align-items: center; cursor: pointer; user-select: none;
+}
+.nav-group-toggle .nav-arrow {
+  width: 12px; height: 12px; margin-left: auto; color: var(--muted);
+  transition: transform 200ms; flex-shrink: 0;
+}
+.nav-group.open > .nav-group-toggle .nav-arrow { transform: rotate(90deg); }
+.nav-group-items {
+  display: none; padding-left: 16px;
+}
+.nav-group.open > .nav-group-items { display: block; }
+.nav-item.sub { font-size: 0.88rem; padding: 5px 12px; }
+.nav-item.sub span:first-child { color: var(--ink-3); }
+
+/* =========================================================
+   Highlight marks
+   ========================================================= */
+mark.hl-mark {
+  background: oklch(0.92 0.18 90 / 0.6);
+  color: inherit; padding: 0 1px; border-radius: 2px;
+}
+
+/* =========================================================
+   Memo card inline
+   ========================================================= */
+.memo-overlay {
+  position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 499;
+}
+.memo-card-inline {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
+  padding: 20px; width: min(380px, 88vw); box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+}
+.mc-header {
+  font-family: 'Noto Serif KR', serif; font-weight: 800; font-size: 1rem; margin-bottom: 12px;
+}
+.mc-quote {
+  font-size: 0.85rem; color: var(--ink-3); border-left: 2px solid var(--accent);
+  padding-left: 10px; margin-bottom: 14px; line-height: 1.5;
+}
+.mc-input {
+  width: 100%; min-height: 80px; padding: 10px 12px; border: 1px solid var(--rule);
+  border-radius: 8px; font-size: 0.9rem; resize: vertical; background: var(--paper);
+  color: var(--ink); font-family: inherit; line-height: 1.6;
+}
+.mc-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+.mc-actions button {
+  padding: 8px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+}
+.mc-cancel { border: 1px solid var(--rule); background: var(--card); }
+.mc-save { background: var(--ink); color: var(--paper); }
+
+/* =========================================================
+   Drawer tabs
+   ========================================================= */
+.cd-tabs {
+  display: flex; gap: 0; border-bottom: 1px solid var(--rule); padding: 0 24px;
+}
+.cd-tab {
+  padding: 10px 16px; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+  border-bottom: 2px solid transparent; cursor: pointer; transition: all 120ms;
+}
+.cd-tab.active { color: var(--ink); border-bottom-color: var(--accent); }
+.cd-tab:hover { color: var(--ink); }
+.memo-note-wrap { margin-top: 8px; }
+.memo-note {
+  width: 100%; min-height: 48px; padding: 8px 10px; border: 1px solid var(--rule);
+  border-radius: 6px; font-size: 0.85rem; resize: vertical; background: var(--paper-2);
+  color: var(--ink); font-family: inherit; line-height: 1.5;
+}
+
+/* =========================================================
+   Clip popover iOS fix (below selection)
+   ========================================================= */
+.clip-popover.pop-below::after {
+  bottom: auto; top: -5px;
+}
+
+/* =========================================================
+   Sync UI
+   ========================================================= */
+.sync-ui { margin-top: 8px; }
+.sync-token-input {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 6px;
+  font-size: 0.85rem; background: var(--card); color: var(--ink); margin-bottom: 8px;
+}
+.sync-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.sync-status { font-size: 0.72rem; margin-left: 4px; }
+.sync-status.synced { color: green; }
+.sync-status.error { color: red; }
+
+/* ============================================================
+   READABILITY ENHANCEMENTS (auto-injected by app.js)
+   ============================================================ */
+
+/* ── Auto Summary Box ── */
+.auto-summary {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin: 12px 0 28px;
+  padding: 14px 18px;
+  background: linear-gradient(to right, color-mix(in oklab, var(--accent-soft) 70%, transparent), transparent);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.95rem; line-height: 1.7;
+  word-break: keep-all;
+}
+.auto-summary .as-label {
+  flex-shrink: 0;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 1.5px;
+  color: var(--accent-ink); text-transform: uppercase;
+  padding: 3px 8px; background: var(--paper); border-radius: 3px;
+  margin-top: 2px;
+}
+.auto-summary .as-text {
+  flex: 1; color: var(--ink-2); font-weight: 500;
+  outline: none; border-radius: 4px; padding: 2px 4px;
+}
+.auto-summary .as-text[contenteditable="true"] {
+  background: var(--paper);
+  outline: 2px solid var(--accent);
+}
+.auto-summary .as-edit {
+  flex-shrink: 0;
+  background: transparent; border: 1px solid var(--rule);
+  width: 26px; height: 26px; border-radius: 4px;
+  font-size: 0.78rem; color: var(--muted); cursor: pointer;
+  margin-top: 2px;
+}
+.auto-summary .as-edit:hover { background: var(--paper); color: var(--accent); }
+
+/* ── TOC Rail ── */
+.toc-rail {
+  position: sticky; top: 80px; float: right;
+  width: 200px; margin: 0 0 24px 32px;
+  padding: 14px 14px 12px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  font-family: 'Pretendard', sans-serif;
+  max-height: calc(100vh - 120px); overflow-y: auto;
+  z-index: 5;
+}
+.toc-head {
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase;
+  margin-bottom: 10px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule-2);
+}
+.toc-list { list-style: none; padding: 0; margin: 0; }
+.toc-item { margin: 2px 0; }
+.toc-item a {
+  display: block; padding: 5px 8px; border-radius: 4px;
+  font-size: 0.8rem; line-height: 1.4; color: var(--ink-3);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 120ms;
+}
+.toc-item a:hover { background: var(--paper-2); color: var(--ink); }
+.toc-item.toc-h3 a { padding-left: 18px; font-size: 0.74rem; color: var(--muted); }
+.toc-item.active a {
+  background: var(--accent-soft); color: var(--accent-ink);
+  border-left-color: var(--accent); font-weight: 600;
+}
+@media (max-width: 1100px) {
+  .toc-rail { float: none; width: auto; position: static; margin: 0 0 24px; max-height: 240px; }
+}
+
+/* ── KPI Highlight ── */
+strong.kpi {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 800;
+  color: var(--accent-ink);
+  background: linear-gradient(to top, var(--accent-soft) 60%, transparent 60%);
+  padding: 0 2px;
+  letter-spacing: -0.2px;
+}
+
+/* ── Mobile readability tuning ── */
+@media (max-width: 720px) {
+  :root { --reading-fs: 17px; }
+  .article-content p, .article-content ul li { line-height: 1.85; }
+  .auto-summary { margin: 8px -8px 20px; padding: 12px 14px; font-size: 0.9rem; gap: 8px; }
+  .auto-summary .as-label { font-size: 0.62rem; padding: 2px 6px; }
+}
+
+/* ── Print / PT-print ── */
+@media print {
+  .sidebar, .topbar, .mobile-tabs, .clips-fab, .clips-drawer-overlay, .toc-rail, .as-edit { display: none !important; }
+  .row.expanded + .inline-article { page-break-after: always; }
+  .article-content p, .article-content li { font-size: 12pt; line-height: 1.7; color: #000; }
+  body { background: white; }
+}
+
+/* ============================================================
+   CLIP FOLDERS (bookmarks.html)
+   ============================================================ */
+.bm-layout { display: grid; grid-template-columns: 240px 1fr; gap: 28px; min-height: 100vh; }
+@media (max-width: 880px) { .bm-layout { grid-template-columns: 1fr; } }
+
+.folder-rail {
+  border-right: 1px solid var(--rule);
+  padding: 8px 0 24px;
+}
+.folder-rail-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px 12px;
+  font-family: 'Pretendard', sans-serif;
+}
+.folder-rail-head .frh-label {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase;
+}
+.folder-add-btn {
+  background: transparent; border: 1px solid var(--rule); border-radius: 4px;
+  width: 24px; height: 24px; font-size: 1rem; color: var(--muted); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.folder-add-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+.folder-list { list-style: none; padding: 0; margin: 0; }
+.folder-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 14px; cursor: pointer;
+  border-left: 3px solid transparent;
+  font-family: 'Pretendard', sans-serif; font-size: 0.92rem;
+  color: var(--ink-2);
+  position: relative;
+}
+.folder-item:hover { background: var(--paper-2); }
+.folder-item.active { background: var(--paper-2); border-left-color: var(--accent); color: var(--ink); font-weight: 600; }
+.folder-item .fi-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.folder-item .fi-name { flex: 1; outline: none; }
+.folder-item .fi-name[contenteditable="true"] { background: var(--paper); outline: 2px solid var(--accent); border-radius: 3px; padding: 1px 4px; }
+.folder-item .fi-count { font-size: 0.74rem; color: var(--muted); }
+.folder-item .fi-tools { display: none; gap: 2px; }
+.folder-item:hover .fi-tools { display: flex; }
+.folder-item .fi-tools button {
+  background: transparent; border: none; padding: 2px 4px; border-radius: 3px;
+  color: var(--muted); cursor: pointer; font-size: 0.74rem;
+}
+.folder-item .fi-tools button:hover { background: var(--rule); color: var(--ink); }
+
+.bm-clip { padding: 14px 16px; border-bottom: 1px solid var(--rule-2); }
+.bm-clip .bc-meta {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  font-size: 0.72rem; color: var(--muted);
+}
+.bm-clip .bc-folder-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 8px; background: var(--paper-2); border-radius: 999px;
+  font-size: 0.7rem; font-weight: 600; color: var(--ink-3);
+}
+.bm-clip .bc-folder-chip .chip-dot { width: 6px; height: 6px; border-radius: 50%; }
+.bm-clip .bc-text {
+  font-family: 'Noto Serif KR', serif; font-size: 1rem; line-height: 1.75;
+  border-left: 2px solid var(--accent); padding: 4px 0 4px 14px;
+  color: var(--ink-2); word-break: keep-all;
+}
+.bm-clip .bc-tools {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;
+}
+.bm-clip .bc-tools button, .bm-clip .bc-tools select {
+  font-size: 0.74rem; padding: 4px 10px; border-radius: 999px;
+  border: 1px solid var(--rule); background: var(--card); color: var(--ink-3);
+  cursor: pointer; font-family: 'Pretendard', sans-serif;
+}
+.bm-clip .bc-tools button:hover { background: var(--paper-2); color: var(--ink); }
+
+.pt-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px; background: var(--ink); color: var(--paper);
+  border-radius: 999px; font-size: 0.86rem; font-weight: 700;
+  text-decoration: none; margin: 16px 0;
+  font-family: 'Pretendard', sans-serif;
+}
+.pt-cta:hover { background: var(--accent); }
+
+/* ============================================================
+   PT CARD VIEW (pt.html)
+   ============================================================ */
+.pt-shell {
+  position: fixed; inset: 0;
+  background: var(--paper);
+  display: flex; flex-direction: column;
+  font-family: 'Pretendard', sans-serif;
+}
+.pt-topbar {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--card);
+}
+.pt-topbar .pt-title {
+  font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 800;
+  color: var(--ink);
+}
+.pt-topbar select, .pt-topbar button {
+  font-size: 0.84rem; padding: 6px 12px; border-radius: 6px;
+  border: 1px solid var(--rule); background: var(--card); color: var(--ink-2);
+  cursor: pointer;
+}
+.pt-topbar button.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pt-progress-wrap { flex: 1; height: 4px; background: var(--rule-2); border-radius: 999px; overflow: hidden; }
+.pt-progress-bar { height: 100%; background: var(--accent); transition: width 200ms; }
+.pt-counter { font-size: 0.84rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+
+.pt-stage {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 40px 60px; position: relative; overflow: hidden;
+}
+.pt-card {
+  width: min(900px, 100%); max-height: calc(100vh - 200px);
+  background: var(--card);
+  border-radius: 16px;
+  padding: 56px 64px;
+  box-shadow: 0 12px 48px rgba(20,18,14,0.08);
+  border: 1px solid var(--rule-2);
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 24px;
+  animation: pt-in 280ms cubic-bezier(.2,.7,.2,1);
+}
+@keyframes pt-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+
+.pt-card .pt-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  align-self: flex-start;
+  padding: 6px 14px;
+  background: var(--accent-soft); color: var(--accent-ink);
+  border-radius: 999px;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.5px;
+}
+.pt-card .pt-chip .chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.pt-card .pt-num {
+  position: absolute; top: 24px; right: 32px;
+  font-size: 0.82rem; font-weight: 700; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.pt-card .pt-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 500; line-height: 1.7;
+  color: var(--ink); word-break: keep-all; text-wrap: pretty;
+}
+.pt-card .pt-source { font-size: 0.84rem; color: var(--muted); }
+.pt-card .pt-note-wrap {
+  margin-top: auto; padding-top: 20px;
+  border-top: 1px dashed var(--rule);
+}
+.pt-card .pt-note-label {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.pt-card .pt-note {
+  width: 100%; min-height: 60px;
+  background: var(--paper); border: 1px solid var(--rule);
+  border-radius: 6px; padding: 10px 12px;
+  font-family: 'Pretendard', sans-serif; font-size: 0.95rem;
+  line-height: 1.65; color: var(--ink-2); resize: vertical;
+}
+.pt-card .pt-note:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+
+.pt-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--card); border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: 0 4px 16px rgba(20,18,14,0.06);
+  font-size: 1.4rem; color: var(--ink-2);
+}
+.pt-nav:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pt-nav.prev { left: 16px; }
+.pt-nav.next { right: 16px; }
+.pt-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.pt-empty { text-align: center; color: var(--muted); padding: 80px 24px; }
+.pt-empty h3 { font-family: 'Noto Serif KR', serif; font-size: 1.4rem; color: var(--ink); margin-bottom: 12px; }
+
+@media (max-width: 720px) {
+  .pt-stage { padding: 16px; }
+  .pt-card { padding: 32px 24px; border-radius: 12px; }
+  .pt-card .pt-num { top: 16px; right: 20px; }
+  .pt-nav { width: 40px; height: 40px; }
+  .pt-nav.prev { left: 6px; }
+  .pt-nav.next { right: 6px; }
+}
+```
+
+### app.js
+```javascript
+/* =========================================================
+   논술 리더 — app.js (공통 런타임)
+   ========================================================= */
+
+// ── Base path detection ──
+const BASE = (function() {
+  const p = location.pathname;
+  // if we're in a subfolder (category page), base is ../
+  // if we're at root index.html, base is ./
+  const segs = p.replace(/\/index\.html$/, '').split('/').filter(Boolean);
+  // check if current page has ../styles.css reference → subfolder
+  const isSubfolder = !!document.querySelector('link[href^="../styles.css"], link[href^="../"]');
+  return isSubfolder ? '../' : './';
+})();
+
+// ── State ──
+let density = localStorage.getItem('ns_density') || 'magazine';
+let theme = localStorage.getItem('ns_theme') || 'white';
+let mode = localStorage.getItem('ns_mode') || 'magazine';
+let fsIdx = ['s','m','l','xl'].indexOf(localStorage.getItem('ns_fs') || 'm');
+if (fsIdx < 0) fsIdx = 1;
+const fsSizes = ['s','m','l','xl'];
+let bookmarks = new Set(JSON.parse(localStorage.getItem('ns_bookmarks') || '[]'));
+let clips = JSON.parse(localStorage.getItem('ns_clips') || '[]');
+let highlights = JSON.parse(localStorage.getItem('ns_highlights') || '[]');
+let memos = JSON.parse(localStorage.getItem('ns_memos') || '[]');
+let clipFolders = JSON.parse(localStorage.getItem('ns_clip_folders') || '[]');
+let summaryOverrides = JSON.parse(localStorage.getItem('ns_summary_overrides') || '{}');
+// Migration: ensure each clip has folderId field
+clips.forEach(c => { if (c.folderId === undefined) c.folderId = null; });
+
+const SVG_CLIP = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg>';
+
+function applyState() {
+  document.body.className = `density-${density} theme-${theme} mode-${mode}`;
+  document.body.dataset.fs = fsSizes[fsIdx];
+  document.querySelectorAll('[data-setting]').forEach(btn => {
+    const [key, val] = btn.dataset.setting.split(':');
+    const current = key === 'density' ? density : key === 'theme' ? theme : key === 'mode' ? mode : fsSizes[fsIdx];
+    btn.classList.toggle('active', val === current);
+  });
+  updateBookmarkUI();
+  updateClipsFab();
+}
+
+// ── Search ──
+function initSearch() {
+  const searchInput = document.getElementById('searchInput');
+  const rows = document.querySelectorAll('.card-row');
+  if (searchInput && rows.length) {
+    searchInput.addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      let vis = 0;
+      rows.forEach(r => {
+        const show = !q || r.dataset.text.includes(q);
+        r.style.display = show ? '' : 'none';
+        if (show) vis++;
+      });
+      const fc = document.getElementById('filterCount');
+      if (fc) fc.textContent = vis + '\uD3B8';
+    });
+  }
+  // category search (main page)
+  const catSearch = document.getElementById('catSearch');
+  if (catSearch) {
+    catSearch.addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('.sector-card').forEach(c => {
+        c.style.display = !q || c.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+      // also filter group children
+      document.querySelectorAll('.group-child').forEach(c => {
+        c.style.display = !q || c.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+      // show all groups if searching
+      if (q) {
+        document.querySelectorAll('.group-children').forEach(gc => gc.style.display = '');
+      }
+    });
+  }
+}
+
+// ── Expand/Collapse (article rows) ──
+function initExpandCollapse() {
+  document.querySelectorAll('.row').forEach(row => {
+    row.addEventListener('click', function(e) {
+      if (e.target.closest('.bookmark-btn') || e.target.closest('.ia-close')) return;
+      const wasOpen = this.classList.contains('expanded');
+      document.querySelectorAll('.row.expanded').forEach(r => r.classList.remove('expanded'));
+      if (!wasOpen) {
+        this.classList.add('expanded');
+        setTimeout(() => {
+          const art = this.nextElementSibling;
+          if (art && art.classList.contains('inline-article')) {
+            const top = art.getBoundingClientRect().top + window.scrollY - 80;
+            window.scrollTo({top, behavior: 'smooth'});
+          }
+        }, 50);
+      }
+    });
+  });
+  document.querySelectorAll('.ia-close').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const art = this.closest('.inline-article');
+      if (art && art.previousElementSibling) art.previousElementSibling.classList.remove('expanded');
+    });
+  });
+}
+
+// ── Bookmarks ──
+function updateBookmarkUI() {
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    const t = btn.dataset.title;
+    const on = bookmarks.has(t);
+    btn.classList.toggle('on', on);
+    const svg = btn.querySelector('svg');
+    if (svg) svg.setAttribute('fill', on ? 'currentColor' : 'none');
+  });
+}
+function initBookmarks() {
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const t = this.dataset.title;
+      if (bookmarks.has(t)) bookmarks.delete(t); else bookmarks.add(t);
+      localStorage.setItem('ns_bookmarks', JSON.stringify([...bookmarks]));
+      updateBookmarkUI();
+      syncPush();
+    });
+  });
+}
+
+// ── Font Size ──
+function initFontSize() {
+  document.getElementById('fsBtn')?.addEventListener('click', () => {
+    fsIdx = (fsIdx + 1) % fsSizes.length;
+    localStorage.setItem('ns_fs', fsSizes[fsIdx]);
+    applyState();
+  });
+}
+
+// ── Density ──
+function initDensity() {
+  document.getElementById('densityBtn')?.addEventListener('click', () => {
+    const order = ['compact','grid','magazine'];
+    density = order[(order.indexOf(density) + 1) % order.length];
+    localStorage.setItem('ns_density', density);
+    applyState();
+  });
+}
+
+// ── Settings Panel ──
+function initSettings() {
+  const settingsOverlay = document.getElementById('settingsOverlay');
+  document.getElementById('settingsBtn')?.addEventListener('click', () => {
+    settingsOverlay?.classList.toggle('open');
+    applyState();
+  });
+  settingsOverlay?.addEventListener('click', (e) => {
+    if (e.target === settingsOverlay) settingsOverlay.classList.remove('open');
+  });
+  document.querySelectorAll('[data-setting]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const [key, val] = this.dataset.setting.split(':');
+      if (key === 'density') { density = val; localStorage.setItem('ns_density', val); }
+      if (key === 'theme') { theme = val; localStorage.setItem('ns_theme', val); }
+      if (key === 'mode') { mode = val; localStorage.setItem('ns_mode', val); }
+      if (key === 'fs') { fsIdx = fsSizes.indexOf(val); localStorage.setItem('ns_fs', val); }
+      applyState();
+    });
+  });
+}
+
+// ── Clips ──
+function updateClipsFab() {
+  const fab = document.querySelector('.clips-fab');
+  if (fab) {
+    const total = clips.length + highlights.length + memos.length;
+    fab.classList.toggle('show', total > 0);
+    fab.querySelector('.num').textContent = total;
+  }
+}
+function addClip(text, title) {
+  clips.unshift({id: Date.now(), text, title, folderId: null, createdAt: Date.now()});
+  localStorage.setItem('ns_clips', JSON.stringify(clips));
+  updateClipsFab();
+  syncPush();
+}
+
+// ── Clip Folders ──
+function saveFolders() { localStorage.setItem('ns_clip_folders', JSON.stringify(clipFolders)); syncPush(); }
+function saveClips() { localStorage.setItem('ns_clips', JSON.stringify(clips)); syncPush(); }
+function createFolder(name, color) {
+  const f = {id: 'f' + Date.now(), name: name || '새 폴더', color: color || 'oklch(0.55 0.13 35)', createdAt: Date.now()};
+  clipFolders.push(f);
+  saveFolders();
+  return f;
+}
+function renameFolder(id, name) { const f = clipFolders.find(f => f.id === id); if (f) { f.name = name; saveFolders(); } }
+function deleteFolder(id) {
+  clipFolders = clipFolders.filter(f => f.id !== id);
+  clips.forEach(c => { if (c.folderId === id) c.folderId = null; });
+  saveFolders(); saveClips();
+}
+function moveClipToFolder(clipId, folderId) {
+  const c = clips.find(c => c.id === clipId);
+  if (c) { c.folderId = folderId; saveClips(); }
+}
+function removeClip(id) {
+  clips = clips.filter(c => c.id !== id);
+  localStorage.setItem('ns_clips', JSON.stringify(clips));
+  updateClipsFab();
+  renderDrawer();
+  syncPush();
+}
+
+// ── Highlights ──
+function addHighlight(text, title) {
+  highlights.unshift({id: Date.now(), text, title, createdAt: Date.now()});
+  localStorage.setItem('ns_highlights', JSON.stringify(highlights));
+  updateClipsFab();
+  applyHighlightsToDOM();
+  syncPush();
+}
+function removeHighlight(id) {
+  highlights = highlights.filter(h => h.id !== id);
+  localStorage.setItem('ns_highlights', JSON.stringify(highlights));
+  updateClipsFab();
+  renderDrawer();
+  syncPush();
+}
+function applyHighlightsToDOM() {
+  // re-apply highlight marks to visible article content
+  document.querySelectorAll('mark.hl-mark').forEach(m => {
+    const text = m.textContent;
+    m.replaceWith(document.createTextNode(text));
+  });
+  if (!highlights.length) return;
+  document.querySelectorAll('.article-content').forEach(content => {
+    highlights.forEach(h => {
+      const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
+      let node;
+      while (node = walker.nextNode()) {
+        const idx = node.textContent.indexOf(h.text);
+        if (idx === -1) continue;
+        const range = document.createRange();
+        range.setStart(node, idx);
+        range.setEnd(node, idx + h.text.length);
+        const mark = document.createElement('mark');
+        mark.className = 'hl-mark';
+        mark.dataset.hlId = h.id;
+        range.surroundContents(mark);
+        break;
+      }
+    });
+  });
+}
+
+// ── Memos ──
+function addMemo(text, title, note) {
+  memos.unshift({id: Date.now(), text, title, note: note || '', createdAt: Date.now()});
+  localStorage.setItem('ns_memos', JSON.stringify(memos));
+  updateClipsFab();
+  syncPush();
+}
+function updateMemoNote(id, note) {
+  const m = memos.find(m => m.id === id);
+  if (m) { m.note = note; localStorage.setItem('ns_memos', JSON.stringify(memos)); syncPush(); }
+}
+function removeMemo(id) {
+  memos = memos.filter(m => m.id !== id);
+  localStorage.setItem('ns_memos', JSON.stringify(memos));
+  updateClipsFab();
+  renderDrawer();
+  syncPush();
+}
+
+// ── Drawer (clips/highlights/memos tabs) ──
+let drawerTab = 'clips';
+
+function renderDrawer() {
+  const list = document.querySelector('.cd-list');
+  if (!list) return;
+  const countEl = document.querySelector('.cd-count');
+
+  if (drawerTab === 'clips') {
+    if (countEl) countEl.textContent = clips.length + '\uAC1C';
+    if (!clips.length) {
+      list.innerHTML = '<div class="cd-empty"><div style="font-size:2.5rem;color:var(--rule);margin-bottom:12px">\xB6</div><div>본문에서 텍스트를 드래그하면<br>여기에 모입니다.</div></div>';
+      return;
+    }
+    list.innerHTML = clips.map(c => `<div class="clip-item"><div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">${esc(c.title || '')}</div><div class="ci-text">${esc(c.text)}</div><div class="ci-tools"><button onclick="navigator.clipboard?.writeText(${JSON.stringify(c.text)})">복사</button><button onclick="removeClip(${c.id})">삭제</button></div></div>`).join('');
+  } else if (drawerTab === 'highlights') {
+    if (countEl) countEl.textContent = highlights.length + '\uAC1C';
+    if (!highlights.length) {
+      list.innerHTML = '<div class="cd-empty"><div style="font-size:2.5rem;color:var(--rule);margin-bottom:12px">\uD83D\uDD8D</div><div>형광펜으로 칠한 텍스트가<br>여기에 모입니다.</div></div>';
+      return;
+    }
+    list.innerHTML = highlights.map(h => `<div class="clip-item"><div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">${esc(h.title || '')}</div><div class="ci-text" style="border-left-color:oklch(0.85 0.18 90)">${esc(h.text)}</div><div class="ci-tools"><button onclick="removeHighlight(${h.id})">삭제</button></div></div>`).join('');
+  } else if (drawerTab === 'memos') {
+    if (countEl) countEl.textContent = memos.length + '\uAC1C';
+    if (!memos.length) {
+      list.innerHTML = '<div class="cd-empty"><div style="font-size:2.5rem;color:var(--rule);margin-bottom:12px">\uD83D\uDCDD</div><div>메모를 추가하면<br>여기에 모입니다.</div></div>';
+      return;
+    }
+    list.innerHTML = memos.map(m => `<div class="clip-item"><div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">${esc(m.title || '')}</div><div class="ci-text">${esc(m.text)}</div><div class="memo-note-wrap"><textarea class="memo-note" placeholder="메모 입력..." data-memo-id="${m.id}">${esc(m.note || '')}</textarea></div><div class="ci-tools"><button onclick="removeMemo(${m.id})">삭제</button></div></div>`).join('');
+    // memo note save on blur
+    list.querySelectorAll('.memo-note').forEach(ta => {
+      ta.addEventListener('blur', function() {
+        updateMemoNote(Number(this.dataset.memoId), this.value);
+      });
+    });
+  }
+}
+
+function initDrawer() {
+  document.querySelector('.clips-fab')?.addEventListener('click', () => {
+    document.getElementById('clipsOverlay')?.classList.add('open');
+    document.querySelector('.clips-drawer')?.classList.add('open');
+    renderDrawer();
+  });
+  document.getElementById('clipsOverlay')?.addEventListener('click', () => {
+    document.getElementById('clipsOverlay')?.classList.remove('open');
+    document.querySelector('.clips-drawer')?.classList.remove('open');
+  });
+  document.getElementById('clipsClose')?.addEventListener('click', () => {
+    document.getElementById('clipsOverlay')?.classList.remove('open');
+    document.querySelector('.clips-drawer')?.classList.remove('open');
+  });
+  // Tabs
+  document.querySelectorAll('.cd-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      drawerTab = this.dataset.tab;
+      document.querySelectorAll('.cd-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === drawerTab));
+      renderDrawer();
+    });
+  });
+}
+
+// ── Text selection popover (clip / highlight / memo) ──
+let clipPopover = null;
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+function showPopover(sel) {
+  if (clipPopover) { clipPopover.remove(); clipPopover = null; }
+  if (!sel || sel.isCollapsed) return;
+  const text = sel.toString().trim();
+  if (text.length < 4) return;
+  const range = sel.getRangeAt(0);
+  const art = range.commonAncestorContainer.closest?.('.inline-article') ||
+              range.commonAncestorContainer.parentElement?.closest?.('.inline-article');
+  if (!art) return;
+  const rect = range.getBoundingClientRect();
+  const title = art.querySelector('.ia-title')?.textContent || '';
+  const safeText = text.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
+  const safeTitle = title.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
+
+  const pop = document.createElement('div');
+  pop.className = 'clip-popover';
+  pop.style.position = 'fixed';
+  pop.style.left = (rect.left + rect.width / 2) + 'px';
+  // iOS: position below selection to avoid native menu overlap
+  if (IS_IOS) {
+    pop.style.top = (rect.bottom + 12) + 'px';
+    pop.style.transform = 'translateX(-50%)';
+    pop.classList.add('pop-below');
+  } else {
+    pop.style.top = rect.top + 'px';
+  }
+
+  pop.innerHTML =
+    `<button onclick="addClip('${safeText}','${safeTitle}');this.parentElement.remove();window.getSelection().removeAllRanges()">${SVG_CLIP} 클립</button>` +
+    `<button onclick="addHighlight('${safeText}','${safeTitle}');this.parentElement.remove();window.getSelection().removeAllRanges()" class="pop-hl">` +
+      `<svg width="14" height="14" viewBox="0 0 24 24" fill="oklch(0.85 0.18 90)" stroke="none"><rect x="1" y="6" width="22" height="12" rx="2"/></svg> 형광펜</button>` +
+    `<button onclick="startMemo('${safeText}','${safeTitle}');this.parentElement.remove()" class="pop-memo">` +
+      `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 메모</button>` +
+    `<button onclick="navigator.clipboard?.writeText('${safeText}');this.parentElement.remove();window.getSelection().removeAllRanges()">복사</button>`;
+
+  document.body.appendChild(pop);
+  clipPopover = pop;
+}
+
+function startMemo(text, title) {
+  window.getSelection().removeAllRanges();
+  // show inline memo card
+  const card = document.createElement('div');
+  card.className = 'memo-card-inline';
+  card.innerHTML = `
+    <div class="mc-header">메모</div>
+    <div class="mc-quote">${esc(text.substring(0, 80))}${text.length > 80 ? '...' : ''}</div>
+    <textarea class="mc-input" placeholder="메모를 입력하세요..." autofocus></textarea>
+    <div class="mc-actions">
+      <button class="mc-cancel">취소</button>
+      <button class="mc-save">저장</button>
+    </div>
+  `;
+  document.body.appendChild(card);
+  // position near center
+  card.style.position = 'fixed';
+  card.style.top = '50%';
+  card.style.left = '50%';
+  card.style.transform = 'translate(-50%, -50%)';
+  card.style.zIndex = '500';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'memo-overlay';
+  document.body.appendChild(overlay);
+
+  const close = () => { card.remove(); overlay.remove(); };
+  card.querySelector('.mc-cancel').addEventListener('click', close);
+  overlay.addEventListener('click', close);
+  card.querySelector('.mc-save').addEventListener('click', () => {
+    const note = card.querySelector('.mc-input').value;
+    addMemo(text, title, note);
+    close();
+  });
+  setTimeout(() => card.querySelector('.mc-input')?.focus(), 50);
+}
+
+function initSelectionPopover() {
+  // Desktop: mouseup
+  document.addEventListener('mouseup', () => {
+    setTimeout(() => showPopover(window.getSelection()), 10);
+  });
+  // iOS/mobile: selectionchange with delay
+  if (IS_IOS) {
+    let selTimer = null;
+    document.addEventListener('selectionchange', () => {
+      clearTimeout(selTimer);
+      selTimer = setTimeout(() => showPopover(window.getSelection()), 350);
+    });
+  } else {
+    // Android/other touch
+    document.addEventListener('touchend', () => {
+      setTimeout(() => showPopover(window.getSelection()), 300);
+    });
+  }
+  // Dismiss
+  document.addEventListener('mousedown', (e) => {
+    if (clipPopover && !e.target.closest('.clip-popover')) { clipPopover.remove(); clipPopover = null; }
+  });
+  document.addEventListener('touchstart', (e) => {
+    if (clipPopover && !e.target.closest('.clip-popover')) { clipPopover.remove(); clipPopover = null; }
+  });
+}
+
+// ── Inline editing ──
+function initInlineEditing() {
+  const EDITS_KEY = 'ns_edits';
+  let edits = JSON.parse(localStorage.getItem(EDITS_KEY) || '{}');
+
+  function makeEditable(el, saveKey, field) {
+    el.addEventListener('dblclick', function(e) {
+      e.stopPropagation();
+      if (this.contentEditable === 'true') return;
+      this.contentEditable = 'true';
+      this.focus();
+      const done = () => {
+        this.contentEditable = 'false';
+        if (!edits[saveKey]) edits[saveKey] = {};
+        edits[saveKey][field] = this.textContent;
+        localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
+        if (field === 'title') {
+          const card = this.closest('.card-row');
+          if (card) {
+            const rt = card.querySelector('.row-title');
+            const it = card.querySelector('.ia-title');
+            if (rt) rt.textContent = this.textContent;
+            if (it) it.textContent = this.textContent;
+          }
+        }
+        syncPush();
+      };
+      this.addEventListener('blur', done, {once: true});
+      this.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') { ev.preventDefault(); this.blur(); }
+      });
+    });
+  }
+
+  document.querySelectorAll('.card-row').forEach((row, i) => {
+    const id = 'card-' + i;
+    row.id = id;
+    const rowTitle = row.querySelector('.row-title');
+    const iaTitle = row.querySelector('.ia-title');
+    if (rowTitle) makeEditable(rowTitle, id, 'title');
+    if (iaTitle) makeEditable(iaTitle, id, 'title');
+    if (edits[id]?.title) {
+      if (rowTitle) rowTitle.textContent = edits[id].title;
+      if (iaTitle) iaTitle.textContent = edits[id].title;
+    }
+  });
+
+  // Main page editable
+  document.querySelectorAll('[data-edit]').forEach(el => {
+    const key = el.dataset.edit;
+    const IDX_KEY = 'ns_idx_edits';
+    let idxEdits = JSON.parse(localStorage.getItem(IDX_KEY) || '{}');
+    if (idxEdits[key]) el.innerHTML = idxEdits[key];
+    el.style.cursor = 'text';
+    el.addEventListener('dblclick', function(e) {
+      e.stopPropagation();
+      if (this.contentEditable === 'true') return;
+      this.contentEditable = 'true';
+      this.focus();
+      const done = () => {
+        this.contentEditable = 'false';
+        idxEdits[key] = this.innerHTML;
+        localStorage.setItem(IDX_KEY, JSON.stringify(idxEdits));
+      };
+      this.addEventListener('blur', done, {once: true});
+      this.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); this.blur(); }
+      });
+    });
+  });
+}
+
+// ── Mobile tabs ──
+function initMobileTabs() {
+  document.getElementById('mFsBtn')?.addEventListener('click', () => document.getElementById('fsBtn')?.click());
+  document.getElementById('mSettingsBtn')?.addEventListener('click', () => document.getElementById('settingsBtn')?.click());
+}
+
+// ── Sidebar group toggle ──
+function initSidebarGroups() {
+  document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const group = this.closest('.nav-group');
+      if (group) group.classList.toggle('open');
+    });
+  });
+}
+
+// ── Gist Sync ──
+const SYNC_TOKEN_KEY = 'ns_sync_token';
+const SYNC_GIST_KEY = 'ns_sync_gist_id';
+let syncToken = localStorage.getItem(SYNC_TOKEN_KEY) || '';
+let syncGistId = localStorage.getItem(SYNC_GIST_KEY) || '';
+let syncDebounce = null;
+
+function getSyncData() {
+  return {
+    bookmarks: [...bookmarks],
+    clips,
+    highlights,
+    memos,
+    clipFolders,
+    summaryOverrides,
+    edits: JSON.parse(localStorage.getItem('ns_edits') || '{}'),
+    idxEdits: JSON.parse(localStorage.getItem('ns_idx_edits') || '{}'),
+    settings: { density, theme, mode, fs: fsSizes[fsIdx] },
+    updatedAt: Date.now()
+  };
+}
+
+function applySyncData(data) {
+  if (!data) return;
+  if (data.bookmarks) { bookmarks = new Set(data.bookmarks); localStorage.setItem('ns_bookmarks', JSON.stringify(data.bookmarks)); }
+  if (data.clips) { clips = data.clips; localStorage.setItem('ns_clips', JSON.stringify(clips)); }
+  if (data.highlights) { highlights = data.highlights; localStorage.setItem('ns_highlights', JSON.stringify(highlights)); }
+  if (data.memos) { memos = data.memos; localStorage.setItem('ns_memos', JSON.stringify(memos)); }
+  if (data.clipFolders) { clipFolders = data.clipFolders; localStorage.setItem('ns_clip_folders', JSON.stringify(clipFolders)); }
+  if (data.summaryOverrides) { summaryOverrides = data.summaryOverrides; localStorage.setItem('ns_summary_overrides', JSON.stringify(summaryOverrides)); }
+  if (data.edits) localStorage.setItem('ns_edits', JSON.stringify(data.edits));
+  if (data.idxEdits) localStorage.setItem('ns_idx_edits', JSON.stringify(data.idxEdits));
+  if (data.settings) {
+    density = data.settings.density || density;
+    theme = data.settings.theme || theme;
+    mode = data.settings.mode || mode;
+    fsIdx = fsSizes.indexOf(data.settings.fs) || fsIdx;
+    localStorage.setItem('ns_density', density);
+    localStorage.setItem('ns_theme', theme);
+    localStorage.setItem('ns_mode', mode);
+    localStorage.setItem('ns_fs', fsSizes[fsIdx]);
+  }
+  applyState();
+  applyHighlightsToDOM();
+}
+
+async function syncPush() {
+  if (!syncToken) return;
+  clearTimeout(syncDebounce);
+  syncDebounce = setTimeout(async () => {
+    try {
+      const data = getSyncData();
+      const body = { files: { 'ns_sync.json': { content: JSON.stringify(data) } } };
+      if (syncGistId) {
+        await fetch(`https://api.github.com/gists/${syncGistId}`, {
+          method: 'PATCH', headers: { Authorization: `token ${syncToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      } else {
+        body.description = 'Essay Reader Sync';
+        body.public = false;
+        const res = await fetch('https://api.github.com/gists', {
+          method: 'POST', headers: { Authorization: `token ${syncToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const json = await res.json();
+        if (json.id) { syncGistId = json.id; localStorage.setItem(SYNC_GIST_KEY, syncGistId); }
+      }
+      showSyncStatus('synced');
+    } catch (e) { showSyncStatus('error'); }
+  }, 2000);
+}
+
+async function syncPull() {
+  if (!syncToken || !syncGistId) return;
+  try {
+    const res = await fetch(`https://api.github.com/gists/${syncGistId}`, {
+      headers: { Authorization: `token ${syncToken}` }
+    });
+    const json = await res.json();
+    const content = json.files?.['ns_sync.json']?.content;
+    if (content) {
+      const data = JSON.parse(content);
+      const localTime = Number(localStorage.getItem('ns_sync_time') || '0');
+      if (data.updatedAt > localTime) {
+        applySyncData(data);
+        localStorage.setItem('ns_sync_time', String(data.updatedAt));
+      }
+    }
+    showSyncStatus('synced');
+  } catch (e) { showSyncStatus('error'); }
+}
+
+function showSyncStatus(status) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  el.className = 'sync-status ' + status;
+  el.textContent = status === 'synced' ? '\u2714' : status === 'error' ? '\u26A0' : '';
+  setTimeout(() => { el.className = 'sync-status'; el.textContent = ''; }, 3000);
+}
+
+function initSyncUI() {
+  // Add sync button to settings if exists
+  const settingsPanel = document.querySelector('.settings-panel');
+  if (!settingsPanel) return;
+
+  const syncSection = document.createElement('div');
+  syncSection.className = 'setting-row';
+  syncSection.innerHTML = `
+    <div class="setting-label">기기 동기화</div>
+    <div class="sync-ui">
+      <input type="password" class="sync-token-input" placeholder="GitHub Token (gist scope)" value="${syncToken ? '********' : ''}">
+      ${syncGistId ? `<div style="font-size:0.72rem;color:var(--muted);margin-top:4px">Gist: ${syncGistId.substring(0, 8)}... <span id="syncStatus" class="sync-status"></span></div>` : ''}
+      <div class="sync-btns">
+        <button class="setting-btn sync-save-btn">토큰 저장</button>
+        <button class="setting-btn sync-pull-btn">불러오기</button>
+        <button class="setting-btn sync-push-btn">내보내기</button>
+        ${syncGistId ? '<button class="setting-btn sync-reset-btn" style="color:var(--muted)">연결 해제</button>' : ''}
+      </div>
+    </div>
+  `;
+  settingsPanel.appendChild(syncSection);
+
+  const tokenInput = syncSection.querySelector('.sync-token-input');
+  syncSection.querySelector('.sync-save-btn').addEventListener('click', () => {
+    const val = tokenInput.value;
+    if (val && val !== '********') {
+      syncToken = val;
+      localStorage.setItem(SYNC_TOKEN_KEY, val);
+      tokenInput.value = '********';
+      // auto push after save
+      syncPush();
+    }
+  });
+  syncSection.querySelector('.sync-pull-btn').addEventListener('click', () => syncPull());
+  syncSection.querySelector('.sync-push-btn').addEventListener('click', () => {
+    clearTimeout(syncDebounce);
+    syncDebounce = null;
+    syncPush();
+  });
+  syncSection.querySelector('.sync-reset-btn')?.addEventListener('click', () => {
+    syncToken = ''; syncGistId = '';
+    localStorage.removeItem(SYNC_TOKEN_KEY);
+    localStorage.removeItem(SYNC_GIST_KEY);
+    tokenInput.value = '';
+    location.reload();
+  });
+}
+
+// ── Readability Enhancements (auto-injected on category pages) ──
+function getArticleId(article) {
+  // Stable id from parent card-row index
+  const card = article.previousElementSibling;
+  if (!card?.classList.contains('card-row')) return null;
+  const all = [...document.querySelectorAll('.card-row')];
+  return 'art-' + all.indexOf(card);
+}
+
+function autoSummaryFor(section) {
+  // Grab first paragraph after the section heading, take first sentence
+  let node = section.nextElementSibling;
+  while (node && !['P','UL','DIV'].includes(node.tagName)) node = node.nextElementSibling;
+  if (!node) return '';
+  const txt = node.textContent.trim();
+  if (!txt) return '';
+  // First sentence: split by . or 다. or 음. patterns
+  const m = txt.match(/^.{20,160}?(?:[\.。](?=\s|$)|다\.|음\.|함\.)/);
+  let s = (m ? m[0] : txt.substring(0, 140)).trim();
+  if (s.length > 160) s = s.substring(0, 157) + '...';
+  return s;
+}
+
+function injectSectionSummaries(article) {
+  const artId = getArticleId(article);
+  if (!artId) return;
+  const sections = article.querySelectorAll('.ia-section-h');
+  sections.forEach((sec, idx) => {
+    if (sec.nextElementSibling?.classList.contains('auto-summary')) return;
+    const key = `${artId}::${idx}`;
+    const override = summaryOverrides[key];
+    const text = override !== undefined ? override : autoSummaryFor(sec);
+    if (!text) return;
+    const box = document.createElement('div');
+    box.className = 'auto-summary';
+    box.dataset.summaryKey = key;
+    box.innerHTML = `<span class="as-label">요약</span><span class="as-text" contenteditable="false">${esc(text)}</span><button class="as-edit" title="수정">✎</button>`;
+    sec.insertAdjacentElement('afterend', box);
+
+    const txtEl = box.querySelector('.as-text');
+    const editBtn = box.querySelector('.as-edit');
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const editing = txtEl.contentEditable === 'true';
+      if (!editing) {
+        txtEl.contentEditable = 'true';
+        txtEl.focus();
+        editBtn.textContent = '✓';
+      } else {
+        txtEl.contentEditable = 'false';
+        editBtn.textContent = '✎';
+        summaryOverrides[key] = txtEl.textContent.trim();
+        localStorage.setItem('ns_summary_overrides', JSON.stringify(summaryOverrides));
+        syncPush();
+      }
+    });
+    txtEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); editBtn.click(); }
+      if (e.key === 'Escape') { txtEl.textContent = override !== undefined ? override : autoSummaryFor(sec); editBtn.click(); }
+    });
+  });
+}
+
+function injectTOC(article) {
+  if (article.querySelector('.toc-rail')) return;
+  const sections = article.querySelectorAll('.ia-section-h, .ia-para-title');
+  if (sections.length < 2) return;
+  const rail = document.createElement('nav');
+  rail.className = 'toc-rail';
+  rail.innerHTML = '<div class="toc-head">목차</div><ul class="toc-list"></ul>';
+  const list = rail.querySelector('.toc-list');
+  sections.forEach((s, i) => {
+    const id = 'toc-' + getArticleId(article) + '-' + i;
+    s.id = id;
+    const li = document.createElement('li');
+    li.className = 'toc-item ' + (s.classList.contains('ia-section-h') ? 'toc-h2' : 'toc-h3');
+    li.innerHTML = `<a href="#${id}">${esc(s.textContent.trim().substring(0, 50))}</a>`;
+    li.querySelector('a').addEventListener('click', (e) => {
+      e.preventDefault();
+      const top = s.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({top, behavior: 'smooth'});
+    });
+    list.appendChild(li);
+  });
+  article.insertBefore(rail, article.firstChild);
+
+  // Active section tracking on scroll
+  const items = [...list.querySelectorAll('.toc-item')];
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        const idx = [...sections].indexOf(en.target);
+        items.forEach((it, i) => it.classList.toggle('active', i === idx));
+      }
+    });
+  }, {rootMargin: '-80px 0px -70% 0px'});
+  sections.forEach(s => observer.observe(s));
+}
+
+function injectKPIHighlights(article) {
+  // Highlight numeric data in p/li (e.g., "87%", "5.6조원", "2만달러")
+  const re = /(\d{1,4}(?:,\d{3})*(?:\.\d+)?\s?(?:%|조원|억원|억달러|만달러|만원|천억|조|억|만|조달러|배|위|개|건|개사|GW|MW|kW|t|kg|km|개국|년|개월|일|주|시간|회|차|호))/g;
+  article.querySelectorAll('.article-content p, .article-content li, .article-content td').forEach(el => {
+    if (el.dataset.kpiDone) return;
+    if (el.querySelector('input,textarea,button,svg,mark,strong.kpi')) return;
+    el.dataset.kpiDone = '1';
+    // Walk text nodes only
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    let n;
+    while (n = walker.nextNode()) nodes.push(n);
+    nodes.forEach(node => {
+      if (!re.test(node.textContent)) return;
+      re.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let last = 0; let m;
+      const t = node.textContent;
+      while ((m = re.exec(t)) !== null) {
+        if (m.index > last) frag.appendChild(document.createTextNode(t.substring(last, m.index)));
+        const strong = document.createElement('strong');
+        strong.className = 'kpi';
+        strong.textContent = m[0];
+        frag.appendChild(strong);
+        last = m.index + m[0].length;
+      }
+      if (last < t.length) frag.appendChild(document.createTextNode(t.substring(last)));
+      node.parentNode.replaceChild(frag, node);
+      re.lastIndex = 0;
+    });
+  });
+}
+
+function enhanceArticle(article) {
+  if (article.dataset.enhanced) return;
+  article.dataset.enhanced = '1';
+  injectSectionSummaries(article);
+  injectKPIHighlights(article);
+}
+
+function initReadabilityEnhancements() {
+  // Enhance any already-expanded article (rare) and on-demand expand
+  document.querySelectorAll('.row').forEach(row => {
+    row.addEventListener('click', () => {
+      const art = row.nextElementSibling;
+      if (art?.classList.contains('inline-article')) {
+        // Defer until after expand animation begins
+        setTimeout(() => enhanceArticle(art), 60);
+      }
+    });
+  });
+  // Eager pass for any open articles
+  document.querySelectorAll('.row.expanded + .inline-article').forEach(enhanceArticle);
+}
+
+// ── Util ──
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', () => {
+  initSearch();
+  initExpandCollapse();
+  initBookmarks();
+  initFontSize();
+  initDensity();
+  initSettings();
+  initDrawer();
+  initSelectionPopover();
+  initInlineEditing();
+  initMobileTabs();
+  initSidebarGroups();
+  initSyncUI();
+  initReadabilityEnhancements();
+  applyState();
+  applyHighlightsToDOM();
+  // Auto pull on load
+  if (syncToken && syncGistId) syncPull();
+});
+```
+
+## 고유 페이지 전체 코드
+
+### index.html (메인)
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>논술 요약 리더</title>
+<meta name="theme-color" content="#f4ede0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="논술 리더">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ── Group cards ── */
+.sector-group { margin-bottom: 8px; }
+.sector-group-header {
+  display: flex; align-items: center; gap: 12px; padding: 18px 20px;
+  background: var(--card); border: 1px solid var(--rule-2); border-radius: var(--r-card);
+  cursor: pointer; transition: all 150ms; user-select: none;
+}
+.sector-group-header:hover { background: var(--paper-2); }
+.sector-group-header .group-emoji { font-size: 1.5rem; }
+.sector-group-header .group-name {
+  font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 800;
+  letter-spacing: -0.5px; flex: 1;
+}
+.sector-group-header .group-count {
+  font-size: 0.82rem; color: var(--muted); font-weight: 600;
+}
+.sector-group-header .group-arrow {
+  width: 20px; height: 20px; color: var(--muted); transition: transform 200ms;
+}
+.sector-group.open .group-arrow { transform: rotate(90deg); }
+.group-children {
+  display: none; padding: 4px 0 4px 20px;
+}
+.sector-group.open .group-children { display: block; }
+.group-child {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  border-radius: var(--r-card); color: var(--ink-2); transition: all 120ms;
+}
+.group-child:hover { background: var(--paper-2); color: var(--ink); }
+.group-child .gc-name { flex: 1; font-size: 0.95rem; font-weight: 600; }
+.group-child .gc-count {
+  font-size: 0.78rem; color: var(--muted); background: var(--paper-2);
+  padding: 2px 10px; border-radius: var(--r-pill);
+}
+
+/* ── Standalone cards (no sub) ── */
+.sector-card-standalone {
+  display: flex; align-items: center; gap: 14px; padding: 18px 20px;
+  background: var(--card); border: 1px solid var(--rule-2); border-radius: var(--r-card);
+  margin-bottom: 8px; transition: all 150ms;
+}
+.sector-card-standalone:hover { background: var(--paper-2); border-color: var(--rule); }
+.sector-card-standalone .sc-emoji { font-size: 1.5rem; }
+.sector-card-standalone .sc-name {
+  font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 800;
+  letter-spacing: -0.5px; flex: 1;
+}
+.sector-card-standalone .sc-count {
+  font-size: 0.82rem; color: var(--muted); font-weight: 600;
+}
+
+/* ── Settings ── */
+.settings-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 300; display: none; }
+.settings-overlay.open { display: block; }
+.settings-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; z-index: 301; width: min(400px, 90vw); box-shadow: var(--shadow-2); }
+.settings-panel h3 { font-family: 'Noto Serif KR',serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; }
+.setting-row { margin-bottom: 16px; }
+.setting-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+.setting-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.setting-btn { padding: 6px 14px; border-radius: var(--r-pill); border: 1px solid var(--rule); font-size: 0.82rem; cursor: pointer; transition: all 120ms; background: var(--card); }
+.setting-btn:hover { background: var(--paper-2); }
+.setting-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.sync-ui { margin-top: 8px; }
+.sync-token-input { width: 100%; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 6px; font-size: 0.85rem; background: var(--card); color: var(--ink); margin-bottom: 8px; }
+.sync-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.sync-status { font-size: 0.72rem; margin-left: 4px; }
+.sync-status.synced { color: green; }
+.sync-status.error { color: red; }
+</style>
+</head>
+<body data-fs="m" class="density-magazine theme-white mode-magazine">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark" id="idx-brand" data-edit="brand">논술 리더</div>
+      <div class="sub" id="idx-sub" data-edit="sub">Essay Reader</div>
+      <div class="meta">489편 · 41개 카테고리</div>
+    </div>
+    <div class="nav-list">
+      <a href="bookmarks.html" class="nav-item"><span>📌 내 북마크 / 클립</span></a>
+      <a href="pt.html" class="nav-item"><span>🎤 PT 카드 모드</span></a>
+    </div>
+    <div class="nav-list">
+      <div class="nav-section-title">카테고리</div>
+      <!-- 독립 -->
+      <a href="ESG/index.html" class="nav-item"><span>🌱 ESG</span><span class="count">20</span></a>
+      <!-- 가계 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>👨‍👩‍👧 가계</span><span class="count">22</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="가계_고령문제/index.html" class="nav-item sub"><span>고령문제</span><span class="count">10</span></a>
+          <a href="가계_금융문제/index.html" class="nav-item sub"><span>금융문제</span><span class="count">3</span></a>
+          <a href="가계_인력문제/index.html" class="nav-item sub"><span>인력문제</span><span class="count">9</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="공급망/index.html" class="nav-item"><span>🔗 공급망</span><span class="count">12</span></a>
+      <!-- 글로벌 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🌍 글로벌</span><span class="count">35</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="글로벌_관세_통상_국제/index.html" class="nav-item sub"><span>관세·통상·국제</span><span class="count">18</span></a>
+          <a href="글로벌_외화/index.html" class="nav-item sub"><span>외화</span><span class="count">17</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="금융업/index.html" class="nav-item"><span>🏦 금융업</span><span class="count">31</span></a>
+      <!-- 디지털 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>💻 디지털</span><span class="count">24</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="디지털_기타/index.html" class="nav-item sub"><span>기타</span><span class="count">5</span></a>
+          <a href="디지털_코인/index.html" class="nav-item sub"><span>코인</span><span class="count">19</span></a>
+        </div>
+      </div>
+      <!-- 벤처 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🚀 벤처</span><span class="count">41</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="벤처_창업_스케일업/index.html" class="nav-item sub"><span>창업·스케일업</span><span class="count">16</span></a>
+          <a href="벤처_투자_모험자본/index.html" class="nav-item sub"><span>투자·모험자본</span><span class="count">25</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="부동산/index.html" class="nav-item"><span>🏠 부동산</span><span class="count">4</span></a>
+      <!-- 산업 과제 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🏗️ 산업 과제</span><span class="count">35</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="산업_과제_산업_과제/index.html" class="nav-item sub"><span>산업 과제</span><span class="count">18</span></a>
+          <a href="산업_과제_생산적금융/index.html" class="nav-item sub"><span>생산적금융</span><span class="count">17</span></a>
+        </div>
+      </div>
+      <!-- 산업별 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🏭 산업별</span><span class="count">146</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="산업별_AI_AI_도입/index.html" class="nav-item sub"><span>AI/AI 도입</span><span class="count">13</span></a>
+          <a href="산업별_AI_일자리/index.html" class="nav-item sub"><span>AI/일자리</span><span class="count">7</span></a>
+          <a href="산업별_AI_도입/index.html" class="nav-item sub"><span>AI/도입</span><span class="count">7</span></a>
+          <a href="산업별_가전_스마트폰_디스플레이/index.html" class="nav-item sub"><span>가전·디스플레이</span><span class="count">6</span></a>
+          <a href="산업별_건설_제조_기계_철강/index.html" class="nav-item sub"><span>건설·제조·철강</span><span class="count">10</span></a>
+          <a href="산업별_로봇/index.html" class="nav-item sub"><span>로봇</span><span class="count">4</span></a>
+          <a href="산업별_바이오_헬스/index.html" class="nav-item sub"><span>바이오·헬스</span><span class="count">10</span></a>
+          <a href="산업별_반도체/index.html" class="nav-item sub"><span>반도체</span><span class="count">9</span></a>
+          <a href="산업별_방산/index.html" class="nav-item sub"><span>방산</span><span class="count">5</span></a>
+          <a href="산업별_섬유패션산업/index.html" class="nav-item sub"><span>섬유·패션</span><span class="count">6</span></a>
+          <a href="산업별_우주/index.html" class="nav-item sub"><span>우주</span><span class="count">4</span></a>
+          <a href="산업별_원전/index.html" class="nav-item sub"><span>원전</span><span class="count">6</span></a>
+          <a href="산업별_유통_서비스_컨텐츠/index.html" class="nav-item sub"><span>유통·서비스</span><span class="count">11</span></a>
+          <a href="산업별_이차전지/index.html" class="nav-item sub"><span>이차전지</span><span class="count">10</span></a>
+          <a href="산업별_자동차/index.html" class="nav-item sub"><span>자동차</span><span class="count">9</span></a>
+          <a href="산업별_조선_해운/index.html" class="nav-item sub"><span>조선·해운</span><span class="count">13</span></a>
+          <a href="산업별_항공/index.html" class="nav-item sub"><span>항공</span><span class="count">2</span></a>
+          <a href="산업별_화학_에너지/index.html" class="nav-item sub"><span>화학·에너지</span><span class="count">15</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="시사/index.html" class="nav-item"><span>📰 시사</span><span class="count">27</span></a>
+      <!-- 자본시장 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>📈 자본시장</span><span class="count">30</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="자본시장_국장/index.html" class="nav-item sub"><span>국장</span><span class="count">25</span></a>
+          <a href="자본시장_채권/index.html" class="nav-item sub"><span>채권</span><span class="count">5</span></a>
+        </div>
+      </div>
+      <!-- 정책금융 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🏛️ 정책금융</span><span class="count">23</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="정책금융_소상공인/index.html" class="nav-item sub"><span>소상공인</span><span class="count">6</span></a>
+          <a href="정책금융_정책금융개선/index.html" class="nav-item sub"><span>정책금융개선</span><span class="count">5</span></a>
+          <a href="정책금융_중소기업/index.html" class="nav-item sub"><span>중소기업</span><span class="count">12</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="중동이슈/index.html" class="nav-item"><span>🕌 중동이슈</span><span class="count">28</span></a>
+      <a href="지역균형/index.html" class="nav-item"><span>🗺️ 지역균형</span><span class="count">10</span></a>
+    </div>
+    <div class="sidebar-footer">논술 대비 요약 보고서 489편을<br>카테고리별로 정리한 리더입니다.</div>
+  </aside>
+  <div class="content">
+    <div class="topbar">
+      <div class="search">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" placeholder="카테고리 검색…" id="catSearch">
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="settingsBtn" title="설정"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      </div>
+    </div>
+    <header class="masthead">
+      <div class="eyebrow" id="idx-eyebrow" data-edit="eyebrow">논술 대비 · 요약 보고서</div>
+      <h1 id="idx-title" data-edit="title">읽고, 정리하고,<br>내 것으로 만드는</h1>
+      <p class="lede" id="idx-lede" data-edit="lede">41개 카테고리, 489편의 논술 대비 요약 보고서를 한 곳에서 읽습니다.</p>
+      <div class="stats">
+        <div class="stat"><div class="n">489</div><div class="l">총 요약</div></div>
+        <div class="stat"><div class="n">41</div><div class="l">카테고리</div></div>
+      </div>
+    </header>
+    <div class="sector-grid" id="sectorGrid">
+
+      <!-- ── ESG (독립) ── -->
+      <a href="ESG/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🌱</div><div class="sc-name">ESG</div><div class="sc-count">20편</div>
+      </a>
+
+      <!-- ── 가계 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">👨‍👩‍👧</div>
+          <div class="group-name">가계</div>
+          <div class="group-count">22편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="가계_고령문제/index.html" class="group-child"><div class="gc-name">고령문제</div><div class="gc-count">10편</div></a>
+          <a href="가계_금융문제/index.html" class="group-child"><div class="gc-name">금융문제</div><div class="gc-count">3편</div></a>
+          <a href="가계_인력문제/index.html" class="group-child"><div class="gc-name">인력문제</div><div class="gc-count">9편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 공급망 (독립) ── -->
+      <a href="공급망/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🔗</div><div class="sc-name">공급망</div><div class="sc-count">12편</div>
+      </a>
+
+      <!-- ── 글로벌 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🌍</div>
+          <div class="group-name">글로벌</div>
+          <div class="group-count">35편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="글로벌_관세_통상_국제/index.html" class="group-child"><div class="gc-name">관세·통상·국제</div><div class="gc-count">18편</div></a>
+          <a href="글로벌_외화/index.html" class="group-child"><div class="gc-name">외화</div><div class="gc-count">17편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 금융업 (독립) ── -->
+      <a href="금융업/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🏦</div><div class="sc-name">금융업</div><div class="sc-count">31편</div>
+      </a>
+
+      <!-- ── 디지털 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">💻</div>
+          <div class="group-name">디지털</div>
+          <div class="group-count">24편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="디지털_기타/index.html" class="group-child"><div class="gc-name">기타</div><div class="gc-count">5편</div></a>
+          <a href="디지털_코인/index.html" class="group-child"><div class="gc-name">코인</div><div class="gc-count">19편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 벤처 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🚀</div>
+          <div class="group-name">벤처</div>
+          <div class="group-count">41편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="벤처_창업_스케일업/index.html" class="group-child"><div class="gc-name">창업·스케일업</div><div class="gc-count">16편</div></a>
+          <a href="벤처_투자_모험자본/index.html" class="group-child"><div class="gc-name">투자·모험자본</div><div class="gc-count">25편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 부동산 (독립) ── -->
+      <a href="부동산/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🏠</div><div class="sc-name">부동산</div><div class="sc-count">4편</div>
+      </a>
+
+      <!-- ── 산업 과제 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🏗️</div>
+          <div class="group-name">산업 과제</div>
+          <div class="group-count">35편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="산업_과제_산업_과제/index.html" class="group-child"><div class="gc-name">산업 과제</div><div class="gc-count">18편</div></a>
+          <a href="산업_과제_생산적금융/index.html" class="group-child"><div class="gc-name">생산적금융</div><div class="gc-count">17편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 산업별 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🏭</div>
+          <div class="group-name">산업별</div>
+          <div class="group-count">146편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="산업별_AI_AI_도입/index.html" class="group-child"><div class="gc-name">AI / AI 도입</div><div class="gc-count">13편</div></a>
+          <a href="산업별_AI_일자리/index.html" class="group-child"><div class="gc-name">AI / 일자리</div><div class="gc-count">7편</div></a>
+          <a href="산업별_AI_도입/index.html" class="group-child"><div class="gc-name">AI / 도입</div><div class="gc-count">7편</div></a>
+          <a href="산업별_가전_스마트폰_디스플레이/index.html" class="group-child"><div class="gc-name">가전·스마트폰·디스플레이</div><div class="gc-count">6편</div></a>
+          <a href="산업별_건설_제조_기계_철강/index.html" class="group-child"><div class="gc-name">건설·제조·기계·철강</div><div class="gc-count">10편</div></a>
+          <a href="산업별_로봇/index.html" class="group-child"><div class="gc-name">로봇</div><div class="gc-count">4편</div></a>
+          <a href="산업별_바이오_헬스/index.html" class="group-child"><div class="gc-name">바이오·헬스</div><div class="gc-count">10편</div></a>
+          <a href="산업별_반도체/index.html" class="group-child"><div class="gc-name">반도체</div><div class="gc-count">9편</div></a>
+          <a href="산업별_방산/index.html" class="group-child"><div class="gc-name">방산</div><div class="gc-count">5편</div></a>
+          <a href="산업별_섬유패션산업/index.html" class="group-child"><div class="gc-name">섬유·패션</div><div class="gc-count">6편</div></a>
+          <a href="산업별_우주/index.html" class="group-child"><div class="gc-name">우주</div><div class="gc-count">4편</div></a>
+          <a href="산업별_원전/index.html" class="group-child"><div class="gc-name">원전</div><div class="gc-count">6편</div></a>
+          <a href="산업별_유통_서비스_컨텐츠/index.html" class="group-child"><div class="gc-name">유통·서비스·컨텐츠</div><div class="gc-count">11편</div></a>
+          <a href="산업별_이차전지/index.html" class="group-child"><div class="gc-name">이차전지</div><div class="gc-count">10편</div></a>
+          <a href="산업별_자동차/index.html" class="group-child"><div class="gc-name">자동차</div><div class="gc-count">9편</div></a>
+          <a href="산업별_조선_해운/index.html" class="group-child"><div class="gc-name">조선·해운</div><div class="gc-count">13편</div></a>
+          <a href="산업별_항공/index.html" class="group-child"><div class="gc-name">항공</div><div class="gc-count">2편</div></a>
+          <a href="산업별_화학_에너지/index.html" class="group-child"><div class="gc-name">화학·에너지</div><div class="gc-count">15편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 시사 (독립) ── -->
+      <a href="시사/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">📰</div><div class="sc-name">시사</div><div class="sc-count">27편</div>
+      </a>
+
+      <!-- ── 자본시장 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">📈</div>
+          <div class="group-name">자본시장</div>
+          <div class="group-count">30편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="자본시장_국장/index.html" class="group-child"><div class="gc-name">국장</div><div class="gc-count">25편</div></a>
+          <a href="자본시장_채권/index.html" class="group-child"><div class="gc-name">채권</div><div class="gc-count">5편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 정책금융 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🏛️</div>
+          <div class="group-name">정책금융</div>
+          <div class="group-count">23편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="정책금융_소상공인/index.html" class="group-child"><div class="gc-name">소상공인</div><div class="gc-count">6편</div></a>
+          <a href="정책금융_정책금융개선/index.html" class="group-child"><div class="gc-name">정책금융개선</div><div class="gc-count">5편</div></a>
+          <a href="정책금융_중소기업/index.html" class="group-child"><div class="gc-name">중소기업</div><div class="gc-count">12편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 중동이슈 (독립) ── -->
+      <a href="중동이슈/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🕌</div><div class="sc-name">중동이슈</div><div class="sc-count">28편</div>
+      </a>
+
+      <!-- ── 지역균형 (독립) ── -->
+      <a href="지역균형/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🗺️</div><div class="sc-name">지역균형</div><div class="sc-count">10편</div>
+      </a>
+
+    </div>
+  </div>
+</div>
+<nav class="mobile-tabs">
+  <a href="index.html" class="tab active"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lab">홈</span></a>
+</nav>
+
+<!-- Settings overlay -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-panel">
+    <h3>설정</h3>
+    <div class="setting-row">
+      <div class="setting-label">테마</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="theme:white">밝은</button>
+        <button class="setting-btn" data-setting="theme:paper">종이</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+// Group toggle for main page
+document.querySelectorAll('.sector-group-header').forEach(header => {
+  header.addEventListener('click', () => {
+    header.closest('.sector-group').classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>
+```
+
+### bookmarks.html
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>내 북마크 — 논술 리더</title>
+<meta name="theme-color" content="#f4ede0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-fs="m" class="density-magazine theme-white mode-magazine">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">논술 리더</div>
+      <div class="sub">Essay Reader</div>
+    </div>
+    <div class="nav-list">
+      <a href="index.html" class="nav-item"><span>← 전체 카테고리</span></a>
+      <a href="bookmarks.html" class="nav-item active"><span>📌 내 북마크 / 클립</span></a>
+      <a href="pt.html" class="nav-item"><span>🎤 PT 카드 모드</span></a>
+    </div>
+  </aside>
+  <div class="content">
+    <div class="topbar">
+      <div class="search">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" placeholder="클립·북마크 검색…" id="bmSearch">
+      </div>
+    </div>
+    <header class="page-head">
+      <div class="eyebrow">📌 My Library</div>
+      <h2>내 북마크 / 클립</h2>
+      <div class="ph-sub" id="bmCount">저장한 글 0편</div>
+      <a href="pt.html" class="pt-cta">🎤 PT 카드 모드로 보기 →</a>
+    </header>
+
+    <!-- Bookmarks section -->
+    <div class="timeline" id="bmList">
+      <div class="empty" id="bmEmpty" style="display:none">
+        <div class="e-mark">¶</div>
+        <div class="e-msg">아직 저장한 글이 없습니다.<br>카테고리 페이지에서 ♡ 버튼을 눌러 북마크하세요.</div>
+      </div>
+    </div>
+
+    <!-- Clips section with folders -->
+    <div class="page-head" style="margin-top:48px">
+      <div class="eyebrow">📝 발췌 클립</div>
+      <h2 id="clipsHeading">내 발췌 (0개)</h2>
+      <div class="ph-sub">폴더로 분류해서 PT 면접 주제별로 정리하세요.</div>
+    </div>
+
+    <div class="bm-layout">
+      <aside class="folder-rail">
+        <div class="folder-rail-head">
+          <span class="frh-label">폴더</span>
+          <button class="folder-add-btn" id="folderAddBtn" title="새 폴더">+</button>
+        </div>
+        <ul class="folder-list" id="folderList"></ul>
+      </aside>
+      <div class="clip-pane" id="clipPane"></div>
+    </div>
+  </div>
+</div>
+<nav class="mobile-tabs">
+  <a href="index.html" class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lab">홈</span></a>
+  <a href="bookmarks.html" class="tab active">📌<span class="lab">북마크</span></a>
+  <a href="pt.html" class="tab">🎤<span class="lab">PT</span></a>
+</nav>
+
+<script src="app.js"></script>
+<script>
+// State
+let activeFolderId = 'all'; // 'all' | 'unfiled' | folder.id
+const FOLDER_COLORS = ['oklch(0.55 0.13 35)','oklch(0.6 0.13 200)','oklch(0.6 0.13 145)','oklch(0.65 0.15 90)','oklch(0.55 0.16 290)','oklch(0.6 0.13 15)'];
+
+const $ = s => document.querySelector(s);
+const folderListEl = $('#folderList');
+const clipPaneEl = $('#clipPane');
+const bmListEl = $('#bmList');
+const bmEmpty = $('#bmEmpty');
+const bmCount = $('#bmCount');
+const bmSearch = $('#bmSearch');
+const clipsHeading = $('#clipsHeading');
+
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+function clipCount(folderId) {
+  if (folderId === 'all') return clips.length;
+  if (folderId === 'unfiled') return clips.filter(c => !c.folderId).length;
+  return clips.filter(c => c.folderId === folderId).length;
+}
+
+function renderFolders() {
+  const items = [
+    {id: 'all', name: '전체', color: 'var(--ink-3)', sys: true},
+    {id: 'unfiled', name: '미분류', color: 'var(--muted)', sys: true},
+    ...clipFolders
+  ];
+  folderListEl.innerHTML = items.map(f => `
+    <li class="folder-item ${activeFolderId === f.id ? 'active' : ''}" data-id="${f.id}">
+      <span class="fi-dot" style="background:${f.color}"></span>
+      <span class="fi-name" data-id="${f.id}">${escapeHtml(f.name)}</span>
+      <span class="fi-count">${clipCount(f.id)}</span>
+      ${f.sys ? '' : `<span class="fi-tools"><button data-action="rename" data-id="${f.id}" title="이름변경">✎</button><button data-action="delete" data-id="${f.id}" title="삭제">✕</button></span>`}
+    </li>
+  `).join('');
+
+  folderListEl.querySelectorAll('.folder-item').forEach(li => {
+    li.addEventListener('click', (e) => {
+      if (e.target.closest('.fi-tools') || e.target.closest('[contenteditable="true"]')) return;
+      activeFolderId = li.dataset.id;
+      renderFolders();
+      renderClips();
+    });
+  });
+  folderListEl.querySelectorAll('[data-action="rename"]').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = b.dataset.id;
+      const span = folderListEl.querySelector(`.fi-name[data-id="${id}"]`);
+      span.contentEditable = 'true'; span.focus();
+      // select all
+      const r = document.createRange(); r.selectNodeContents(span);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      const finish = () => {
+        span.contentEditable = 'false';
+        renameFolder(id, span.textContent.trim() || '폴더');
+        renderFolders();
+      };
+      span.addEventListener('blur', finish, {once: true});
+      span.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); span.blur(); } });
+    });
+  });
+  folderListEl.querySelectorAll('[data-action="delete"]').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = b.dataset.id;
+      const f = clipFolders.find(x => x.id === id);
+      if (!confirm(`"${f?.name}" 폴더를 삭제할까요? (안의 클립은 미분류로 이동)`)) return;
+      deleteFolder(id);
+      if (activeFolderId === id) activeFolderId = 'all';
+      renderFolders(); renderClips();
+    });
+  });
+}
+
+function getFolderName(id) {
+  if (!id) return null;
+  return clipFolders.find(f => f.id === id)?.name || null;
+}
+function getFolderColor(id) {
+  if (!id) return 'var(--muted)';
+  return clipFolders.find(f => f.id === id)?.color || 'var(--muted)';
+}
+
+function renderClips() {
+  const q = (bmSearch?.value || '').toLowerCase();
+  let list = clips;
+  if (activeFolderId === 'unfiled') list = list.filter(c => !c.folderId);
+  else if (activeFolderId !== 'all') list = list.filter(c => c.folderId === activeFolderId);
+  if (q) list = list.filter(c => (c.text + ' ' + (c.title||'')).toLowerCase().includes(q));
+
+  clipsHeading.textContent = `내 발췌 (${clips.length}개)${activeFolderId !== 'all' ? ` · 표시 ${list.length}` : ''}`;
+
+  if (!list.length) {
+    clipPaneEl.innerHTML = `<div class="cd-empty" style="padding:48px 24px;text-align:center;color:var(--muted)">
+      <div style="font-size:2.5rem;color:var(--rule);margin-bottom:12px">¶</div>
+      <div>${q ? '검색 결과 없음' : '이 폴더에 클립이 없습니다.<br>본문에서 텍스트를 드래그해 클립하세요.'}</div></div>`;
+    return;
+  }
+
+  const folderOptions = ['<option value="">미분류</option>', ...clipFolders.map(f => `<option value="${f.id}">${escapeHtml(f.name)}</option>`)].join('');
+
+  clipPaneEl.innerHTML = list.map(c => {
+    const fname = getFolderName(c.folderId);
+    const fcolor = getFolderColor(c.folderId);
+    return `
+    <div class="bm-clip" data-id="${c.id}">
+      <div class="bc-meta">
+        <span>${escapeHtml(c.title || '')}</span>
+        ${fname ? `<span class="bc-folder-chip"><span class="chip-dot" style="background:${fcolor}"></span>${escapeHtml(fname)}</span>` : '<span class="bc-folder-chip" style="background:transparent;border:1px dashed var(--rule);color:var(--muted)">미분류</span>'}
+      </div>
+      <div class="bc-text">${escapeHtml(c.text)}</div>
+      <div class="bc-tools">
+        <select data-clip="${c.id}" class="bc-folder-select">
+          ${folderOptions.replace(`value="${c.folderId||''}"`, `value="${c.folderId||''}" selected`)}
+        </select>
+        <button data-act="copy" data-clip="${c.id}">복사</button>
+        <button data-act="del" data-clip="${c.id}">삭제</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  clipPaneEl.querySelectorAll('.bc-folder-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const id = Number(sel.dataset.clip);
+      moveClipToFolder(id, sel.value || null);
+      renderFolders(); renderClips();
+    });
+  });
+  clipPaneEl.querySelectorAll('[data-act="copy"]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = Number(b.dataset.clip);
+      const c = clips.find(c => c.id === id);
+      if (c) navigator.clipboard?.writeText(c.text);
+      b.textContent = '복사됨'; setTimeout(() => b.textContent = '복사', 1000);
+    });
+  });
+  clipPaneEl.querySelectorAll('[data-act="del"]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = Number(b.dataset.clip);
+      if (confirm('이 클립을 삭제할까요?')) {
+        removeClip(id);
+        renderFolders(); renderClips();
+      }
+    });
+  });
+}
+
+function renderBookmarks() {
+  const q = (bmSearch?.value || '').toLowerCase();
+  const filtered = [...bookmarks].filter(b => !q || b.toLowerCase().includes(q));
+  bmCount.textContent = `저장한 글 ${bookmarks.size}편${q ? ` · 검색 ${filtered.length}` : ''}`;
+  bmEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
+  bmListEl.querySelectorAll('.bm-row').forEach(r => r.remove());
+  filtered.forEach(title => {
+    const row = document.createElement('div');
+    row.className = 'row bm-row';
+    row.style.cursor = 'default';
+    row.innerHTML = `<div class="row-body"><h3 class="row-title">${escapeHtml(title)}</h3></div><div class="row-actions"><button class="bookmark-btn on" data-title="${escapeHtml(title)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button></div>`;
+    bmListEl.appendChild(row);
+    row.querySelector('.bookmark-btn').addEventListener('click', () => {
+      bookmarks.delete(title);
+      localStorage.setItem('ns_bookmarks', JSON.stringify([...bookmarks]));
+      syncPush?.();
+      renderBookmarks();
+    });
+  });
+}
+
+$('#folderAddBtn').addEventListener('click', () => {
+  const name = prompt('새 폴더 이름:');
+  if (!name) return;
+  const used = clipFolders.length;
+  const f = createFolder(name.trim(), FOLDER_COLORS[used % FOLDER_COLORS.length]);
+  activeFolderId = f.id;
+  renderFolders(); renderClips();
+});
+
+bmSearch.addEventListener('input', () => { renderBookmarks(); renderClips(); });
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderBookmarks();
+  renderFolders();
+  renderClips();
+});
+</script>
+</body>
+</html>
+```
+
+### pt.html
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PT 카드 모드 — 논술 리더</title>
+<meta name="theme-color" content="#f4ede0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-white">
+<div class="pt-shell">
+  <div class="pt-topbar">
+    <a href="bookmarks.html" style="text-decoration:none;color:var(--ink-2);font-size:0.86rem">← 클립</a>
+    <div class="pt-title">PT 카드</div>
+    <select id="folderSelect"></select>
+    <div class="pt-progress-wrap"><div class="pt-progress-bar" id="progressBar"></div></div>
+    <span class="pt-counter" id="counter">0 / 0</span>
+    <button id="shuffleBtn" title="순서 섞기">🔀</button>
+    <button id="noteToggle" class="primary">📝 메모</button>
+  </div>
+  <div class="pt-stage">
+    <button class="pt-nav prev" id="prevBtn">←</button>
+    <div id="cardArea"></div>
+    <button class="pt-nav next" id="nextBtn">→</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+const ptNotes = JSON.parse(localStorage.getItem('ns_pt_notes') || '{}');
+let currentList = [];
+let cursor = 0;
+let showNote = true;
+
+const $ = s => document.querySelector(s);
+const folderSel = $('#folderSelect');
+const progressBar = $('#progressBar');
+const counter = $('#counter');
+const cardArea = $('#cardArea');
+const prevBtn = $('#prevBtn');
+const nextBtn = $('#nextBtn');
+
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+function buildFolderOptions() {
+  const opts = [
+    `<option value="all">전체 (${clips.length})</option>`,
+    `<option value="unfiled">미분류 (${clips.filter(c => !c.folderId).length})</option>`,
+    ...clipFolders.map(f => `<option value="${f.id}">${escapeHtml(f.name)} (${clips.filter(c => c.folderId === f.id).length})</option>`)
+  ];
+  folderSel.innerHTML = opts.join('');
+}
+
+function loadList(folderId) {
+  if (folderId === 'all') currentList = [...clips];
+  else if (folderId === 'unfiled') currentList = clips.filter(c => !c.folderId);
+  else currentList = clips.filter(c => c.folderId === folderId);
+  cursor = 0;
+  render();
+}
+
+function getFolderInfo(id) {
+  if (!id) return {name: '미분류', color: 'var(--muted)'};
+  const f = clipFolders.find(f => f.id === id);
+  return f ? {name: f.name, color: f.color} : {name: '미분류', color: 'var(--muted)'};
+}
+
+function render() {
+  if (!currentList.length) {
+    cardArea.innerHTML = `<div class="pt-empty"><h3>이 폴더에 클립이 없습니다</h3><div>카테고리 페이지에서 텍스트를 클립한 뒤<br><a href="bookmarks.html" style="color:var(--accent-ink)">북마크 페이지</a>에서 폴더로 분류하세요.</div></div>`;
+    counter.textContent = '0 / 0'; progressBar.style.width = '0%';
+    prevBtn.disabled = nextBtn.disabled = true;
+    return;
+  }
+  prevBtn.disabled = cursor === 0;
+  nextBtn.disabled = cursor === currentList.length - 1;
+  const c = currentList[cursor];
+  const fi = getFolderInfo(c.folderId);
+  const note = ptNotes[c.id] || '';
+  counter.textContent = `${cursor + 1} / ${currentList.length}`;
+  progressBar.style.width = ((cursor + 1) / currentList.length * 100) + '%';
+
+  cardArea.innerHTML = `
+    <div class="pt-card" style="position:relative">
+      <span class="pt-num">${cursor + 1} / ${currentList.length}</span>
+      <span class="pt-chip"><span class="chip-dot" style="background:${fi.color}"></span>${escapeHtml(fi.name)}</span>
+      <div class="pt-text">${escapeHtml(c.text)}</div>
+      ${c.title ? `<div class="pt-source">출처: ${escapeHtml(c.title)}</div>` : ''}
+      ${showNote ? `
+        <div class="pt-note-wrap">
+          <div class="pt-note-label">발표 메모 (Cmd+S 저장)</div>
+          <textarea class="pt-note" id="noteInput" placeholder="이 클립으로 무엇을 말할지 적어두세요...">${escapeHtml(note)}</textarea>
+        </div>
+      ` : ''}
+    </div>
+  `;
+
+  const ta = $('#noteInput');
+  if (ta) {
+    ta.addEventListener('blur', () => saveNote(c.id, ta.value));
+    ta.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveNote(c.id, ta.value); ta.blur(); }
+    });
+  }
+}
+
+function saveNote(id, val) {
+  if (val) ptNotes[id] = val; else delete ptNotes[id];
+  localStorage.setItem('ns_pt_notes', JSON.stringify(ptNotes));
+}
+
+function shuffle() {
+  for (let i = currentList.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentList[i], currentList[j]] = [currentList[j], currentList[i]];
+  }
+  cursor = 0; render();
+}
+
+prevBtn.addEventListener('click', () => { if (cursor > 0) { cursor--; render(); } });
+nextBtn.addEventListener('click', () => { if (cursor < currentList.length - 1) { cursor++; render(); } });
+folderSel.addEventListener('change', () => loadList(folderSel.value));
+$('#shuffleBtn').addEventListener('click', shuffle);
+$('#noteToggle').addEventListener('click', () => { showNote = !showNote; render(); });
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.key === 'ArrowLeft') prevBtn.click();
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextBtn.click(); }
+  if (e.key === 'n') $('#noteToggle').click();
+  if (e.key === 's') shuffle();
+});
+
+// Touch swipe
+let touchX = null;
+cardArea.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+cardArea.addEventListener('touchend', e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) (dx > 0 ? prevBtn : nextBtn).click();
+  touchX = null;
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildFolderOptions();
+  loadList('all');
+});
+</script>
+</body>
+</html>
+```
+
+## 카테고리 페이지 템플릿 (샘플 1개 — 모든 41개가 같은 구조)
+
+### 공급망/index.html (대표 샘플)
+
+구조: 사이드바 nav + 상단검색 + `.card-row`(접힘 제목) → 클릭시 `.inline-article`(펼침 본문) 반복.
+각 페이지마다 **동일한 인라인 `<style>` 블록이 중복**됨 (디자인 변경시 styles.css와 함께 정리 필요).
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>공급망 — 논술 요약</title>
+<meta name="theme-color" content="#f4ede0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="논술 리더">
+<link rel="manifest" href="../manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="../styles.css">
+<style>
+/* ── 인라인 편집 ── */
+.row-title:hover, .ia-title:hover, .ia-section-h:hover, .ia-para-title:hover {
+  cursor: text; background: color-mix(in oklab, var(--accent-soft) 50%, transparent);
+  border-radius: 4px; transition: background 150ms;
+}
+[contenteditable="true"] { outline: 2px solid var(--accent) !important; border-radius: 4px; padding: 4px 8px; background: var(--card); }
+
+/* ── 접기/펼치기 ── */
+.inline-article { display: none !important; }
+.row.expanded + .inline-article { display: block !important; animation: ia-in 200ms ease-out; }
+@keyframes ia-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── 본문 기본 ── */
+.article-content { word-break: keep-all; text-wrap: pretty; }
+.article-content p {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  margin-bottom: 1.35em; word-break: keep-all;
+}
+.article-content p:last-child { margin-bottom: 0; }
+.article-content ul { padding-left: 1.5em; margin: 0.8em 0; }
+.article-content ul li {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  margin-bottom: 0.5em; word-break: keep-all;
+}
+.article-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1.2em 0; }
+.article-content table th { background: var(--paper-2); padding: 10px 14px; font-weight: 700; text-align: left; border-bottom: 2px solid var(--rule); }
+.article-content table td { padding: 10px 14px; border-bottom: 1px solid var(--rule-2); vertical-align: top; line-height: 1.7; }
+
+/* ── 빈 소제목 숨김 ── */
+.ia-section-h:empty, .ia-para-title:empty, .ia-sub-title:empty, .ia-tag-title:empty { display: none; }
+
+/* ── 소제목 계층: section-h(H2) > para-title(H3) > sub-title(①) > tag-title([태그]) ── */
+.ia-section-h {
+  font-family: 'Noto Serif KR',serif; font-size: 1.3rem; font-weight: 900;
+  letter-spacing: -0.8px; line-height: 1.3;
+  margin: 48px 0 18px !important; padding: 0 0 10px;
+  border-bottom: 2px solid var(--accent); color: var(--ink);
+}
+.ia-section-h::before { content: ''; width: 28px; height: 2px; background: var(--accent); }
+.ia-para-title, h3.ia-para-title {
+  font-family: 'Noto Serif KR',serif !important; font-size: 1.18rem !important; font-weight: 800 !important;
+  letter-spacing: -0.5px; line-height: 1.35;
+  margin: 36px 0 14px !important; padding-left: 14px;
+  border-left: 4px solid var(--accent); color: var(--ink);
+}
+.ia-sub-title {
+  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 700;
+  margin: 28px 0 10px; color: var(--ink); line-height: 1.4;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.ia-sub-title .sub-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; background: var(--accent); color: var(--paper);
+  border-radius: 50%; font-size: 0.82rem; font-weight: 800; flex-shrink: 0;
+  font-family: 'Pretendard',sans-serif;
+}
+.ia-tag-title {
+  font-family: 'Noto Serif KR',serif; font-size: 1.08rem; font-weight: 800;
+  margin: 24px 0 10px; color: var(--ink); line-height: 1.4;
+  display: flex; align-items: center; gap: 10px; letter-spacing: -0.3px;
+}
+.tag-label {
+  display: inline-block; padding: 4px 12px;
+  background: var(--accent); color: var(--paper); border-radius: 4px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 1.5px;
+  font-family: 'Pretendard',sans-serif; white-space: nowrap; flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+/* ── 용어박스 (grid) ── */
+.term-box {
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 16px;
+  padding: 14px 18px 14px 20px; margin: 14px 0;
+  background: color-mix(in oklab, var(--paper-2) 70%, transparent);
+  border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
+  align-items: baseline;
+}
+.term-name { font-size: 0.9rem; font-weight: 800; color: var(--ink); letter-spacing: -0.3px; white-space: nowrap; }
+.term-def { font-size: 0.9rem; color: var(--ink-3); line-height: 1.75; }
+
+/* ── Q&A ── */
+.qa-q {
+  font-family: 'Noto Serif KR',serif; font-size: 1.05rem; font-weight: 700;
+  line-height: 1.55; color: var(--ink);
+  border-top: 2px solid var(--ink); padding: 20px 0 14px 44px;
+  margin-top: 36px; position: relative;
+}
+.qa-q::before {
+  content: 'Q'; position: absolute; left: 0; top: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--ink); color: var(--paper);
+  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
+  font-family: 'Pretendard',sans-serif;
+}
+.qa-a {
+  font-size: var(--reading-fs); line-height: 1.93; color: var(--ink-2);
+  padding: 14px 0 14px 44px; border-bottom: 1px solid var(--rule);
+  margin-bottom: 20px; position: relative; word-break: keep-all;
+}
+.qa-a::before {
+  content: 'A'; position: absolute; left: 0; top: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--accent); color: var(--paper);
+  border-radius: 6px; font-size: 0.88rem; font-weight: 800;
+  font-family: 'Pretendard',sans-serif;
+}
+
+/* ── 설정 패널 ── */
+.settings-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 300; display: none; }
+.settings-overlay.open { display: block; }
+.settings-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; z-index: 301; width: min(400px, 90vw); box-shadow: var(--shadow-2); }
+.settings-panel h3 { font-family: 'Noto Serif KR',serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; }
+.setting-row { margin-bottom: 16px; }
+.setting-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+.setting-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.setting-btn { padding: 6px 14px; border-radius: var(--r-pill); border: 1px solid var(--rule); font-size: 0.82rem; cursor: pointer; transition: all 120ms; background: var(--card); }
+.setting-btn:hover { background: var(--paper-2); }
+.setting-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ── 클립 FAB ── */
+.clips-fab { position: fixed; right: 22px; bottom: 22px; z-index: 90; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 10px 16px 10px 12px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.18); display: none; align-items: center; gap: 8px; }
+.clips-fab.show { display: inline-flex; }
+.clips-fab:hover { transform: translateY(-2px); }
+.clips-fab .num { background: var(--accent); color: white; border-radius: 999px; padding: 2px 8px; font-size: 0.74rem; }
+@media (max-width: 880px) { .clips-fab { bottom: 76px; right: 14px; } }
+
+/* ── 클립 드로어 ── */
+.clips-drawer-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 200; display: none; }
+.clips-drawer-overlay.open { display: block; }
+.clips-drawer { position: fixed; top: 0; right: 0; width: min(440px, 100vw); height: 100vh; background: var(--paper); z-index: 201; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(0,0,0,0.18); transform: translateX(100%); transition: transform 240ms cubic-bezier(.2,.7,.2,1); }
+.clips-drawer.open { transform: translateX(0); }
+.cd-head { padding: 22px 24px 16px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; gap: 12px; }
+.cd-head h2 { font-family: 'Noto Serif KR',serif; font-size: 1.4rem; font-weight: 800; }
+.cd-head .cd-count { font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+.cd-list { overflow-y: auto; flex: 1; padding: 10px 0 80px; }
+.cd-empty { padding: 60px 24px; text-align: center; color: var(--muted); }
+.clip-item { padding: 16px 24px; border-bottom: 1px solid var(--rule-2); }
+.clip-item .ci-text { font-family: 'Noto Serif KR',serif; font-size: 0.95rem; line-height: 1.7; border-left: 2px solid var(--accent); padding-left: 12px; margin-top: 8px; }
+.clip-item .ci-tools { display: flex; gap: 8px; margin-top: 10px; }
+.clip-item .ci-tools button { font-size: 0.72rem; color: var(--muted); padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--rule); background: var(--card); }
+.clip-item .ci-tools button:hover { background: var(--paper-2); color: var(--ink); }
+
+/* ── 클립 팝오버 ── */
+.clip-popover { position: absolute; z-index: 300; background: var(--ink); color: var(--paper); border-radius: 8px; padding: 6px; display: flex; gap: 4px; box-shadow: 0 8px 28px rgba(0,0,0,0.25); transform: translate(-50%,-100%); margin-top: -8px; }
+.clip-popover::after { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 10px; height: 10px; background: var(--ink); }
+.clip-popover button { background: transparent; color: var(--paper); font-size: 0.78rem; padding: 6px 12px; border-radius: 5px; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; white-space: nowrap; }
+.clip-popover button:hover { background: rgba(255,255,255,0.12); }
+mark.clip-mark { background: oklch(0.92 0.1 85 / 0.7); color: inherit; padding: 0 1px; border-radius: 2px; }
+</style>
+</head>
+<body data-fs="m" class="density-magazine theme-white mode-magazine">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">논술 리더</div>
+      <div class="sub">Essay Reader</div>
+    </div>
+    <div class="nav-list">
+      <a href="../index.html" class="nav-item"><span>← 전체 카테고리</span></a>
+      <a href="../bookmarks.html" class="nav-item"><span>📌 내 북마크 / 클립</span></a>
+      <a href="../pt.html" class="nav-item"><span>🎤 PT 카드 모드</span></a>
+    </div>
+    <div class="nav-list">
+      <div class="nav-section-title">카테고리</div>
+      <a href="../ESG/index.html" class="nav-item"><span>🌱 ESG</span><span class="count">20</span></a>
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>??‍??‍?? 가계</span><span class="count">22</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="../가계_고령문제/index.html" class="nav-item sub"><span>고령문제</span><span class="count">10</span></a>
+          <a href="../가계_금융문제/index.html" class="nav-item sub"><span>금융문제</span><span class="count">3</span></a>
+          <a href="../가계_인력문제/index.html" class="nav-item sub"><span>인력문제</span><span class="count">9</span></a>
+        </div>
+      </div>
+      <a href="../공급망/index.html" class="nav-item"><span>🔗 공급망</span><span class="count">12</span></a>
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🌍 글로벌</span><span class="count">35</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="../글로벌_관세_통상_국제/index.html" class="nav-item sub"><span>관세·통상·국제</span><span class="count">18</span></a>
+          <a href="../글로벌_외화/index.html" class="nav-item sub"><span>외화</span><span class="count">17</span></a>
+        </div>
+      </div>
+      <a href="../금융업/index.html" class="nav-item"><span>🏦 금융업</span><span class="count">31</span></a>
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>💻 디지털</span><span class="count">24</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="../디지털_기타/index.html" class="nav-item sub"><span>기타</span><span class="count">5</span></a>
+          <a href="../디지털_코인/index.html" class="nav-item sub"><span>코인</span><span class="count">19</span></a>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🚀 벤처</span><span class="count">41</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="../벤처_창업_스케일업/index.html" class="nav-item sub"><span>창업·스케일업</span><span class="count">16</span></a>
+          <a href="../벤처_투자_모험자본/index.html" class="nav-item sub"><span>투자·모험자본</span><span class="count">25</span></a>
+        </div>
+      </div>
+      <a href="../부동산/index.html" class="nav-item"><span>🏠 부동산</span><span class="count">4</span></a>
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>??️ 산업 과제</span><span class="count">35</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="../산업_과제_산업_과제/index.html" class="nav-item sub"><span>산업 과제</span><span class="count">18</span></a>
+          <a href="../산업_과제_생산적금융/index.html" class="nav-item sub"><span>생산적금융</span><span class="count">17</span></a>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🏭 산업별</span><span class="count">146</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="../산업별_AI_AI_도입/index.html" class="nav-item sub"><span>AI/AI 도입</span><span class="count">13</span></a>
+          <a href="../산업별_AI_일자리/index.html" class="nav-item sub"><span>AI/일자리</span><span class="count">7</span></a>
+          <a href="../산업별_AI_도입/index.html" class="nav-item sub"><span>AI/도입</span><span class="count">7</span></a>
+          <a href="../산업별_가전_스마트폰_디스플레이/index.html" class="nav-item sub"><span>가전·디스플레이</span><span class="count">6</span></a>
+          <a href="../산업별_건설_제조_기계_철강/index.html" class="nav-item sub"><span>건설·제조·철강</span><span class="count">10</span></a>
+          <a href="../산업별_로봇/index.html" class="nav-item sub"><span>로봇</span><span class="count">4</span></a>
+          <a href="../산업별_바이오_헬스/index.html" class="nav-item sub"><span>바이오·헬스</span><span class="count">10</span></a>
+          <a href="../산업별_반도체/index.html" class="nav-item sub"><span>반도체</span><span class="count">9</span></a>
+          <a href="../산업별_방산/index.html" class="nav-item sub"><span>방산</span><span class="count">5</span></a>
+          <a href="../산업별_섬유패션산업/index.html" class="nav-item sub"><span>섬유·패션</span><span class="count">6</span></a>
+          <a href="../산업별_우주/index.html" class="nav-item sub"><span>우주</span><span class="count">4</span></a>
+          <a href="../산업별_원전/index.html" class="nav-item sub"><span>원전</span><span class="count">6</span></a>
+          <a href="../산업별_유통_서비스_컨텐츠/index.html" class="nav-item sub"><span>유통·서비스</span><span class="count">11</span></a>
+          <a href="../산업별_이차전지/index.html" class="nav-item sub"><span>이차전지</span><span class="count">10</span></a>
+          <a href="../산업별_자동차/index.html" class="nav-item sub"><span>자동차</span><span class="count">9</span></a>
+          <a href="../산업별_조선_해운/index.html" class="nav-item sub"><span>조선·해운</span><span class="count">13</span></a>
+          <a href="../산업별_항공/index.html" class="nav-item sub"><span>항공</span><span class="count">2</span></a>
+          <a href="../산업별_화학_에너지/index.html" class="nav-item sub"><span>화학·에너지</span><span class="count">15</span></a>
+        </div>
+      </div>
+      <a href="../시사/index.html" class="nav-item"><span>📰 시사</span><span class="count">27</span></a>
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>📈 자본시장</span><span class="count">30</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="../자본시장_국장/index.html" class="nav-item sub"><span>국장</span><span class="count">25</span></a>
+          <a href="../자본시장_채권/index.html" class="nav-item sub"><span>채권</span><span class="count">5</span></a>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>??️ 정책금융</span><span class="count">23</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="../정책금융_소상공인/index.html" class="nav-item sub"><span>소상공인</span><span class="count">6</span></a>
+          <a href="../정책금융_정책금융개선/index.html" class="nav-item sub"><span>정책금융개선</span><span class="count">5</span></a>
+          <a href="../정책금융_중소기업/index.html" class="nav-item sub"><span>중소기업</span><span class="count">12</span></a>
+        </div>
+      </div>
+      <a href="../중동이슈/index.html" class="nav-item"><span>🕌 중동이슈</span><span class="count">28</span></a>
+      <a href="../지역균형/index.html" class="nav-item"><span>??️ 지역균형</span><span class="count">10</span></a>
+    </div>
+  </aside>
+  <div class="content">
+    <div class="topbar">
+      <div class="search">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" placeholder="제목·내용 검색…" id="searchInput">
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="densityBtn" title="보기 방식"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 10h18M3 14h18M3 18h18"/></svg></button>
+        <button class="icon-btn" id="fsBtn" title="글자 크기"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></button>
+        <button class="icon-btn" id="settingsBtn" title="설정"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      </div>
+      <span id="filterCount" style="font-size:0.78rem;color:var(--muted)">12편</span>
+    </div>
+    <header class="page-head">
+      <div class="eyebrow">📄 논술 요약</div>
+      <h2>공급망</h2>
+      <div class="ph-sub">12편의 요약 보고서</div>
+    </header>
+    <div class="timeline">
+      <div class="card-row" data-text="kdb 주도 &#x27;희토류 미드스트림(제련) 전용 친환경 인프라 펀드&#x27; 조성 " style="display:contents">
+<div class="row" id="row-0">
+  <div class="row-body">
+    <h3 class="row-title">KDB 주도 &#x27;희토류 미드스트림(제련) 전용 친환경 인프라 펀드&#x27; 조성</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="KDB 주도 &#x27;희토류 미드스트림(제련) 전용 친환경 인프라 펀드&#x27; 조성"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">KDB 주도 &#x27;희토류 미드스트림(제련) 전용 친환경 인프라 펀드&#x27; 조성</h2>
+  <div class="article-content">
+    <h3 class="ia-para-title">🇨🇳 중국의 희토류 생태계 장악과 무기화 전략의 딜레마</h3>
+<p class="ia-para-body">희토류는 현대 첨단 산업과 방위 산업의 핵심 소재로, 단순한 광물을 넘어 국가 간 패권 분쟁의 &#x27;비대칭 전력(Asymmetric Capability)&#x27;으로 자리 잡았습니다. 중국은 1990년대부터 국가적 차원에서 희토류 산업을 집요하게 육성하여 현재 글로벌 밸류체인을 사실상 독점하고 있습니다.</p>
+<ul>
+<li><strong>3단계 굴기 전략과 생태계 장악:</strong> 중국은 1단계 저가 덤핑으로 서방의 광산을 고사시켰고, 2단계 국가 통제 강화를 거쳐, 3단계 국영 거대 기업(북방/중국희토류그룹) 체제를 완성했습니다. 현재 중국은 채굴의 약 60%, 정제·분리의 80%, 고성능 영구자석 제조의 90% 이상을 장악하고 있습니다.</li>
+<li><strong>딜레마와 스마트한 통제:</strong> 희토류가 강력한 무기임에도 중국은 &#x27;전면 수출 금지&#x27; 카드를 남발할 수 없습니다. 서방의 대체재 개발을 자극하고 자국 산업에 경제적 부메랑으로 돌아올 수 있기 때문입니다. 이에 따라 최근에는 원물 수출을 막기보다 &#x27;가공 및 자석 제조 기술&#x27;의 수출을 금지하거나 허가제를 도입하여, 서방을 중국 중심의 밸류체인에 묶어두는 고도의 &#x27;레버리지&#x27; 전략을 구사하고 있습니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">초크 포인트(Choke point)</span><span class="term-def">외교적·경제적 분쟁 시 상대국의 핵심 산업(반도체, 방산 등) 숨통을 죌 수 있는 전략적 급소.</span></div>
+<h3 class="ia-para-title">🇺🇸 미국과 🇯🇵 일본의 탈(脫)중국 &#x27;디리스킹(De-risking)&#x27; 반격</h3>
+<p class="ia-para-body">서방 진영은 단기적 비용 증가를 감수하더라도 장기적 종속을 끊어내겠다는 의지를 명확히 하고 있습니다.</p>
+<ul>
+<li><strong>미국의 &#x27;게임 체인저&#x27; 기술 및 제도적 돌파:</strong> 트럼프 행정부는 F-35 전투기 등 첨단 무기 생산의 아킬레스건을 해소하기 위해 막대한 보조금(약 14억 달러)을 투입하여 &#x27;MP 머티리얼즈&#x27; 등 채굴부터 자석 제조까지의 수직계열화를 추진 중입니다. 핵심은 전통적 방식이 아닌 <strong>첨단 기술 기반의 우위</strong>입니다. 석탄 폐기물(Fly Ash)이나 특수 박테리아를 활용한 희토류 추출, 철과 질소를 결합한 차세대 자석(Niron Magnetics 상용화), AI 로봇을 활용한 어번 마이닝 등이 대표적입니다.</li>
+<li><strong>일본의 &#x27;센카쿠 쇼크&#x27; 극복과 3대 자립 전략:</strong> 2010년 중국의 희토류 보복을 겪은 일본은 대중 의존도를 90%에서 60% 이하로 낮추는 데 성공했습니다. 이를 위해 ① <strong>저감 및 대체 (Reduce &amp; Substitute)</strong>: 중희토류 미사용 모터 및 입계확산 기술 상용화, ② <strong>재활용 (Recycle)</strong>: 폐전기차 모터에서 고온으로 희토류를 회수하는 순환 경제 구축, ③ <strong>공급선 다변화 (Diversify)</strong>: 호주(Lynas), 베트남 광산 지분 투자 및 미·일 심해 희토류 채굴 동맹을 공격적으로 추진해왔습니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">입계확산(Grain Boundary Diffusion) 기술</span><span class="term-def">고가의 중희토류를 자석 전체에 섞지 않고 표면에만 코팅하여, 사용량을 대폭 줄이면서도 고온 내열성(전기차 모터 필수 요건)을 유지하는 정밀 공정.</span></div>
+<div class="term-box"><span class="term-name">어번 마이닝(Urban Mining)</span><span class="term-def">AI 및 로봇 기술을 활용해 폐가전이나 폐모터의 회로기판 등에서 희토류 함유 부품만 초정밀로 분리하고 추출해내는 도시 광산 기술.</span></div>
+<h3 class="ia-para-title">게임이론을 통한 희토류 패권 시나리오 전망</h3>
+<p class="ia-para-body">미·중 무역전쟁 이후 과거의 &#x27;자유무역에 입각한 효율적 분업&#x27; 구조는 완전히 붕괴되었으며, 양측 모두 비용을 지불하는 &#x27;죄수의 딜레마&#x27; 상황에 돌입했습니다.</p>
+<ul>
+<li><strong>리스크 폭발 (최악의 시나리오):</strong> 중국의 전면 수출 통제와 서방의 더딘 대응으로 글로벌 공급 충격 및 가격 급등 발생.</li>
+<li><strong>공조와 공존 (가장 유력한 시나리오):</strong> 중국은 규제를 레버리지로만 활용하고, 서방은 다변화에 성공하여 공급망이 안정화되는 경쟁-협력 병행 체제.</li>
+<li><strong>탈동조화/블록화:</strong> 미·중 갈등 극대화로 글로벌 밸류체인이 완전히 두 개로 쪼개져 비용 상승과 보호무역이 고착화되는 체제.</li>
+</ul>
+<h3 class="ia-para-title">🇰🇷 한국의 위기와 전방위적 생태계 대응 전략 (핵심)</h3>
+<p class="ia-para-body">자원 빈곤국이자 최고 수준의 제조국인 한국은 네오디뮴 영구자석의 대중국 의존도가 94.7%에 달하는 등 &#x27;잃어버린 15년&#x27;을 겪고 있습니다. 당분간 중국 공급망을 활용하되, 서방의 공급망에 점진적으로 편입하는 고도의 &#x27;줄타기 전략&#x27;이 필수적이며, 원문이 제안하는 밸류체인 단계별 해법에 집중해야 합니다.</p>
+<ul>
+<li><strong>[단기/Upstream] 자산화 및 다변화 (Resilience):</strong> 베트남, 호주 등 비중국계 광산에 대한 적극적인 지분 투자(Offtake 확보)와 포지(Forge) 이니셔티브 등 다자간 핵심광물안보 협의체에 깊숙이 참여해 리스크를 헷징해야 합니다. 또한, 원소별 세분화된 전략적 비축 시스템(Safety Buffer) 고도화가 시급합니다.</li>
+<li><strong>[중기/Midstream] 친환경 제련 기술 내재화 (Technological Sovereignty):</strong> 광물을 확보해도 제련을 중국에 의존하면 의미가 없습니다. 특히 희토류 제련 시 발생하는 심각한 환경 오염 문제를 역이용하여, 방사성 폐기물 처리 등 <strong>친환경 고효율 정제 공정을 상용화</strong>해야 합니다. 이는 ESG 규제가 강화되는 글로벌 시장에서 한미일 동맹 내 한국의 강력한 무기가 될 수 있으며, 나아가 &#x27;K-희토류 통합 클러스터&#x27; 조성을 도모해야 합니다.</li>
+<li><strong>[장기/Downstream] 혁신 대체재 및 순환 경제 (Alternative &amp; Circular):</strong> 전기차 구동 모터 등에서 중희토류를 원천 배제하는 설계(SRM 등) 기술을 선점하고, 폐배터리 및 폐모터 밸류체인을 활용한 어번 마이닝 생태계를 구축하여 자립도를 높여야 합니다.</li>
+</ul>
+<h3 class="ia-para-title"></h3>
+<p class="ia-para-body">희토류는 과거의 &#x27;국제 비교우위에 따른 무역재&#x27;에서 &#x27;경제 안보를 판가름하는 전략 무기&#x27;로 그 본질이 완전히 변모했습니다. 글로벌 패권 경쟁은 결국 누가 중국을 배제하고도 &#x27;친환경적이며 경제성 있는&#x27; 정제·가공 밸류체인을 구축하느냐의 싸움이 될 것입니다. 한국은 늦어진 출발을 만회하기 위해 광물 확보(Upstream)를 넘어 친환경 정제 기술(Midstream)과 대체재 개발(Downstream)에 사활을 걸어야 합니다. 이 과정에서 KDB산업은행은 단순한 자금 공급을 넘어, 민간 상업은행이 감당하기 힘든 긴 호흡의 기술 개발과 막대한 설비 투자를 견인하는 &#x27;인내하는 자본(Patient Capital)&#x27;으로서 대한민국 경제 안보의 최전선 방어막 역할을 수행해야 합니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</h3>
+<div class="ia-section-h">KDB 주도 &#x27;희토류 미드스트림(제련) 전용 친환경 인프라 펀드&#x27; 조성</div>
+<p class="ia-para-body">해결방안 중 중기 전략인 &#x27;분리·정제 기술 내재화&#x27;에 착안한 금융 모델입니다. 희토류 제련 공정은 초기 설비 투자비가 막대하고 환경 규제 리스크가 커서 민간 자본이 기피하는 대표적인 &#x27;시장 실패&#x27; 영역입니다. 산업은행이 앵커 출자자가 되어 ESG 기준을 충족하는 친환경 정제 기술(바이오 침출 등)을 보유한 강소기업이나 R&amp;D 프로젝트에 장기 지분 투자를 단행하는 전용 펀드를 조성해야 합니다. 이는 중국의 아킬레스건인 &#x27;환경 오염&#x27;을 파고드는 한국만의 차별화된 무기가 될 것입니다.</p>
+<div class="ia-section-h">&#x27;폐쇄형 루프(Closed-Loop)&#x27; 완성을 위한 순환경제 밸류체인 브릿지 금융 지원</div>
+<p class="ia-para-body">장기 전략인 &#x27;도시 광산 활성화&#x27;를 현실화하기 위한 방안입니다. 현재 폐배터리 재활용 기업(공급자)과 전기차/모터 제조사(수요자) 간의 협업 구조가 미약합니다. 산업은행이 양측을 연결하는 브릿지 역할을 수행하여, 재활용 희토류를 일정 비율 이상 의무 구매하는 장기 공급 계약(Offtake)을 맺는 기업 컨소시엄에 파격적인 금리 우대나 신디케이티드 론을 제공해야 합니다. 자원이 부족한 한국에서 &#x27;어번 마이닝&#x27;은 유일하게 우리가 직접 통제할 수 있는 국내 광산이라는 점을 명심해야 합니다.</p>
+<ul>
+<li><strong>Q1. 자원 빈곤국인 한국 입장에서, 해외 광산 지분 투자(업스트림)보다 제련 기술(미드스트림) 투자를 더 강조한 이유는 무엇입니까?</strong></li>
+<li><strong>A.</strong> 원물(광석)을 호주나 베트남 등 다변화된 국가에서 성공적으로 확보하더라도, 이를 자석으로 만들기 위한 분리 및 정제 능력이 없다면 결국 다시 중국에 원물을 보내 가공해야 하는 구조적 모순에 빠지기 때문입니다. 특히 제련 과정의 환경 오염 문제가 심각한데, 한국의 우수한 환경 공학 기술을 결합해 &#x27;친환경 정제 생태계&#x27;를 선점한다면 이는 단순히 자립을 넘어 글로벌 공급망에서 한국의 협상력을 극대화하는 핵심 키(Key)가 될 것으로 생각합니다.</li>
+<li><strong>Q2. 희토류 대체 및 재활용 기술은 상용화까지 오랜 시간이 걸립니다. 산업은행의 정책금융이 민간 시중은행과 구별되어야 하는 지점은 어디라고 보십니까?</strong></li>
+<li><strong>A.</strong> &#x27;시간의 가치&#x27;를 다르게 평가해야 한다는 점입니다. 시중은행은 단기적인 수익성과 담보 가치를 중시하지만, 희토류 공급망 내재화는 국가 경제 안보와 직결된 10년 이상의 초장기 프로젝트입니다. 따라서 산업은행은 단기 수익 창출이 어려운 딥테크(희토류-Free 모터 개발, 신규 친환경 제련 공법 등) 영역에 &#x27;인내하는 자본(Patient Capital)&#x27;을 공급하여 죽음의 계곡(Valley of Death)을 건널 수 있게 해주는 마중물 역할을 해야 한다고 생각합니다.</li>
+</ul>
+  </div>
+</div>
+</div><div class="card-row" data-text="q1. 리튬 공급망 다변화를 위해 산업은행이 금융지원 시 지정학적으로 가장 우선 고려할 국가는 어디이며, 그 이유는 무엇인가요? " style="display:contents">
+<div class="row" id="row-1">
+  <div class="row-body">
+    <h3 class="row-title">Q1. 리튬 공급망 다변화를 위해 산업은행이 금융지원 시 지정학적으로 가장 우선 고려할 국가는 어디이며, 그 이유는 무엇인가요?</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="Q1. 리튬 공급망 다변화를 위해 산업은행이 금융지원 시 지정학적으로 가장 우선 고려할 국가는 어디이며, 그 이유는 무엇인가요?"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">Q1. 리튬 공급망 다변화를 위해 산업은행이 금융지원 시 지정학적으로 가장 우선 고려할 국가는 어디이며, 그 이유는 무엇인가요?</h2>
+  <div class="article-content">
+    <h3 class="ia-para-title">글로벌 리튬 공급망 위기와 한국의 구조적 과제 및 대응 전략</h3>
+<h3 class="ia-para-title">핵심 논점 및 분석 배경</h3>
+<p class="ia-para-body">최근 미·중 패권 경쟁과 러·우 전쟁은 &#x27;자원의 무기화&#x27;를 가속화하고 있습니다. 글로벌 자동차 생산량 9,217만 대 중 전기차가 1,300만 대를 차지할 만큼 산업 패러다임이 전환되는 가운데, 전기차 배터리의 핵심 소재인 리튬의 안정적 확보는 단순한 기업 경쟁력을 넘어 &#x27;국가 경제 안보&#x27;의 핵심으로 격상되었습니다. 특히 수산화리튬의 중국 수입 의존도가 80.4%에 달하는 한국은 글로벌 통상 규제와 공급망 블록화에 매우 취약한 구조적 한계를 지니고 있습니다.</p>
+<h3 class="ia-para-title">글로벌 리튬 공급망 밸류체인 분석 (탐사 채굴 정·제련 배터리/전기차)</h3>
+<p class="ia-para-body">리튬 공급망은 채굴의 지리적 편중성과 가공의 독점성이라는 두 가지 특징을 가집니다.</p>
+<ul>
+<li><strong>매장 및 채굴 (Upstream):</strong> 전 세계 매장량의 약 60%가 칠레(염호형)와 호주(경암형)에 집중되어 있습니다. 채굴량 역시 호주(36.7%), 칠레(20.4%), 중국(17.1%) 3개국이 전체의 74%를 과점하고 있습니다.</li>
+<li><strong>가공 및 정·제련 (Midstream):</strong> <strong>가장 치명적인 병목 구간</strong>입니다. 중국이 수산화리튬 가공의 72%, 탄산리튬 가공의 65%를 장악하며 글로벌 공급망을 실질적으로 통제하고 있습니다. 호주는 최대 채굴국이나 가공 비중은 11%에 불과하며, 한국은 리튬 원료 전량을 수입하면서도 우수한 정·제련 기술력으로 8%의 점유율을 차지하고 있습니다.</li>
+<li><strong>배터리 및 완제품 (Downstream):</strong> 중국(CATL, BYD 등)이 리튬이온배터리 생산의 60%를 주도하며, 한국(LG엔솔, SK온, 삼성SDI)은 북미 시장 중심의 고에너지 밀도 양극재(NCM, NCA) 분야에서 점유율 16%로 추격 중입니다 [12-15].</li>
+</ul>
+<div class="term-box"><span class="term-name">염호형 추출</span><span class="term-def">소금호수 지하수를 퍼 올려 태양열로 자연 증발시켜 리튬을 얻는 방식. 생산 단가는 낮으나 24개월의 긴 시간과 대규모 수자원이 소모됨.</span></div>
+<div class="term-box"><span class="term-name">경암형 추출</span><span class="term-def">광산을 파서 리튬이 포함된 광석(스포듀민 등)을 분쇄·가열·화학처리하는 방식. 생산 속도가 빠르고 순도가 높아 전 세계 공급량의 상당 부분을 차지함.</span></div>
+<div class="term-box"><span class="term-name">수산화리튬</span><span class="term-def">에너지 밀도가 높아 NCM, NCA 등 삼원계 전기차 배터리의 양극재 합성에 필수적으로 사용되는 고순도 리튬 화합물.</span></div>
+<h3 class="ia-para-title">주요국의 공급망 정책 동향: 자원 민족주의와 &#x27;공급망 내재화&#x27; 경쟁</h3>
+<p class="ia-para-body">글로벌 주요국은 리튬을 국가 전략자산으로 지정하고 철저한 &#x27;자국 우선주의&#x27;를 펼치고 있습니다.</p>
+<ul>
+<li>🇺🇸 <strong>미국 (배제와 내재화):</strong> 트럼프 2기 행정부는 바이든 정부의 역내 조달 요건을 유지하면서도 &#x27;중국산 완전 배제&#x27;와 자국 내 생산 비중 극대화를 최우선으로 합니다. 중국산 리튬 관련 부품에 25% 고율 관세를 부과하며 동맹국 중심의 완결형 밸류체인을 노립니다.</li>
+<li>🇨🇳 <strong>중국 (수출 통제와 지배력 강화):</strong> 원가 경쟁력과 공정 노하우를 무기로 &#x27;25년 7월 기술 통제 목록 추가, &#x27;25년 10월 리튬 배터리 등 수출 통제 조치를 연이어 발표하며 자원을 무기화하고 시장 질서 주도권을 쥐고 있습니다 [19-21].</li>
+<li>🇪🇺 <strong>유럽 (역내 자립과 환경 규제):</strong> 단일국 의존도를 65% 미만으로 낮추고, 2030년까지 채굴(10%), 정제(40%), 재활용(25%) 역내 자급률을 법제화(CRMA)했습니다. 친환경 요건이 엄격해 역외 기업에 강력한 비관세 장벽으로 작용합니다.</li>
+<li>🇯🇵 <strong>일본 (국가 주도 리스크 전담):</strong> 정책금융기관(JOGMEC)이 해외 대규모 프로젝트의 초기 리스크를 직접 전담하고, 미국과 공조 체계를 강화하여 자본 투입형 공급망 다변화를 추진합니다.</li>
+<li>🇦🇺 <strong>호주 (원료 수출국에서 가공국으로):</strong> 2030년까지 자국 내 가공 비중을 50%로 늘리기 위해 가공 비용 10% 세액 환급 등 강력한 인센티브를 제공합니다.</li>
+<li>🌎 <strong>남미 4국 (노선 분화):</strong> 칠레/볼리비아는 국가 통제권(국유화)을 강화하는 반면, 아르헨티나/브라질은 대규모 세제 혜택 등 개방적 투자 유치로 서방 자본을 끌어모으고 있습니다.</li>
+</ul>
+<h3 class="ia-para-title">한국의 현황 및 구조적 취약성</h3>
+<p class="ia-para-body">한국 배터리 산업은 세계 최고 수준의 공정 기술력(양극재)을 보유하고 있음에도 불구하고, 다음과 같은 뼈아픈 구조적 한계를 안고 있습니다.</p>
+<ul>
+<li><strong>원료의 극단적 대외 의존도:</strong> 리튬 매장량이 부족해 상업적 채굴이 불가능하며, 수입의 95%를 중국과 칠레에, 특히 배터리용 수산화리튬의 수입은 80% 이상 중국에 의존합니다. 정부 비축량은 5.8일분에 불과합니다.</li>
+<li><strong>정책적 안전망 및 외교적 협상력 부재:</strong> 기업(SK온, LG엔솔, 포스코 등)이 개별적으로 해외 장기 공급 계약을 체결하고 있으나, 일본처럼 정부가 대규모 투자 리스크를 분담하거나, 서방 선진국처럼 강력한 통합 외교 협상력을 발휘하지 못해 민간 역량에만 의존하고 있습니다.</li>
+</ul>
+<h3 class="ia-para-title">대응 전략 및 해결방안 (원문 기반 최우선 과제)</h3>
+<p class="ia-para-body">원문은 고도의 기술력을 무기로 국가와 기업이 역할을 분담하는 &#x27;공급망 전주기 자립 체계&#x27;를 핵심 해결책으로 제시합니다.</p>
+<ul>
+<li><strong>[정부 부문] 국가 주도의 리스크 분담 및 제도적 지원 밸류체인 구축</strong></li>
+<li><strong>국가자원안보 특별법 가동 및 자원외교 강화:</strong> 리튬을 최우선 전략 핵심 광물로 지정하고 조기경보체계를 가동해야 합니다. 나아가 개별 기업 단위의 쟁탈전이 아닌, 상설 외교 네트워크를 구축하여 브라질, 아르헨티나 등 개방형 국가들과의 통합된 대외 교섭력을 발휘해야 합니다.</li>
+<li><strong>초기 투자 리스크 보전 (JOGMEC 벤치마킹):</strong> 실패 위험이 큰 상류 부문(탐사/채굴)에 대해 일본처럼 범정부 차원에서 직접 투자에 참여하고 손실 보전 안전망(공급망 펀드 확대 등)을 구축해야 합니다.</li>
+<li><strong>폐배터리 재활용 법제화 및 세제 지원:</strong> 폐배터리를 &#x27;국가 전략 자원&#x27;으로 정의하고, 유럽처럼 재활용 리튬 추출 기술에 대한 세액 공제를 즉각 법제화해야 합니다.</li>
+<li><strong>[기업 부문] 규제 우회 거점 확보 및 초격차 기술 활용</strong></li>
+<li><strong>전략적 거점 이전 및 기술 조기 양산:</strong> IRA 등 해외 우려 기관(FEOC) 규제에 선제 대응하기 위해 정제 시설을 미국 및 FTA 체결국 내로 이전해야 합니다. 또한, 친환경 직접 추출 기술(DLE) 등을 자원 보유국(칠레 등)에 선제적으로 제안하여 &#x27;기술을 대가로 독점 공급권을 확보&#x27;하는 전략이 필수적입니다.</li>
+<li><strong>어반 마이닝(도시 광산) 내재화:</strong> 성일하이텍 등과 협력하여 배터리 공정 스크랩 및 폐배터리에서 고순도 리튬을 추출하는 재자원화(Recycling) 사업 파트너십을 굳건히 해야 합니다.</li>
+</ul>
+<h3 class="ia-para-title">산업의 혈관 &#x27;리튬&#x27; 안보, 국가와 정책금융의 2인 3각 시스템이 필수불가결하다</h3>
+<p class="ia-para-body">글로벌 리튬 공급망 위기는 이제 단순한 원자재 수급의 문제가 아닙니다. 배터리 원가의 절반에 달하는 리튬의 무기화는 곧 한국의 국가 주력 산업인 자동차·배터리 밸류체인 전체의 생존과 직결됩니다. 미국과 유럽이 거대한 자본과 규제를 무기로 공급망을 블랙홀처럼 빨아들이고 있고, 자원 보유국들이 노골적으로 자국 내 고부가가치화(내재화)를 강제하는 현시점에서, 과거처럼 &quot;해외에서 원광을 사다 국내에서 가공하여 파는&quot; 가공 무역 모델은 한계에 다다랐습니다.</p>
+<p class="ia-para-body">따라서 향후의 관전 포인트는 <strong>&#x27;누가 먼저 광물 채굴(Upstream)부터 재활용(Recycling)까지 폐쇄형 순환 생태계를 주도하느냐&#x27;</strong>입니다. 이 과정에서 <strong>산업은행의 역할은 절대적</strong>입니다. 대기업조차 단독으로 감당하기 힘든 해외 광산 조 단위 지분 투자에 대해, 산업은행은 &#x27;인내하는 자본(Patient Capital)&#x27;으로서 프로젝트 파이낸싱(PF)과 지분투자를 제공하는 &#x27;금융 안보의 최후 보루&#x27; 역할을 수행해야 합니다.</p>
+<div class="term-box"><span class="term-name">💡 차별화 포인트 1</span><span class="term-def">&quot;팀 코리아(Team Korea) 자원-금융 패키지 딜&quot; 주도**</span></div>
+<p class="ia-para-body">원문에서 지적한 &#x27;민간 참여에만 의존하는 구조적 한계&#x27;를 극복하기 위해, 산업은행이 K-배터리 제조사 + 정유·화학사(현지 인프라 역량) + 정부(외교)를 결합한 컨소시엄의 앵커 투자자로 나서야 합니다. 특히 아르헨티나, 브라질처럼 투자 유치에 개방적인 국가를 타겟으로, 한국의 우수한 &#x27;정·제련 친환경 기술력&#x27;과 &#x27;산업은행의 장기 저리 금융&#x27;을 패키지로 묶어 제안한다면 중국의 자본 공세를 이겨낼 강력한 협상 카드가 될 것입니다.</p>
+<div class="term-box"><span class="term-name">💡 차별화 포인트 2</span><span class="term-def">리사이클링(재자원화) 전용 펀드 조성 및 중소·중견 소재 기업 스케일업**</span></div>
+<p class="ia-para-body">공급망 다변화의 현실적 대안은 결국 &#x27;도시광산(재활용)&#x27;입니다. 대기업의 해외 광산 확보 지원도 중요하지만, 성일하이텍과 같은 폐배터리 추출 강소기업들이 유럽/미국의 높은 환경 기준을 충족할 수 있는 설비를 갖추도록 산업은행이 &#x27;순환경제 인프라 전용 펀드&#x27;를 조성해 집중 육성해야 합니다. 이는 수입 의존도를 즉각적으로 낮추는 지름길입니다.</p>
+<h3 class="ia-para-title"></h3>
+<div class="ia-section-h">Q1. 리튬 공급망 다변화를 위해 산업은행이 금융지원 시 지정학적으로 가장 우선 고려할 국가는 어디이며, 그 이유는 무엇인가요?</div>
+<div class="term-box"><span class="term-name">A</span><span class="term-def">아르헨티나와 브라질 등 남미 개방형 국가와 우방국 호주를 최우선 타겟으로 삼아야 합니다. 보고서에 따르면 칠레와 볼리비아는 자원 국유화 및 국가 통제로 진입 장벽이 높아지는 반면, 아르헨티나와 브라질은 외국 자본 유치와 세제 혜택에 적극적입니다. 또한, 핵심 광물 생태계를 역내로 내재화하려는 호주 정부의 수요에 발맞춰, K-배터리 기업들이 호주 현지에 정제련 합작 공장을 세우는 프로젝트에 산은이 초기 금융을 조달하는 것이 미국 IRA 요건 충족과 리스크 분산 측면에서 가장 합리적입니다.</span></div>
+<div class="ia-section-h">Q2. 대기업 중심의 해외 광산 확보 경쟁 속에서, 자금력이 부족한 국내 중소·중견 소재 기업을 위해 정책금융은 어떤 지원을 해야 할까요?</div>
+<div class="term-box"><span class="term-name">A</span><span class="term-def">원광석 확보는 대기업 컨소시엄에 맡기더라도, 중소·중견 기업은 공급망의 &#x27;미드스트림(가공)&#x27;과 &#x27;재자원화(폐배터리 재활용)&#x27; 생태계에 편입될 수 있도록 핀셋 지원을 해야 합니다. 최근 정부가 조성한 2,500억 원 규모의 핵심 광물 공급망 펀드를 적극 활용하여, 이들 기업이 폐배터리에서 리튬을 추출하는 친환경 공정 설비를 고도화할 수 있도록 시설 자금 및 R&amp;D 보증을 대폭 확대해 주는 것이 산업은행의 본연의 역할이라고 생각합니다.</span></div>
+  </div>
+</div>
+</div><div class="card-row" data-text="과거의 천연가스가 원유를 보조하는 &#x27;대체재&#x27;였다면, 미래의 천연가스는 ai와 데이터센터 등 첨단 미래 산업을 가동하는 &#x27;핵심 전략 자본&#x27;입니다. " style="display:contents">
+<div class="row" id="row-2">
+  <div class="row-body">
+    <h3 class="row-title">과거의 천연가스가 원유를 보조하는 &#x27;대체재&#x27;였다면, 미래의 천연가스는 AI와 데이터센터 등 첨단 미래 산업을 가동하는 &#x27;핵심 전략 자본&#x27;입니다.</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="과거의 천연가스가 원유를 보조하는 &#x27;대체재&#x27;였다면, 미래의 천연가스는 AI와 데이터센터 등 첨단 미래 산업을 가동하는 &#x27;핵심 전략 자본&#x27;입니다."><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">과거의 천연가스가 원유를 보조하는 &#x27;대체재&#x27;였다면, 미래의 천연가스는 AI와 데이터센터 등 첨단 미래 산업을 가동하는 &#x27;핵심 전략 자본&#x27;입니다.</h2>
+  <div class="article-content">
+    <p class="ia-para-body">📊 <strong>국제 천연가스 시장 충격이 국내 경제에 미치는 파급효과와 정책적 시사점</strong></p>
+<h3 class="ia-para-title">현황 및 문제의식 : 원유에서 천연가스로의 에너지 패러다임 전환</h3>
+<p class="ia-para-body">과거 국제 천연가스 시장은 원유시장에 비해 규모와 유동성이 작아 유가에 연동되어 가격이 결정되는 종속적인 성격이 강했습니다. 그러나 셰일가스 상업화와 지역별 고유 가스 허브의 발달로 원유시장과의 탈동조화 현상이 나타나며 독자적인 가격 결정 구조를 갖추게 되었습니다.</p>
+<p class="ia-para-body">가장 주목해야 할 점은 <strong>우리나라 경제의 천연가스 의존도가 급증</strong>하고 있다는 사실입니다. 1990년 대비 2022년 국내 산업의 원유 의존도는 절반 수준으로 감소한 반면, 천연가스 의존도는 3배나 증가했습니다. 특히 AI 혁명과 데이터센터 증설은 이러한 현상을 가속하고 있습니다. AI는 기존 대비 3~4배의 전력 집적도를 요구하며, 이를 충당하기 위한 발전용 천연가스 수요가 폭발적으로 증가할 전망입니다. 국내 역시 2025~2027년 29개의 대규모 데이터센터 공급이 예정되어 있어, 전량 수입에 의존하는 천연가스 시장의 충격이 과거와 달리 국내 거시경제 전반을 흔들 수 있는 핵심 리스크로 부상했습니다.</p>
+<div class="term-box"><span class="term-name">헨리 허브(Henry Hub)</span><span class="term-def">미국 루이지애나주에 위치한 천연가스 거래소로, 북미 지역 천연가스 거래 계약의 지표가 되는 대표적 가격 기준점</span></div>
+<div class="term-box"><span class="term-name">노드스트림(Nord Stream)</span><span class="term-def">발틱해를 가로질러 러시아와 유럽 대륙을 직접 연결하는 핵심 천연가스 파이프라인</span></div>
+<h3 class="ia-para-title">국제 천연가스 시장의 3대 구조적 충격 요인과 역사적 흐름</h3>
+<p class="ia-para-body">천연가스 시장의 가격과 생산량 변동은 크게 세 가지 요인별 충격(총수요, 천연가스 공급, 천연가스 수요)으로 식별되며, 주요 경제 위기 시점마다 이들이 복합적으로 작용해왔습니다.</p>
+<ul>
+<li><strong>① 총수요 충격 (글로벌 실물경제활동 변화)</strong></li>
+</ul>
+<p class="ia-para-body">글로벌 경기가 확장될 때 발생하며 천연가스 가격을 상승시킵니다. 그 효과는 충격 발생 후 1년까지 증가하다가 점차 소멸하는 특징을 보입니다. 2020년 코로나19 사태 직후 경기 침체로 마이너스 충격이 가해졌고, 2022년 팬데믹 진정 이후 경기 반등 시기에는 강력한 상승 충격으로 작용했습니다.</p>
+<ul>
+<li><strong>② 천연가스 공급 충격 (지정학적 요인, 셰일가스 개발 등)</strong></li>
+</ul>
+<p class="ia-para-body">당기 천연가스 생산량을 즉각적으로 상승시키나 1년 이내에 빠르게 소멸합니다. 2009년 미국의 셰일가스 혁명 당시에는 거대한 긍정적 공급 충격으로 가격 급락을 유도했으나, 2022년 러-우 전쟁(러시아의 천연가스 무기화) 시기에는 극심한 공급 차질(유럽 내 러시아산 공급 20% 감소)을 일으켜 가격을 사상 최대로 끌어올렸습니다.</p>
+<ul>
+<li><strong>③ 천연가스 수요 충격 (기대심리에 따른 예비적·투기적 수요)</strong></li>
+</ul>
+<p class="ia-para-body">가격 상승에 대한 두려움으로 발생하는 선제적 수요입니다. 당기 가격에 가장 큰 상승 압력을 가하며 1년 이내 소멸합니다. 2008년 배럴당 133달러에 달하는 초고유가 시기에 가스 가격 역시 급등할 것이란 투기적 수요가 발생하며 가격 상승을 견인했습니다.</p>
+<div class="term-box"><span class="term-name">구조적 VAR 모형</span><span class="term-def">경제 변수들 간의 상호작용과 인과관계를 역사적 시계열 데이터를 바탕으로 추정하여, 특정 외부 충격이 경제에 미치는 영향을 동태적으로 식별하는 통계 모형</span></div>
+<h3 class="ia-para-title">국제 천연가스 시장 충격이 국내 거시경제에 미치는 파급 경로</h3>
+<p class="ia-para-body">국제 천연가스 시장의 충격이 당장 국내 GDP 등 성장률 지표에 미치는 가시적 영향은 제한적이나, <strong>수출입 물가</strong>를 중심으로는 뚜렷하고 유의미한 파급효과가 나타나고 있습니다.</p>
+<ul>
+<li><strong>수입물가 상승 경로:</strong> 글로벌 총수요 충격과 투기적 성격의 천연가스 수요 충격은 국내 수입물가를 유의하게 상승시킵니다. 천연가스는 산업(특히 석유화학, 철강) 생산에 투입되는 기초 원재료이므로, 도입 가격 상승은 즉각적인 수입물가 상승으로 전이됩니다.</li>
+<li><strong>수출물가 상승 경로:</strong> 총수요 충격은 세계 실물경기 활성화로 인한 완제품 수요 증가 효과와 수입원자재 가격 상승에 따른 비용 전가(판가 인상) 효과가 결합되어 국내 수출물가를 상승시킵니다.</li>
+<li><strong>GDP 및 실물경제 위축 리스크:</strong> 현재까지 전반적인 GDP 변동률에 미치는 영향은 적으나, 천연가스에 대한 &#x27;투기적 수요 충격&#x27;은 국내 경제성장에 부정적(-)인 영향을 미치는 것으로 식별되었습니다.</li>
+</ul>
+<h3 class="ia-para-title">핵심 정책적 시사점 및 대응 방안</h3>
+<p class="ia-para-body">우리나라 주요 주력산업(석유화학, 철강 등)은 완제품을 수출하고 원재료를 수입하는 구조입니다. 특히 석유화학 부문은 나프타 대신 도시가스(천연가스)를 원료로 전환하는 비중이 2016년 1%에서 2019년 14%로 급증하는 등 산업계의 연·원료용 소비가 늘고 있습니다.</p>
+<p class="ia-para-body">따라서, 향후 갑작스러운 총수요 증가나 공급망 차질로 천연가스 가격이 급등할 경우, 수입물가 폭등이 국내 인플레이션을 자극하고 금리 상승 압력으로 이어져 소비와 투자를 동시에 위축시키는 <strong>&#x27;비용 인상형 인플레이션(Cost-push Inflation)&#x27;</strong>의 뇌관이 될 수 있습니다. 선행연구 및 실증분석 결과를 토대로, 단기적인 가격 모니터링을 넘어 충격의 성격(수요발 vs 공급발)을 명확히 식별하고 그에 맞는 정교한 원가경쟁력 보전 정책이 마련되어야 합니다.</p>
+<h3 class="ia-para-title"></h3>
+<p class="ia-para-body"><strong>과거의 천연가스가 원유를 보조하는 &#x27;대체재&#x27;였다면, 미래의 천연가스는 AI와 데이터센터 등 첨단 미래 산업을 가동하는 &#x27;핵심 전략 자본&#x27;입니다.</strong></p>
+<p class="ia-para-body">러-우 전쟁이 증명했듯 글로벌 에너지 공급망은 매우 취약하며, 천연가스 의존도가 날로 높아지고 100% 수입에 의존하는 한국 경제에 국제 천연가스 시장의 구조적 충격은 치명적인 비용 부담으로 직결됩니다. 현재는 수출입 물가에 주로 영향을 미치고 있으나, 데이터센터 확충과 산업 공정 전환이 완료되는 시점에는 GDP와 무역수지를 좌우할 절대적 변수가 될 것입니다.</p>
+<p class="ia-para-body">따라서 대한민국 산업 및 경제의 최전방 방어수인 <strong>산업은행</strong>은 천연가스 가격 변동이 유발하는 산업별 충격 경로를 선제적으로 분석하고, 기업의 원가 변동성을 흡수할 수 있는 금융 방어막을 구축하는 한편, 장기적인 에너지 안보를 위한 투자 마중물 역할을 수행해야 합니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</h3>
+<p class="ia-para-body">💡 <strong>1. &#x27;에너지 공급망 다변화 펀드&#x27; 조성 및 해외 허브 인프라 직접 투자 지원</strong></p>
+<p class="ia-para-body">천연가스 100% 수입국이라는 구조적 한계를 극복하기 위해, 산업은행 주도로 &#x27;에너지 안보 특화 펀드&#x27;를 조성해야 합니다. 북미, 중동 등 주요 가스 허브의 지분 인수나 장기 도입 인프라(LNG 터미널, 액화 설비 등)를 구축하는 국내 에너지 기업 및 종합상사에게 저금리 신디케이티드 론(Syndicated Loan)이나 PF(프로젝트 파이낸싱)를 선제적으로 제공하여 가격 협상력과 공급 안정성을 동시에 확보해야 합니다.</p>
+<p class="ia-para-body">💡 <strong>2. AI·데이터센터 등 가스 다소비 신산업 대상 &#x27;에너지 효율 연계 녹색금융(Sustainability Linked Loan)&#x27; 도입</strong></p>
+<p class="ia-para-body">천연가스 수요 급증의 주원인인 데이터센터와 석유화학 산업을 대상으로, &#x27;에너지 효율 목표 달성&#x27;과 대출 금리를 연동하는 녹색금융 상품 확대를 제언합니다. 냉각 전력 효율화(PUE 개선), 폐열 회수 시스템 도입, 혹은 사업장 내 재생에너지 자가발전 비율을 높여 천연가스 의존도를 자발적으로 낮추는 기업에게 금리 인하 인센티브를 제공함으로써 산업 구조 자체의 맷집을 키워야 합니다.</p>
+<h3 class="ia-para-title"></h3>
+<div class="qa-q">보고서에서 우리나라 경제의 원유 의존도는 낮아지고 천연가스 의존도는 급증했다고 하는데, 산업은행 입장에서 이러한 변화에 가장 먼저 금융 지원을 강화해야 할 구체적인 산업군은 어디라고 생각하나요?</div>
+<div class="qa-a">두 가지 산업군을 꼽겠습니다. 첫째는 AI 혁명으로 폭발적으로 늘어나고 있는 <strong>데이터센터 관련 IT·인프라 산업</strong>입니다. 이들은 전력 소모가 극심해 발전용 천연가스 의존도를 높이는 주범이므로 고효율 설비 전환에 대한 금융 지원이 시급합니다. 둘째는 <strong>석유화학 및 철강 산업</strong>입니다. 탄소 저감 압박으로 인해 나프타나 석탄 대신 천연가스(도시가스)로 연·원료를 전환하는 비중이 빠르게 늘고 있어, 가격 충격 시 원가경쟁력이 크게 훼손될 수 있으므로 선제적인 유동성 지원과 설비투자 자금 공급이 필요합니다.</div>
+<div class="qa-q">천연가스 수요 충격이나 공급 충격이 수입물가에는 직접적인 영향을 미쳤음에도 불구하고, 국내 GDP 등 실물경제에는 아직 유의미한 타격을 주지 않은 이유는 무엇이라고 유추해 볼 수 있을까요?</div>
+<div class="qa-a">두 가지 완충 장치가 작동했기 때문이라 생각합니다. 첫째, 그간 우리나라 대기업들이 원자재 가격 상승분을 글로벌 수출 시장의 판매 단가 인상이나 환율 상승에 따른 가격 효과로 일정 부분 방어해 냈기 때문입니다. 둘째, 장기공급계약 위주의 도입 구조가 단기적인 가격 급등 충격을 시차를 두고 분산시켰기 때문입니다. 하지만 향후 데이터센터 증설 등으로 천연가스의 절대적 소비량이 임계점을 넘어서면 이러한 완충 효과가 사라지고 무역수지 악화와 GDP 하락으로 직결될 위험이 큽니다.</div>
+  </div>
+</div>
+</div><div class="card-row" data-text="글로벌 리튬 자원 개발 현황과 한국의 공급망 확보 전략 " style="display:contents">
+<div class="row" id="row-3">
+  <div class="row-body">
+    <h3 class="row-title">글로벌 리튬 자원 개발 현황과 한국의 공급망 확보 전략</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="글로벌 리튬 자원 개발 현황과 한국의 공급망 확보 전략"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">글로벌 리튬 자원 개발 현황과 한국의 공급망 확보 전략</h2>
+  <div class="article-content">
+    <h4 class="ia-tag-title"><span class="tag-label">산업분석 보고서</span> 글로벌 리튬 자원 개발 현황과 한국의 공급망 확보 전략</h4>
+<div class="ia-section-h">리튬 자원 확보의 전략적 중요성</div>
+<p class="ia-para-body">전기차(EV) 충전 인프라 고도화와 전고체 배터리 상용화 등 모빌리티 패러다임이 화석연료에서 전동화로 급변함에 따라, 에너지 저장 장치의 핵심 원료인 리튬의 전략적 가치가 급등하고 있다. 과거 산업 발전의 원동력이 유전 확보에 있었다면, 다가올 미래 산업의 주도권은 리튬 광산 및 염호의 통제권 확보에 달려 있다. 특히 한국과 같이 배터리 제조 하이테크 기술력은 세계 최상위권이나 핵심 광물 자원이 전무한 국가에게 해외 리튬 자원의 선제적 확보는 국가 산업 경쟁력 및 안보와 직결되는 최우선 과제이다.</p>
+<div class="ia-section-h">글로벌 리튬 자원 개발의 양대 축 : 염호와 광석</div>
+<p class="ia-para-body">글로벌 리튬 생산은 크게 &#x27;염호(Brine)&#x27;와 &#x27;광석(Hard-rock)&#x27; 두 가지 방식으로 양분되며, 각각 상이한 경제성과 개발 제약 요건을 지니고 있다.</p>
+<ul>
+<li><strong>💧 염호리튬 (남미 및 중국 중심):</strong> 전 세계 매장량 1위인 볼리비아(우유니 염호)와 생산량 1위인 칠레(아타카마 사막), 중국 칭하이성 등에서 주로 생산된다. 생산원가가 저렴하다는 강력한 장점이 있으나, 해발 3,000m 이상의 고산지대에 위치해 노동력 확보가 어렵고 막대한 초기 인프라 투자가 요구된다. 특히, 리튬 정제·제련 공정에 필수적인 &#x27;담수&#x27;가 세계적으로 부족해 기조적인 증산에 심각한 제동이 걸려 있는 상황이다. 이로 인해 거대 글로벌 기업이나 국영기업만이 개발을 주도하고 있다.</li>
+<li><strong>🪨 광석리튬 (호주, 아프리카 중심):</strong> 주로 실리카 계열의 페그마타이트 화성암에서 추출하며, 호주(생산 1위), 캐나다(퀘벡), 아프리카(짐바브웨 등)에 집중되어 있다. 고품위 광석인 스포듀민을 비롯해 레피돌라이트(중국 등), 앰블리거나이트 등 다양한 원석에서 추출 기술이 발전하고 있다. 아프리카 등지에서는 산화리튬 함량 1.5% 이하의 저품위 광석이라도 선광 기술을 통해 경제성을 확보하려는 각국의 진출이 치열하게 전개되고 있다.</li>
+</ul>
+<div class="term-box"><span class="term-name">담수</span><span class="term-def">염호에서 염수를 증발시킨 후 남은 혼합물에서 순수한 리튬을 분리하고 정제·제련하는 공정에 필수적으로 사용되는 맑은 물</span></div>
+<div class="term-box"><span class="term-name">스포듀민(리튬휘석)</span><span class="term-def">화성암에서 발견되는 실리카 계열 광석 중 리튬 추출 효율이 가장 높아 널리 상용화된 고품위 광물</span></div>
+<div class="term-box"><span class="term-name">레피돌라이트(리튬운모)</span><span class="term-def">전 세계 리튬 생산의 약 15%를 차지하며, 최근 고품위 광석 고갈로 인해 중국 및 아프리카 등지에서 대체 개발이 활발한 원료</span></div>
+<div class="ia-section-h">글로벌 리튬 강국과 약소국의 자원 확보 패러다임</div>
+<p class="ia-para-body">최근 글로벌 광물 시장은 &#x27;자원 보호무역주의&#x27;로 급속히 재편되고 있다. 멕시코 등 남미 국가들은 자원 국유화를 선언하며 국영기업 중심의 통제력을 강화하고 있고, 호주와 캐나다 역시 광산의 경영권은 철저히 방어한 채 외국 기업에게는 단순 지분 투자나 생산물 분배만을 허용하고 있다.</p>
+<ul>
+<li><strong>중국의 공격적 자원 영토 확장:</strong> 전 세계 리튬 가공 시장의 65%를 장악한 중국은 정작 자체 매장량이 6%에 불과해 해외 광산 확보가 필수적이다. 이들은 막대한 자본력으로 대형 광산의 대주주로 참여해 경영권을 인수하거나, 중소기업을 선발대로 보내 아프리카 등지에서 직접 탐사 및 광업권을 획득하게 한 뒤 대기업이 이를 매입해 거점화하는 전략(예: 쓰촨야화리튬의 짐바브웨 광산 인수)을 펴고 있다. 특히, 자국이 보유한 고도화된 &#x27;선광 및 가공 기술&#x27;을 무기로 아프리카 소규모 광업권자들과 합작 법인을 설립, 개발도상국의 제도를 우회하며 실질적인 채굴 및 위탁 통제권을 쥐고 있다.</li>
+</ul>
+<div class="ia-section-h">리튬 약소국(한국)의 자원 확보를 위한 실행적 해결방안</div>
+<p class="ia-para-body">하이테크 기술력은 보유했으나 자주권과 경영권 중심의 자원 확보 경쟁에서 밀려 있는 한국이 안정적인 공급망을 구축하기 위해서는 대기업 중심의 획일적 접근을 넘어, 중소·중견기업의 기동력을 활용한 다각적 전략과 정부의 입체적 지원이 결합되어야 한다. 원문에서 도출된 핵심 해결방안은 다음과 같다.</p>
+<ul>
+<li><strong>① 국가 주도의 글로벌 광물 빅데이터 구축 및 컨설팅 제공 (정부 역할):</strong> 개별 중소기업이 접근하기 어려운 전 세계 광산 프로젝트의 성공·실패 사례, 원인 분석, 지질 데이터 등을 통합한 빅데이터 플랫폼을 정부(공기업) 차원에서 구축해야 한다. 또한 개발도상국의 불투명한 정책, 정권의 부패 리스크, 현지 법망의 사각지대(예: 현지인 전용 소규모 광업권 등)를 극복할 수 있도록 현실적이고 합법적인 진출 전략 컨설팅이 지원되어야 한다.</li>
+<li><strong>② 기존 데이터의 융합 분석 및 틈새시장 타겟팅 (기업 역할):</strong> SNE 리서치, 학술 논문, 중단된 프로젝트 기사 등을 역추적하여 숨겨진 유망 지역을 발굴해야 한다. 몽골, 탄자니아, 마다가스카르 등 기존에 리튬 자원으로 덜 주목받았으나 잠재력이 높은 신흥 시장을 선점하는 정보전이 필수적이다.</li>
+<li><strong>③ 첨단 측정 설비에 대한 과감한 투자 (기업 역할):</strong> 험지에서 육안이나 기초 지식만으로는 광석의 품위를 판단할 수 없다. 즉각적인 품위 측정이 가능한 LIBS(레이저 유도 분광기) 등 현장 검사 장비에 과감히 투자하고, 국내외 전문 연구기관(AHK 등)과의 긴밀한 검증 네트워크를 구축하여 탐사 리스크와 소요 시간을 최소화해야 한다.</li>
+<li><strong>④ 지질학·화학 등 기초 과학 역량 내재화 (기업 역할):</strong> 브로커에 의존하는 관행에서 벗어나, 경영진부터 현장 실무자까지 화성암 계열의 특성, 광석 내 화학적 구성 등을 자체 학습하여 현장의 변수에 즉각 대응할 수 있는 기초 역량을 길러야 한다.</li>
+</ul>
+<div class="term-box"><span class="term-name">소규모 광업권</span><span class="term-def">아프리카 등 일부 개발도상국에서 자국민 보호를 위해 현지인에게만 독점적으로 부여하는 영세 규모의 채굴 권리</span></div>
+<div class="term-box"><span class="term-name">LIBS(레이저 유도 분광기)</span><span class="term-def">레이저 펄스를 쏘아 발생하는 플라즈마 빛을 분석하여, 산 속 등 험지 현장에서 즉각적으로 광물 내 리튬 함량 및 품위를 측정하는 첨단 장비</span></div>
+<h4 class="ia-tag-title"><span class="tag-label">결론</span> 종합 요약 및 KDB산업은행의 역할</h4>
+<p class="ia-para-body">리튬 확보전은 단순히 돈을 주고 원자재를 사 오는 무역의 영역을 넘어, 탐사·채굴·가공기술·현지 법인 합작이 총망라된 &#x27;글로벌 영토 전쟁&#x27;이다. 자원 무기화 기조 속에서 단순 지분 투자는 경영권 부재로 인한 공급망 붕괴 리스크를 안고 있다. 따라서 중국이 아프리카 등지에서 보여준 &#x27;선광 기술 연계 현지 합작 및 위탁 채굴&#x27; 모델을 벤치마킹하여 실질적인 자원 통제권을 가져와야 한다.</p>
+<p class="ia-para-body">이러한 국면에서 <strong>KDB산업은행은 &#x27;국가 공급망 수호의 핵심 금융 엔진&#x27;</strong>이 되어야 한다. 단순 대출을 넘어, ① 중소기업이 고가의 탐사 장비(LIBS 등)를 도입하거나 해외 광산 지분을 매입할 때 필요한 &#x27;초기 리스크 테이킹(Risk-Taking) 자금&#x27;을 지원하고, ② 개발도상국의 정치적 불확실성을 헷지할 수 있는 &#x27;해외 자원 개발 특별 보증 및 펀드&#x27;를 조성해야 한다. 산업은행의 정책 금융이 정부의 데이터 지원, 기업의 현장 개척과 맞물릴 때 비로소 대한민국은 자원 빈국에서 &#x27;핵심 광물 공급망 강국&#x27;으로 도약할 수 있을 것이다.</p>
+<div class="ia-section-h">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</div>
+<div class="term-box"><span class="term-name">💡 추가 인사이트 1</span><span class="term-def">KDB 주도 &#x27;Tech-Finance 자원 교환 패키지&#x27; 구축**</span></div>
+<p class="ia-para-body">중국의 성공 요인은 &#x27;자본&#x27;과 &#x27;선광기술&#x27;의 결합이었다. 한국 역시 우수한 배터리 소재 가공 기술을 보유하고 있다. 이를 활용해, 산업은행이 자금력이 부족한 남미/아프리카 자원 보유국에 &#x27;친환경 리튬 정제 시설&#x27; 건립 자금을 프로젝트 파이낸싱(PF)으로 제공하고, 그 대가로 국내 기업들이 생산된 리튬의 장기 공급권(Off-take)이나 위탁 운영권을 확보하는 &#x27;Tech-Finance 결합형 스왑 전략&#x27;을 추진해야 한다. 이는 단순 지분 요구를 거절하는 자원 민족주의 국가들에게 매우 매력적인 당근책이 될 수 있다.</p>
+<div class="term-box"><span class="term-name">💡 추가 인사이트 2</span><span class="term-def">탐사 실패 리스크를 분산하는 &#x27;민관 합동 K-리튬 벤처 펀드&#x27; 조성**</span></div>
+<p class="ia-para-body">리튬 광산 탐사는 극도의 &#x27;High-Risk, High-Return&#x27; 비즈니스다. 자본력이 부족한 중소기업이 개별적으로 아프리카 오지에 뛰어드는 것은 한계가 있다. 산업은행이 앵커 출자자로 나서고 정부와 민간 대기업(포스코, LG 등 최종 수요자)이 공동 출자하는 형태의 &#x27;공급망 탐사 벤처 펀드&#x27;를 제언한다. 이 펀드를 통해 중소기업의 초기 탐사 비용(데이터 분석, LIBS 장비 구매, 시험 시추 등)을 지원하고, 성공 시 대기업이 해당 광물을 전량 매입하도록 밸류체인을 묶어준다면 중소-대기업 간 완벽한 상생 생태계가 구축될 것이다.</p>
+<div class="ia-section-h">예상 꼬리질문 (면접 대비용)</div>
+<ul>
+<li><strong>Q1.</strong> 아프리카나 남미 등 신흥국 광산에 직접 진출할 경우, 정권 교체나 부패로 인해 하루아침에 광업권을 몰수당할 지정학적 리스크가 큽니다. 국책은행의 실무자로서 이런 리스크를 어떻게 금융적으로 헷지(Hedge)하시겠습니까?</li>
+<li><em>(예상 답변)</em> 두 가지 방안을 고려하겠습니다. 첫째, 다자간개발은행(MDB)과의 공동 신디케이트론을 구성하여 해당 국가가 쉽게 계약을 파기하지 못하도록 국제적 구속력을 강화하겠습니다. 둘째, 무역보험공사 등과 협업하여 해외투자보험 연계 금융상품을 구조화함으로써, 극단적인 몰수나 국유화 사태 발생 시 우리 기업과 은행의 자본 손실을 최소화하는 안전장치를 선제적으로 마련하겠습니다.</li>
+<li><strong>Q2.</strong> 지원자는 중소기업의 탐사 장비(LIBS 등) 투자를 적극 지원해야 한다고 했는데, 탐사 단계는 아직 수익이 나지 않아 은행 입장에서 대출 회수 가능성이 낮습니다. 이 단계의 기업에게 어떤 방식의 금융 지원이 적합하다고 보십니까?</li>
+<li><em>(예상 답변)</em> 전통적인 담보 위주의 대출(Debt)보다는, 전환사채(CB) 인수나 지분 투자(Equity) 방식이 적합하다고 생각합니다. 나아가 &#x27;성공 조건부 융자(Venture Debt)&#x27; 모델을 도입하여, 탐사 실패 시에는 대출 상환 부담을 최소화해주되 광구 발굴 성공 및 상용화 시에는 추가적인 이익 공유(Warrant)나 높은 금리로 보상받는 구조를 짜서 정책적 지원과 은행의 수익성을 동시에 챙기겠습니다.</li>
+</ul>
+  </div>
+</div>
+</div><div class="card-row" data-text="글로벌 불확실성 심화에 따른 공급망 위기 진단 및 범국가적 대응 전략 " style="display:contents">
+<div class="row" id="row-4">
+  <div class="row-body">
+    <h3 class="row-title">글로벌 불확실성 심화에 따른 공급망 위기 진단 및 범국가적 대응 전략</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="글로벌 불확실성 심화에 따른 공급망 위기 진단 및 범국가적 대응 전략"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">글로벌 불확실성 심화에 따른 공급망 위기 진단 및 범국가적 대응 전략</h2>
+  <div class="article-content">
+    <div class="ia-section-h">글로벌 불확실성 심화에 따른 공급망 위기 진단 및 범국가적 대응 전략</div>
+<h3 class="ia-para-title">상황 진단 및 핵심 문제의식 : 경제안보 시대의 도래</h3>
+<p class="ia-para-body">과거 비용 효율성 중심의 글로벌 공급망(Supply Chain) 체계가 지정학적 갈등과 자원 무기화 현상으로 인해 구조적 취약성을 노출하고 있습니다. 러시아-우크라이나 전쟁발 원자재 쇼크, 중국의 전략자원 통제, 주요국의 무역장벽 강화는 공급망 리스크가 단기적 수급 이슈를 넘어 <strong>국가의 생존과 경제 지속가능성을 위협하는 상시적 위기</strong>로 진화했음을 시사합니다.</p>
+<p class="ia-para-body">특히, 우리나라는 2019년 일본의 수출 통제, 2020년 마스크 대란, 2021년 요소수 사태 등을 겪으며 특정 국가나 외부 변수에 필수 물자 의존도가 높을 경우 발생하는 치명적인 파급력을 실감했습니다. 이에 따라 정부는 기존의 사후 대응적 접근에서 벗어나, 2024년 6월 제정된 &#x27;공급망기본법&#x27;을 토대로 <strong>다층적이고 선제적인 공급망 안정화 전략</strong>을 본격적으로 추진하고 있습니다.</p>
+<div class="term-box"><span class="term-name">공급망기본법</span><span class="term-def">경제안보를 위한 공급망 안정화 지원 기본법으로, 핵심 품목 비축, 수입선 다변화, 기금 조성 등의 법적 근거가 되는 제도적 기반</span></div>
+<h3 class="ia-para-title">4대 핵심 전략 및 해결방안 (공급망 회복력 고도화)</h3>
+<p class="ia-para-body">정부는 국가 경제의 방어력을 극대화하기 위해 &#x27;비축-다변화-내재화-국제공조&#x27;로 이어지는 입체적 해결방안을 가동하고 있습니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> [단기 대응] 전략적 비축의 양적·질적 확대</h4>
+<p class="ia-para-body">위기 발생 시 대체 공급처를 확보할 때까지 &#x27;시간을 벌어주는 1차 안전판&#x27;으로서 비축 제도를 개편하고 있습니다. 핵심 광물 비축량을 대폭 늘리고 비축에 소요되는 일정을 단축하는 한편, 산업·민생·국방 필수 품목에 대한 신규 비축을 추진 중입니다. 다만, 무조건적인 물량 확대는 유동성 악화, 보관 비용 증가, 품질 저하 등의 부작용을 야기할 수 있으므로, 비축전문위원회를 통해 경제성과 안정성의 균형을 맞춘 &#x27;최적 비축 규모&#x27;를 산출하고 있습니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> [중기 대응] 수입선 다변화 지원 및 금융 인센티브</h4>
+<p class="ia-para-body">특정 국가에 편중된 수입 구조를 재편하기 위해 정부 지원을 대폭 강화했습니다. 요소수 사태 재발을 막기 위해 베트남, 중동, EU 등으로 수입처를 넓히는 과정에서 수입단가 차액 지원 물량을 기존 3만 톤에서 3만 7,500톤으로 확대하고, 보조율 역시 50%에서 최대 90%까지 상향했습니다. 나아가 호주, 아프리카 등 대체 자원국 지분 투자 및 제3국 생산기지 이전을 위한 금융·컨설팅 지원을 병행하고 있습니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">③</span> [장기 대응] 국내 생산 기반(내재화) 및 재자원화 생태계 구축</h4>
+<p class="ia-para-body">가장 근본적인 해법은 자국 내 공급망 완결성을 확보하는 것입니다. 이를 위해 2025년 최대 10조 원 규모의 <strong>&#x27;공급망안정화기금&#x27;</strong>이 출범합니다. 공급망 선도 기업에는 최대 1%p 우대금리를 적용하며, 핵심 소부장(소재·부품·장비)을 국내에서 조달하는 제조기업에는 조달원가 수준의 파격적인 자금 지원이 이루어집니다.</p>
+<p class="ia-para-body">또한, &#x27;핵심광물 재자원화(도시광산)&#x27;를 핵심 대안으로 삼고 있습니다. 폐배터리 및 폐전자기기에서 희소 금속을 추출해 재활용하는 이 방식은 신규 광산 개발보다 친환경적이며 효율적인 자급률 제고 수단입니다.</p>
+<div class="term-box"><span class="term-name">공급망안정화기금</span><span class="term-def">첨단산업 및 필수재 관련 기업 투자를 돕기 위해 조성된 자금으로, 산업은행이 관리·운용을 전담하여 2025년 10조 원 규모로 공급 예정</span></div>
+<div class="term-box"><span class="term-name">핵심광물 재자원화</span><span class="term-def">수명이 다한 배터리나 전자제품 등에서 리튬, 니켈 등 산업 핵심 금속을 재추출하여 국내 공급망에 다시 투입하는 산업</span></div>
+<h4 class="ia-sub-title"><span class="sub-num">④</span> [글로벌 대응] 다자간·양자간 전략적 국제협력 연대</h4>
+<p class="ia-para-body">자원 빈국인 우리나라의 특성상 내부 역량만으로는 한계가 뚜렷합니다. 이를 극복하기 위해 IPEF(인도-태평양 경제 프레임워크), MSP(핵심광물안보파트너십) 등 주요 다자 협의체에 적극 참여하여 글로벌 정보망을 공유하고 전략자원 공동 확보에 나서고 있습니다.</p>
+<h3 class="ia-para-title">향후 과제 : AI/빅데이터 기반 통합 조기경보 시스템 고도화</h3>
+<p class="ia-para-body">미래 위기 대응의 성패는 &#x27;징후의 사전 탐지&#x27;에 달려 있습니다. 현재의 수시 모니터링을 넘어, 글로벌 원자재 가격 동향, 해운 물류 데이터, 지정학적 리스크 요인을 실시간으로 분석하는 <strong>빅데이터 및 AI 기반 통합 조기경보 체계(EWS)</strong>의 구축이 시급합니다. 이를 통해 기후변화나 분쟁 등 복합 위기 상황이 국내로 전이되기 전에 선제적인 정책 개입과 기업 지원이 이루어질 수 있습니다.</p>
+<h3 class="ia-para-title"></h3>
+<p class="ia-para-body">과거의 공급망은 기업의 &#x27;비용 절감&#x27;을 위한 도구였으나, 현재의 공급망은 국가의 &#x27;안보와 생존&#x27;을 결정짓는 핵심 자본이 되었습니다. 우리나라는 자원 수입 의존도가 극도로 높은 경제 구조를 띄고 있어 글로벌 블록화 현상에 가장 취약합니다.</p>
+<p class="ia-para-body">따라서 정부가 추진하는 비축 고도화, 수입 다변화, 공급망안정화기금을 통한 국내 내재화는 필수 불가결한 국가 생존 전략입니다. <strong>산업은행은 국가 대표 정책금융기관이자 공급망안정화기금의 전담 운용 주체로서</strong>, 10조 원 규모의 자금이 단순 대출을 넘어 첨단산업의 초격차 확보와 자원 안보 생태계 조성에 적재적소 투입될 수 있도록 철저한 산업 분석과 리스크 평가 역량을 발휘해야 합니다. 나아가 기업의 공급망 재편(리쇼어링, 수입 다변화) 과정에서 발생하는 일시적 유동성 위기를 막아주는 든든한 방파제 역할을 수행해야 합니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</h3>
+<div class="ia-section-h">&#x27;공급망 다변화 지수(SCDI)&#x27; 개발 및 기업 여신 심사와의 연계 (정책적 시야)</div>
+<ul>
+<li><strong>제언:</strong> 산업은행 주도로 주요 산업군 및 개별 기업의 특정 국가 의존도를 수치화한 &#x27;공급망 다변화 지수&#x27;를 개발해야 합니다. 이를 기업 여신이나 공급망안정화기금 집행 시 주요 평가 지표로 활용하여, 수입선을 선제적으로 다변화하거나 국산화율을 높이는 기업에게 금리 우대 폭을 추가로 넓혀주는 인센티브 구조를 설계할 수 있습니다. 이는 기업 스스로 리스크를 헷지(Hedge)하도록 유도하는 강력한 금융 마중물이 될 것입니다.</li>
+</ul>
+<div class="ia-section-h">&#x27;도시광산(재자원화) 생태계&#x27; 육성을 위한 전용 프로젝트 펀드(PEF) 조성 (산업적 통찰)</div>
+<ul>
+<li><strong>제언:</strong> 본문에서 언급된 &#x27;핵심광물 재자원화&#x27; 산업은 초기 설비 투자 비용이 막대하여 민간 주도의 성장이 어렵습니다. 따라서 산업은행이 앵커 출자자로 참여하여 폐배터리 리사이클링 및 희소금속 추출 전문 혁신 기업에 집중 투자하는 &#x27;순환경제 및 자원안보 전용 PEF(사모펀드)&#x27;를 조성해야 합니다. 이는 원자재 해외 의존도를 영구적으로 낮추는 근본적인 해결책이자, 친환경 신성장 동력을 발굴하는 일석이조의 효과를 창출할 것입니다.</li>
+</ul>
+<ul>
+<li><strong>Q1. 수입선 다변화나 국내 생산(리쇼어링)은 기업 입장에서 단가 상승으로 이어져 수익성을 악화시킬 수 있습니다. 이를 어떻게 극복해야 합니까?</strong></li>
+<li><strong>A:</strong> 단기적인 비용 상승은 불가피한 &#x27;안보 프리미엄(Security Premium)&#x27;으로 인식해야 합니다. 이를 상쇄하기 위해 산업은행의 공급망안정화기금을 통한 저리 자금 조달 및 원가 보전 지원이 반드시 필요합니다. 장기적으로는 R&amp;D 투자를 통한 공정 자동화와 스마트 팩토리 도입으로 제조 혁신을 이뤄내 원가 경쟁력 자체를 근본적으로 회복하는 방향으로 금융 지원이 병행되어야 합니다.</li>
+<li><strong>Q2. 공급망 핵심품목 비축 확대 시 보관 비용 증가와 장기 보관에 따른 품질 저하 문제가 지적되었습니다. 효율적인 비축 관리 방안이 있을까요?</strong></li>
+<li><strong>A:</strong> &#x27;민관 공동 비축 제도&#x27; 및 &#x27;순환 비축 시스템&#x27;의 도입이 현실적인 대안입니다. 정부와 공공기관이 저장 인프라를 제공하되, 실수요자인 민간 기업이 원자재를 보관하고 실제 생산 주기에 맞춰 이를 지속적으로 사용·보충(First-in, First-out)하게 함으로써 품질 저하를 막고 관리 비용을 분담할 수 있습니다. 여기에 AI 수요 예측 시스템을 더해 최적의 비축물량을 탄력적으로 조절해야 합니다.</li>
+</ul>
+  </div>
+</div>
+</div><div class="card-row" data-text="글로벌 석유·가스 교역망 재편과 한국의 공급망 리스크 대응 전략 과거 중동과 러시아에 의존했던 글로벌 화석연료 시장은 북미의 셰일 혁명과 러-우 전쟁을 기점으로 &#x27;부족한 자원의 시대&#x27;에서 **&#x27;풍부한 자원의 시대&#x27;**로, 나아가 **&#x27;지정학적 블록화 시대&#x27;**로 급변하고 있습니다." style="display:contents">
+<div class="row" id="row-5">
+  <div class="row-body">
+    <h3 class="row-title">글로벌 석유·가스 교역망 재편과 한국의 공급망 리스크 대응 전략</h3>
+    <p class="row-excerpt">과거 중동과 러시아에 의존했던 글로벌 화석연료 시장은 북미의 셰일 혁명과 러-우 전쟁을 기점으로 &#x27;부족한 자원의 시대&#x27;에서 **&#x27;풍부한 자원의 시대&#x27;**로, 나아가 **&#x27;지정학적 블록화 시대&#x27;**로 급변하고 있습니다.</p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="글로벌 석유·가스 교역망 재편과 한국의 공급망 리스크 대응 전략"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">글로벌 석유·가스 교역망 재편과 한국의 공급망 리스크 대응 전략</h2>
+  <div class="article-content">
+    <div class="ia-section-h">글로벌 석유·가스 교역망 재편과 한국의 공급망 리스크 대응 전략</div>
+<div class="ia-section-h">글로벌 에너지 시장의 구조적 패러다임 전환</div>
+<p class="ia-para-body">과거 중동과 러시아에 의존했던 글로벌 화석연료 시장은 북미의 셰일 혁명과 러-우 전쟁을 기점으로 &#x27;부족한 자원의 시대&#x27;에서 <strong>&#x27;풍부한 자원의 시대&#x27;</strong>로, 나아가 <strong>&#x27;지정학적 블록화 시대&#x27;</strong>로 급변하고 있습니다.</p>
+<ul>
+<li><strong>🇺🇸 미국의 핵심 공급자 부상과 다극 체제 형성</strong></li>
+</ul>
+<p class="ia-para-body">과거 세계 최대 에너지 수입국이었던 미국은 셰일 기술의 발전으로 원유와 천연가스의 거대 수출국으로 탈바꿈했습니다. 미국이라는 거대 노드(Node)의 등장은 글로벌 공급망을 다극화시켜, OPEC+의 인위적 감산 등 시장 교란 행위를 완충하고 실질적인 국제 유가 안정화에 기여하고 있습니다.</p>
+<ul>
+<li><strong>🇷🇺 러-우 전쟁에 따른 에너지 블록화 및 수요 중심축 이동</strong></li>
+</ul>
+<p class="ia-para-body">EU는 에너지 안보를 위해 러시아산 화석연료 의존도를 획기적으로 낮추고 미국산 LNG로 대규모 수입선을 전환했습니다. 이에 따라 갈 곳을 잃은 러시아산 원유는 인도와 중국 등 아시아 신흥국으로 쏠리고 있습니다. 결과적으로 글로벌 석유 수요의 거대한 중심축이 서구 선진국에서 경제성장률이 높은 &#x27;아시아 권역&#x27;으로 이동하며 새로운 해상 물류 리스크를 잉태하고 있습니다.</p>
+<ul>
+<li><strong>🚢 천연가스의 &#x27;LNG 글로벌 시장&#x27; 전환</strong></li>
+</ul>
+<p class="ia-para-body">과거 지리적 한계에 묶여있던 파이프라인(PNG) 중심의 지역 가스 시장은, 미국·호주·중동을 3대 축으로 하는 LNG 중심으로 재편되고 있습니다. 액화 설비 기반의 교역이 늘어나면서 시장의 유연성과 변동성이 동시에 증폭되고 있습니다.</p>
+<div class="term-box"><span class="term-name">`DUC(Drilled but Uncompleted)`</span><span class="term-def">시추는 완료되었으나 생산이 시작되지 않은 미완결 유정으로, 미국의 단기 공급 유연성을 보여주는 핵심 재고 지표</span></div>
+<div class="ia-section-h">한국의 석유·가스 공급망 리스크 진단 (착시와 구조적 취약성)</div>
+<p class="ia-para-body">글로벌 교역 지형이 다변화되었음에도 불구하고, 우리나라는 구조적인 지정학적 취약점에 노출되어 있습니다. 통계적 양적 지표가 가리고 있는 실질적 위험을 직시해야 합니다.</p>
+<ul>
+<li><strong>🔍 표면적 수입 다변화 지표의 착시 현상</strong></li>
+</ul>
+<p class="ia-para-body">단순한 국가별 수입 비중을 측정하는 표준 집중도 지표(HHI)를 적용하면 한국은 0.2 수준으로 공급 다변화가 매우 우수한 것처럼 보입니다. 하지만 석유 수입의 핵심 병목인 <strong>&#x27;호르무즈 해협&#x27; 리스크</strong>를 반영한 가중 HHI로 진단하면 그 수치는 0.6에 육박합니다. 즉, 단순히 수입국 숫자만 많을 뿐, 이들 국가가 특정 분쟁 위험 지역과 해상 수송로에 물리적으로 묶여 있어 실제 공급망 복원력은 지극히 취약합니다.</p>
+<ul>
+<li><strong>🌪️ 미국산 도입 확대의 딜레마 (이중적 리스크 전이)</strong></li>
+</ul>
+<p class="ia-para-body">중동 의존도를 완화하기 위해 정부의 다변화 지원금을 바탕으로 미국산 석유·가스 도입을 크게 늘렸습니다. 이는 호르무즈 해협이라는 중동의 &#x27;지정학적 리스크&#x27;는 낮췄으나, 새로운 문제를 파생시켰습니다. 미국산 화석연료 인프라가 집중된 멕시코만 특성상 잦은 허리케인 등 <strong>&#x27;자연재해 리스크&#x27;</strong>에 심각하게 노출된 것입니다. 즉, 위험이 소멸된 것이 아니라 위험의 성격이 이동하는 풍선효과가 발생했습니다.</p>
+<ul>
+<li><strong>📈 양적 지표(HHI)와 질적 지표(지분 물량)의 괴리</strong></li>
+</ul>
+<p class="ia-para-body">이웃 국가인 일본은 호주에 대한 LNG 의존도가 높아 단순 통계 지표상으로는 한국보다 훨씬 위험해 보입니다. 그러나 일본은 호주의 초대형 가스전(익시스 프로젝트) 등에 자국 기업이 직접 투자해 &#x27;지분 확보 물량(Equity Gas)&#x27;을 들여옵니다. 표면적 다변화보다 실질적인 자원 통제권을 쥔 일본이 오히려 공급 안정성 면에서 우위에 있다는 점은 시사하는 바가 큽니다.</p>
+<div class="term-box"><span class="term-name">`HHI (Herfindahl-Hirschman Index)`</span><span class="term-def">특정 국가의 수입이 소수의 교역 상대국에 얼마나 집중되어 있는지를 평가하는 시장 집중도 산출 지표 (0~1 사이, 높을수록 의존도 심각)</span></div>
+<div class="ia-section-h">에너지 안보 강화를 위한 실효적 해결방안 (정책 제언)</div>
+<p class="ia-para-body">보고서가 지적하는 문제의식의 핵심은 &quot;단순히 수입처를 쪼개는 것만으로는 안보를 지킬 수 없다&quot;는 점입니다. 이를 해결하기 위해 국가와 금융기관이 주도해야 할 정책적 우선순위는 다음과 같습니다.</p>
+<ul>
+<li><strong>🛡️ 리스크 헷징형 &#x27;입체적 포트폴리오&#x27; 구축</strong></li>
+</ul>
+<p class="ia-para-body">단순한 지역적, 수치적 분산을 넘어서야 합니다. 수입국별로 내재된 위기 유형(중동의 지정학 분쟁, 미국의 허리케인 자연재해, 동남아의 해상 사고 등)이 서로 겹치지 않도록 교차 보완적으로 설계된 &#x27;입체적 포트폴리오&#x27;를 구축해야 합니다. 한쪽에서 자연재해가 발생하면, 다른 쪽의 지정학적으로 안전한 국가에서 즉각 대체 물량을 뽑아올 수 있는 구조적 헷징이 필요합니다.</p>
+<ul>
+<li><strong>📊 실질적 위기 요인을 반영한 &#x27;신규 자원안보 진단 지표&#x27; 도입</strong></li>
+</ul>
+<p class="ia-para-body">기존의 평면적인 수입 집중도(HHI)나 거버넌스(WGI) 평가 체계는 버려야 합니다. 국가자원안보 특별법 시행에 발맞춰, ▲핵심 수송로의 물리적 병목 리스크(호르무즈, 말라카 해협 등) ▲과거 석유·가스 위기 발생 빈도 ▲국가별 기후재난 발생 확률 등을 복합 가중치로 둔 고도화된 안보 진단 시스템을 설계해야 합니다.</p>
+<ul>
+<li><strong>🤝 포트폴리오 사업자 연대 및 해외 &#x27;질적 자원개발&#x27; 재개</strong></li>
+</ul>
+<p class="ia-para-body">경직된 장기 계약의 한계를 극복하기 위해, 도착지 제한 조항 없이 전 세계에서 가스를 확보하여 유연하게 공급하는 글로벌 &#x27;포트폴리오 사업자&#x27;와의 협력을 확대해야 합니다. 동시에, 일본의 사례를 거울삼아 국가적 차원의 해외자원개발 투자를 부활시키고, 단순 구매자가 아닌 개발 지분권자로서 물량을 확보(Equity Gas)하는 등 자원 안보의 질적 체질을 개선해야 합니다.</p>
+<div class="term-box"><span class="term-name">`포트폴리오 사업자`</span><span class="term-def">특정 생산 프로젝트에 얽매이지 않고 여러 국가에서 LNG를 확보해 자체 포트폴리오를 구성한 뒤, 세계 시장 상황에 맞춰 탄력적으로 에너지를 공급하는 글로벌 트레이더</span></div>
+<div class="ia-section-h">핵심 시사점 및 향후 전망</div>
+<p class="ia-para-body">글로벌 에너지 시장은 &#x27;자원이 얼마나 있는가&#x27;의 문제를 넘어, <strong>&#x27;어떤 지정학적, 기후적 리스크를 피할 수 있는가&#x27;</strong>가 국가 경쟁력을 결정하는 시대로 진입했습니다. 한국 경제는 여전히 화석연료 의존도가 매우 높으며, 탈탄소 시대로 넘어가는 브릿지 구간에서 LNG 등 천연가스의 안정적 확보는 반도체·철강 등 주력 산업의 생존과 직결됩니다.</p>
+<p class="ia-para-body">따라서 단순히 여러 나라에서 에너지를 사 오는 1차원적 정책에서 벗어나, 질적 지분율을 높이고 위기를 상호 보완하는 정밀한 대응이 절실합니다. <strong>이 과정에서 산업은행은 대한민국 경제의 방파제로서, 막대한 자본이 소요되는 해외 가스전 지분 인수(M&amp;A) 금융, 호르무즈를 우회하는 신규 에너지 물류 인프라 PF 지원, 그리고 도입선을 다변화하는 중소·중견 에너지 기업에 대한 금리 우대 등 &#x27;자원 안보 밸류체인 전반을 아우르는 정책금융&#x27;을 적극적으로 리드해야 합니다.</strong></p>
+<div class="ia-section-h">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</div>
+<div class="ia-section-h">에너지 자원 통합 금융 플랫폼 및 &#x27;안보 스와프(Swap)&#x27; 펀드 구축</div>
+<p class="ia-para-body">국내 중소·중견 에너지 직도입사들이 개별적으로 입체적 포트폴리오를 짜는 것은 자본력 측면에서 한계가 있습니다. 산업은행이 주도하여 여러 기업의 수요를 한데 묶고, 이를 바탕으로 다양한 리스크(지정학, 자연재해)를 상호 헷징하는 &#x27;에너지 안보 스와프 금융 플랫폼&#x27;을 구축할 수 있습니다. 수입선이 다변화된 기업들의 공동 구매를 담보로 저금리 신용을 보강해 주어 질적 안보 수준을 획기적으로 끌어올리는 방안입니다.</p>
+<div class="ia-section-h">브릿지 자원(LNG) 투트랙 파이낸싱 전략 추진</div>
+<p class="ia-para-body">완전한 탈탄소로 넘어가기 전 수십 년간 천연가스(LNG) 수요는 오히려 견고할 것입니다. 산업은행은 재생에너지 PF에 집중하는 것과 별개로, &#x27;안정적 브릿지 연료 확보&#x27;라는 명분하에 호주나 북미의 우량 LNG 가스전 지분 인수에 앵커 투자자로 참여하는 펀드를 조성해야 합니다. 단순한 무역 대금 대출을 넘어, 일본처럼 국가적 자원 통제권을 확보하는 데 정책금융의 실탄을 집중해야 합니다.</p>
+<h3 class="ia-para-title">예상 꼬리질문 &amp; 답변 2선</h3>
+<div class="qa-q">보고서에서 수입선 다변화로 인해 오히려 미국의 자연재해 리스크에 새롭게 노출되었다는 지적이 있습니다. 그렇다면 특정 리스크를 완벽히 피할 수 없는 현실에서, 산업은행은 기업의 어떤 수입 전략에 가점을 주어 금융을 지원해야 할까요?</div>
+<p class="ia-para-body"><strong>A.</strong> 특정 리스크를 &#x27;회피&#x27;하는 전략보다 &#x27;상호 보완&#x27;하는 전략에 가점을 주어야 합니다. 예를 들어, 지정학적 리스크가 큰 중동과 자연재해 리스크가 큰 미국 멕시코만, 그리고 물류비용은 높지만 지리적으로 안전한 캐나다나 호주 물량을 전략적으로 배분하는 기업을 높게 평가해야 합니다. 즉, 하나의 위기가 발현되었을 때 즉각 다른 지역의 초과 물량으로 충격을 흡수할 수 있는 &#x27;위험 분산형 포트폴리오&#x27;를 증명하는 기업에 우대 금리나 신용 보강을 제공하는 것이 바람직합니다.</p>
+<div class="qa-q">에너지 안보를 위해 일본처럼 해외자원개발 &#x27;지분 투자(Equity Gas)&#x27;를 늘려야 한다고 하셨습니다. 하지만 과거 자원외교 실패 사례처럼 자본 손실의 위험이 큽니다. 산업은행은 이 리스크를 어떻게 통제하며 투자에 나서야 할까요?</div>
+<p class="ia-para-body"><strong>A.</strong> 투자의 타당성을 단순한 &#x27;자원 확보량&#x27;이 아닌 &#x27;사업성과 재무적 안정성&#x27;에 두어야 합니다. 이를 위해 산업은행은 100% 단독 지분 인수를 지양하고, 글로벌 메이저 에너지 기업이나 경험이 풍부한 다국적 포트폴리오 사업자와의 조인트벤처(JV) 형태로 참여해 운영 리스크를 분담해야 합니다. 또한, 산은의 압도적인 프로젝트 파이낸싱(PF) 심사 역량을 활용해 철저한 현금흐름 분석을 선행하고, 유가 변동성에 대비한 금융 파생상품 헷징을 구조화하여 자본 손실의 하방 경직성을 확보해야 합니다.</p>
+  </div>
+</div>
+</div><div class="card-row" data-text="글로벌 원자재 가격 급등이 중소기업에 미치는 파급효과 및 대응 전략 최근 글로벌 경제는 코로나19 여파에 따른 **원자재 공급 병목현상**과 **우크라이나 사태의 장기화**가 맞물리며 에너지 및 비철금속 가격이 2018년 이후 최고치를 경신하는 등 전례 없는 원자재 인플레이션을 겪고 있습니다." style="display:contents">
+<div class="row" id="row-6">
+  <div class="row-body">
+    <h3 class="row-title">글로벌 원자재 가격 급등이 중소기업에 미치는 파급효과 및 대응 전략</h3>
+    <p class="row-excerpt">최근 글로벌 경제는 코로나19 여파에 따른 **원자재 공급 병목현상**과 **우크라이나 사태의 장기화**가 맞물리며 에너지 및 비철금속 가격이 2018년 이후 최고치를 경신하는 등 전례 없는 원자재 인플레이션을 겪고 있습니다.</p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="글로벌 원자재 가격 급등이 중소기업에 미치는 파급효과 및 대응 전략"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">글로벌 원자재 가격 급등이 중소기업에 미치는 파급효과 및 대응 전략</h2>
+  <div class="article-content">
+    <div class="ia-section-h">글로벌 원자재 가격 급등이 중소기업에 미치는 파급효과 및 대응 전략</div>
+<h3 class="ia-para-title">현황 및 문제의식 : 다중 복합위기와 구조적 수급 불안</h3>
+<p class="ia-para-body">최근 글로벌 경제는 코로나19 여파에 따른 <strong>원자재 공급 병목현상</strong>과 <strong>우크라이나 사태의 장기화</strong>가 맞물리며 에너지 및 비철금속 가격이 2018년 이후 최고치를 경신하는 등 전례 없는 원자재 인플레이션을 겪고 있습니다.</p>
+<p class="ia-para-body">특히 글로벌 공급망 교란은 단순한 일과성 이벤트가 아니라, 주요 자원 부국(중국, 인도네시아, 멕시코 등)의 <strong>‘자원 무기화’ 및 보호주의 진영화</strong>로 이어지고 있어 구조적인 리스크로 고착화될 가능성이 농후합니다.</p>
+<p class="ia-para-body">자원 빈국인 우리나라는 전체 수입의 약 50%가 원자재이며, 이 중 에너지와 광물의 비중이 70%에 달합니다. 철광석(호주/브라질 99%), 비철금속 등 특정 국가에 대한 수입 의존도가 기형적으로 높아 대외 변수에 극도로 취약한 구조적 한계를 지니고 있습니다.</p>
+<h3 class="ia-para-title">중소기업 파급효과 및 산업적 영향 분석</h3>
+<p class="ia-para-body">국제 원자재 가격 상승은 밸류체인 최하단에 위치한 중소기업의 생존을 직접적으로 위협하고 있습니다. 실증분석에 따르면 <strong>국제 원자재 가격이 10% 상승할 때마다 중소기업의 영업이익은 약 0.8% 감소</strong>하는 것으로 추정됩니다. 현재와 같은 원자재 가격 급등세가 장기화될 경우, 특정 업종 중소기업의 영업이익은 최대 10~15%까지 증발할 수 있습니다.</p>
+<ul>
+<li><strong>영세 규모 기업의 비대칭적 타격:</strong> 매출 규모가 작은 소기업일수록 타격이 큽니다. 해외 원자재를 수입·가공해 납품하는 하청 중소기업은 원가 인상분을 대기업 등 원청기업의 납품 단가에 제때 반영하지 못해 ‘채산성 악화’의 직격탄을 맞고 있습니다.</li>
+<li><strong>특정 산업군의 구조적 취약성:</strong> 비금속광물 가공, 1차 금속제품 등 원자재 투입 비중이 전체의 50~70%에 달하는 금속/비금속 가공업과 기계·장비·운송 산업의 영업이익 감소 폭이 압도적으로 큽니다.</li>
+<li><strong>환율 및 금리 인상의 삼중고(三重苦):</strong> 최근의 원화 약세(환율 상승)는 수입 단가를 더욱 끌어올려 물류비용의 폭등을 부추기고 있으며, 시장금리 상승은 코로나19 기간 동안 부채 비중이 높아진 중소기업의 금융비용 부담을 임계점까지 끌어올리고 있습니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">한계기업</span><span class="term-def">3년 연속으로 영업이익으로 이자 비용조차 감당하지 못해 재무구조가 부실해진 기업</span></div>
+<h3 class="ia-para-title">핵심 정책 시사점 및 해결방안 (정부 및 기업 차원)</h3>
+<p class="ia-para-body">원자재 수급 불균형이 장기적·구조적 문제로 대두됨에 따라, 일시적 자금 지원을 넘어선 근본적인 공급망 재편 및 상생 생태계 구축이 시급합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> [정부] EWS 고도화 및 경제안보 협력망 구축</h4>
+<p class="ia-para-body">단순 모니터링을 넘어 AI와 빅데이터를 활용하여 글로벌 공급망 데이터를 예측하는 <strong>조기경보시스템(EWS)</strong>의 신속한 가동과 고도화가 필요합니다. 또한, 자원 부국의 자원 무기화에 대응해 동남아, 호주, 남미 등으로 수입선을 다변화하고, 해외자원개발 투자의 장기적 지속성을 담보할 수 있는 법적 기반을 조속히 마련해야 합니다.</p>
+<div class="term-box"><span class="term-name">자원안보특별법</span><span class="term-def">위기 시 평시 비축 물량을 방출하고 긴급 수급 조치 등을 발동할 수 있도록 핵심 자원의 공급망 전반을 국가가 관리하는 법적 기반</span></div>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> [정부] 공공 비축 인프라 확대 및 공동구매 보증 지원</h4>
+<p class="ia-para-body">조달청과 한국광해광업공단이 주도하는 경제안보 핵심 원자재의 공공 비축 물량을 중장기적으로 확대해야 합니다. 자체 보관 인프라가 부족한 중소기업을 위해 공공 비축기지 활용 비용을 지원하고, 신보/기보 등을 통한 <strong>&#x27;중소기업 원자재 공동구매 보증지원&#x27;</strong> 규모를 대폭 늘려 바잉파워(Buying Power)를 융성해야 합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">③</span> [기업] 납품단가 연동제 안착 및 전후방 상생협력</h4>
+<p class="ia-para-body">원가 상승분을 납품 가격에 원활히 반영할 수 있도록, 밸류체인 전후방 기업 간 선제적이고 자발적인 납품단가 조정 협의가 활성화되어야 합니다. 제도적 도입과 별개로 대·중소기업 간 상생의 룰이 시장에 정착되는 것이 핵심입니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">④</span> [기업] 생산 효율화 및 혁신 활동 강화</h4>
+<p class="ia-para-body">원자재 공급망 리스크는 상시화되었습니다. 중소기업 자체적으로도 대체 소재 연구개발(R&amp;D), 스마트 공장 도입을 통한 공정 효율화 등 원가절감을 위한 뼈를 깎는 혁신이 병행되어야 합니다.</p>
+<h3 class="ia-para-title"></h3>
+<p class="ia-para-body">단순한 유동성 위기를 넘어 글로벌 밸류체인(GVC)의 블록화가 촉발한 이번 원자재 충격은, 우리 중소기업 생태계의 취약한 민낯을 그대로 보여줍니다. 앞으로의 경제안보는 <strong>&#x27;누가 더 싸게 만드느냐&#x27;가 아니라 &#x27;누가 더 안정적으로 원자재를 확보하고 가격 전가력을 가지느냐&#x27;</strong>로 패러다임이 이동할 것입니다.</p>
+<p class="ia-para-body">따라서 정책금융의 맏형인 산업은행은 단순한 간접 자금 공급자 역할을 넘어, 중소·중견기업이 글로벌 공급망 재편에 대응할 수 있도록 <strong>해외 자원 확보를 위한 지분 투자, 공급망 다변화를 위한 특별 금융, 원자재 발(發) 유동성 위기 기업을 위한 맞춤형 채무조정</strong> 등 시장 안전판으로서의 역할을 선제적으로 수행해야 합니다.</p>
+<h3 class="ia-para-title">(차별화 포인트)</h3>
+<div class="ia-section-h">KDB 주도 &#x27;공급망 안정화(Supply-Chain) 신디케이트 펀드&#x27; 조성</div>
+<p class="ia-para-body">중소기업 단독으로는 원자재 수입선 다변화나 장기 공급계약 체결이 불가능에 가깝습니다. 산업은행이 주축이 되어 무역보험공사, 수출입은행 등과 연계해 업종별 중소기업 협동조합이 원자재를 대량 공동 구매할 때 저금리로 자금을 대주는 전용 펀드를 조성해야 합니다. 대량 구매를 통한 단가 인하 효과를 유도하고, 여기에 환헤지(선물환) 프로그램까지 패키지로 묶어 환율 리스크까지 덜어주는 실질적인 해법이 될 수 있습니다.</p>
+<div class="ia-section-h">납품단가 연동제 우수 대기업-협력사 패키지 우대 금융 (ESG 상생금융)</div>
+<p class="ia-para-body">원자재 가격을 납품단가에 자발적이고 투명하게 연동해주는 대기업(원청)과 그 생태계 내의 중소기업(하청)을 하나의 &#x27;상생 클러스터&#x27;로 묶어, 해당 밸류체인에 속한 기업 모두에게 운영자금 금리 인하 및 한도 확대 혜택을 주는 상품을 기획해 볼 수 있습니다. 이는 산업은행의 ESG 경영 목표와도 부합하며, 시장 내 자발적인 납품단가 연동 관행을 정책금융이 부드럽게 유도(Nudge)하는 훌륭한 수단이 될 것입니다.</p>
+<h3 class="ia-para-title">예상 꼬리질문 2선 및 답변 가이드</h3>
+<div class="qa-q">원자재 가격이 오르더라도 최근 원화 가치가 하락(환율 상승)했으니, 오히려 수출 중소기업들은 가격 경쟁력이 생겨서 이익을 볼 수 있는 것 아닌가요?</div>
+<p class="ia-para-body"><strong>A.</strong> 통상적인 상황이라면 원화 약세가 수출 경쟁력을 높이는 긍정적 효과가 있습니다. 하지만 현재는 원자재 자체의 절대적 가격 급등폭이 너무 커서, 환율 상승으로 얻는 수출 단가 인하 효과를 &#x27;수입 원가 상승&#x27;이라는 비용 증가분이 완전히 압도해버린 상황입니다. 특히 우리 중소기업들은 원자재를 전량 수입에 의존해 가공 후 수출하는 구조이므로, 원화 약세는 오히려 엎친 데 덮친 격으로 비용 부담을 배가시키는 부정적 요인으로 작용하고 있습니다.</p>
+<div class="qa-q">산업은행은 금융기관인데, 중소기업들이 원자재 가격을 대기업에 반영하지 못하는 &#x27;납품단가 미반영&#x27; 문제를 산은 차원에서 어떻게 해결할 수 있나요?</div>
+<p class="ia-para-body"><strong>A.</strong> 산업은행이 개별 기업 간의 계약에 직접 개입하여 단가를 조정할 수는 없습니다. 하지만 정책금융기관으로서 간접적인 유인책을 설계할 수 있습니다. 예를 들어, 하청업체와 납품단가 연동 약정을 체결한 대기업이나 중견기업에게 &#x27;상생협력 우수기업&#x27; 타이틀을 부여하고 시설자금이나 ESG 펀드 대출 시 금리를 우대해 주는 방식입니다. 즉, 자본의 흐름을 이용해 대기업이 자발적으로 중소기업의 고통을 분담하도록 생태계를 조성하는 촉매제 역할을 할 수 있습니다.</p>
+  </div>
+</div>
+</div><div class="card-row" data-text="대중국 외교의 현실적 접근과 신뢰 구축 (디리스킹 전략) " style="display:contents">
+<div class="row" id="row-7">
+  <div class="row-body">
+    <h3 class="row-title">대중국 외교의 현실적 접근과 신뢰 구축 (디리스킹 전략)</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="대중국 외교의 현실적 접근과 신뢰 구축 (디리스킹 전략)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">대중국 외교의 현실적 접근과 신뢰 구축 (디리스킹 전략)</h2>
+  <div class="article-content">
+    <p class="ia-para-body">📊 <strong>[산업분석/정책 보고서] 글로벌 핵심광물 공급망 재편과 한국의 전략적 대응방안</strong></p>
+<h3 class="ia-para-title">Ⅰ. 핵심 논점 및 배경: 중국의 자원 무기화와 글로벌 공급망 교란</h3>
+<p class="ia-para-body">최근 글로벌 경제 및 안보의 핵심 뇌관으로 &#x27;핵심광물 공급망&#x27;이 부상하고 있습니다. 중국 상무부는 갈륨, 게르마늄, 흑연에 이어 안티모니와 초경재료까지 수출 통제를 확대하며 핵심광물을 전면적인 전략 무기로 활용하고 있습니다. 이러한 중국의 행보는 단순한 자원 보호를 넘어, 첨단기술 산업의 주도권을 쥐고 글로벌 외교·경제 무대에서 지렛대(Leverage)로 삼기 위한 다목적 포석입니다.</p>
+<p class="ia-para-body">특히 중국은 국가 주도의 대규모 자금 투입, 아프리카·남미 중심의 원광 싹쓸이 수입, 낮은 인건비와 전력비, 그리고 느슨한 환경 규제를 바탕으로 &#x27;핵심광물 정·제련 분야&#x27;에서 압도적인 글로벌 독점 지위를 구축했습니다. 이는 다른 선진국들이 단기간에 모방하거나 추격하기 어려운 강력한 진입장벽으로 작용하고 있습니다.</p>
+<div class="term-box"><span class="term-name">안티모니</span><span class="term-def">방염제, 반도체, 배터리, 군수물자 등에 폭넓게 사용되는 희소 금속</span></div>
+<div class="term-box"><span class="term-name">정·제련 (Refining and Smelting)</span><span class="term-def">채굴된 광석(원광)에서 불순물을 제거하고 순도 높은 금속을 추출해내는 가공 공정</span></div>
+<h3 class="ia-para-title">Ⅱ. 주요국의 핵심광물 공급망 확보 및 탈(脫)중국 정책 동향</h3>
+<p class="ia-para-body">글로벌 주요국들은 중국의 자원 무기화에 맞서 자국 중심의 공급망 재편과 다변화 정책을 공격적으로 펴고 있습니다.</p>
+<ul>
+<li><strong>미국 (동맹국 연대 및 보조금 통제):</strong></li>
+</ul>
+<p class="ia-para-body">미국은 중국 배제를 위해 다자협력체인 &#x27;핵심광물안보파트너십(MSP)&#x27;을 주도하고 있으며, 한국은 2024년 7월부터 제2대 의장국으로서 30개의 시범사업을 이끌고 있습니다. 또한 인플레이션감축법(IRA)을 통해 북미 또는 FTA 체결국 내 광물 조달을 의무화하고, 해외우려기관(FEOC) 지분이 25% 이상인 기업을 보조금 대상에서 전면 배제하는 등 강력한 시장 통제를 시행 중입니다.</p>
+<ul>
+<li><strong>유럽연합 (역내 자립도 및 재활용 강화):</strong></li>
+</ul>
+<p class="ia-para-body">&#x27;핵심원자재법(CRMA)&#x27;을 발효하여 특정 국가(중국)에 대한 수입 의존도를 역내 전체 소비량의 65% 미만으로 제한했습니다. 나아가 2030년까지 EU 내 채굴 10%, 가공 40%, 재활용 15% 달성이라는 구체적인 정량 목표를 설정하고, 34종의 전략 원자재를 관리하고 있습니다.</p>
+<ul>
+<li><strong>일본 (치밀한 전략과 심해자원 개발):</strong></li>
+</ul>
+<p class="ia-para-body">한국과 산업 구조가 유사한 일본은 36종의 핵심광물을 선정하고, 심해열수광상 등 해양자원 개발이라는 선도적 기술을 추진 중입니다. 또한 35종의 광물 비축, 자원국(호주, 아프리카, 남미)과의 강력한 다자협력 체계를 통해 전방위적인 공급망 다각화를 꾀하고 있습니다.</p>
+<div class="term-box"><span class="term-name">FEOC (해외우려기관)</span><span class="term-def">미국 IRA 규정상 전기차 보조금 수혜가 배제되는 기업으로, 주로 중국 정부의 지분이나 통제를 받는 기업</span></div>
+<div class="term-box"><span class="term-name">해저열수광상</span><span class="term-def">수심 1,000~3,000m 심해저에서 분출되는 뜨거운 물에 녹아 있는 금속 이온이 차가운 바닷물과 만나 침전되어 형성된 광물 자원</span></div>
+<h3 class="ia-para-title">Ⅲ. 한국의 현주소와 정부의 정책적 대응</h3>
+<p class="ia-para-body">대한민국의 이차전지(세계 2위), 디스플레이(2위), 반도체(18% 점유율) 산업은 세계 최고 수준이나, 그 뼈대가 되는 원료 광물의 95% 이상을 해외(특히 중국) 수입에 의존하는 &#x27;가마우지 경제&#x27;의 한계를 지니고 있습니다.</p>
+<p class="ia-para-body">정부는 이에 대응하여 33종의 핵심광물(10대 전략 핵심광물 포함)을 지정하고, 공급망 위기 징후를 사전에 포착하는 조기경보시스템(EWS)을 구축했습니다. 특히 2025년 2월부터 &#x27;국가자원안보특별법(공급망 3법 중 하나)&#x27;이 본격 시행됨에 따라 제도적 기반은 마련되었으나, 실효성 있는 인프라 구축을 위해서는 보다 근본적인 해결책이 요구됩니다.</p>
+<div class="term-box"><span class="term-name">EWS (조기경보시스템)</span><span class="term-def">공급망 교란 요인이나 가격 급등락 등 위기 징후를 사전에 탐지하여 선제적으로 대응할 수 있도록 돕는 시스템</span></div>
+<h3 class="ia-para-title">Ⅳ. 핵심광물 공급망 안정화를 위한 4대 전략적 해결방안</h3>
+<p class="ia-para-body">원문에서 제시하는 핵심광물 위기 극복 방안은 산업은행의 기업 금융 및 정책 기조와 직결되는 매우 중요한 논점입니다. 이를 실현 가능성과 정책적 시야를 담아 4가지로 재구성하였습니다.</p>
+<div class="ia-section-h">대중국 외교의 현실적 접근과 신뢰 구축 (디리스킹 전략)</div>
+<p class="ia-para-body">핵심광물 공급망에서 당장 중국을 100% 배제하는 것은 불가능에 가깝습니다. 정·제련 공정에서 발생하는 막대한 환경오염 처리 비용과 높은 인건비 등은 보조금 없이 선진국이 감당하기 힘든 원가 구조를 지닙니다. 따라서 &#x27;탈(脫)중국&#x27;이라는 급진적 구호보다는, 일관된 정책 기조 아래 중국과의 경제적 신뢰 관계를 유지하면서 점진적으로 리스크를 완화(De-risking)하는 외교적 균형 감각이 선행되어야 합니다.</p>
+<div class="ia-section-h">장기적 안목의 해외자원개발 생태계 재건 및 공공지원 확대</div>
+<p class="ia-para-body">현재 수요기업(이차전지 소재사 등) 중심의 지분투자 및 장기 공급계약 체결 전략은 전기차 캐즘(수요 정체) 등 급변하는 시장에서 리스크 방어에 한계가 있습니다. 광업은 탐사부터 생산까지 평균 리드타임이 10년 이상 걸리는 장기 산업입니다. 따라서 민간의 단기적 성과주의에서 벗어나 생태계 자체를 육성해야 합니다. 한국광해광업공단, 수출입은행, 무역보험공사 등 공공 및 금융기관의 자금 지원과 정책 보증 제도가 전폭적으로 투입되어야 합니다.</p>
+<div class="term-box"><span class="term-name">리드타임 (Lead Time)</span><span class="term-def">자원개발 분야에서 광상 탐사부터 실제 광물을 채굴하여 수익을 내기까지 소요되는 장기간의 시간</span></div>
+<div class="term-box"><span class="term-name">전기차 캐즘 (Chasm)</span><span class="term-def">전기차 시장이 초기 수용자 단계를 지나 대중화 단계로 진입하기 전, 일시적으로 수요가 정체되거나 침체되는 현상</span></div>
+<div class="ia-section-h">원자재 수입의 대안, &#x27;재자원화(도시광산)&#x27; 산업의 집중 육성</div>
+<p class="ia-para-body">폐기물에서 유용 광물을 회수하는 재자원화는 부존자원이 빈약한 우리나라의 훌륭한 대안입니다. 글로벌 패러다임 역시 천연자원을 넘어 폐기물까지 자원 확보 대상으로 삼고 있습니다. 이를 위해 폐기물 처리에 대한 낡은 규제를 혁파하고, 높은 기술·자본 장벽을 넘기 위한 맞춤형 제도가 필요합니다. 특히 기술적 상업성이 입증된 코발트, 리튬과 효용성이 낮은 망간 등 광종별 특성에 맞는 차별화된 육성 전략이 필수적입니다.</p>
+<div class="ia-section-h">공공-민간 투트랙(Two-Track) 비축 시스템 활성화</div>
+<p class="ia-para-body">정부(한국광해광업공단)는 2031년까지 20종 핵심광물에 대해 100~180일분 공공 비축을 목표로 기지를 구축 중입니다. 하지만 공공 비축만으로는 민간 기업들이 요구하는 세밀한 특정 스펙(품질, 형태 등)을 모두 충족하기 어렵습니다. 따라서 민간 기업이 스스로 필요 물량을 단순 재고가 아닌 전략 비축분으로 확보할 수 있도록, 정부와 금융기관이 비축 시설 임차 비용이나 매입 자금을 정책 금융으로 지원하는 민간 비축 활성화가 병행되어야 합니다.</p>
+<h3 class="ia-para-title">Ⅴ.</h3>
+<p class="ia-para-body">핵심광물 공급망 확보는 이제 단순한 비용 절감의 문제를 넘어 첨단산업의 생존과 국가 안보를 좌우하는 핵심 의제로 격상되었습니다. 글로벌 무역 환경이 블록화되고 자원 무기화가 심화되는 상황에서, 우리나라는 미국·EU 등 주요 동맹국의 다자협의체(MSP 등)를 적극 활용함과 동시에, 현실적으로 배제하기 어려운 중국과의 유연한 전략적 파트너십을 병행해야 합니다.</p>
+<p class="ia-para-body">특히 산업은행은 이러한 국면에서 국가 첨단산업의 &#x27;방파제&#x27; 역할을 수행해야 합니다. 단기적인 수익성 분석을 넘어, 해외 광산 개발이라는 10년 이상의 리드타임과 불확실성을 인내할 수 있는 <strong>&#x27;인내형 자본(Patient Capital)&#x27;</strong>을 공급하고, 폐배터리 재자원화 및 대체 소재 기술 개발 기업에 대규모 정책 금융을 선제적으로 지원하여 공급망 자립화에 중추적인 역할을 담당해야 할 것입니다.</p>
+<h3 class="ia-para-title">Ⅵ. [내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</h3>
+<p class="ia-para-body">💡 <strong>면접/논술을 위한 차별화 제언 2가지</strong></p>
+<ul>
+<li><strong>&#x27;한국형 자원확보 컨소시엄&#x27; 구성 및 금융 구조화 지원 (산업은행 역할)</strong></li>
+</ul>
+<p class="ia-para-body">개별 기업이 해외 광산 지분 인수나 장기 계약을 추진하는 것은 자본력과 리스크 측면에서 한계가 큽니다. 따라서 &quot;수요기업(확실한 구매처) + 종합상사(글로벌 네트워크) + 산업은행(신디케이트론 및 보증 등 대규모 자금조달)&quot;이 결합된 &#x27;한국형 자원확보 컨소시엄&#x27; 모델을 제안합니다. 산업은행이 프로젝트 파이낸싱(PF)의 주관사로 나서 안정성을 담보한다면, 개별 기업의 진출 한계를 극복하고 국가 차원의 협상력을 극대화할 수 있을 것입니다.</p>
+<ul>
+<li><strong>탄소중립 연계 &#x27;핵심광물 재자원화(도시광산) 전용 펀드&#x27; 조성</strong></li>
+</ul>
+<p class="ia-para-body">핵심광물 재자원화(폐배터리 재활용 등)는 자원 안보 확보뿐만 아니라 EU 등의 탄소 배출 규제(CBAM 등)에 대응하는 ESG 경영의 핵심입니다. 산업은행 주도로 &#x27;핵심광물 순환경제 전용 펀드&#x27;를 조성하고, 재활용 공정 기술을 보유한 딥테크 스타트업이나 설비 투자를 진행하는 중소·중견기업에 대해 ESG 지표 달성 시 금리를 인하해주는 지속가능연계대출(SLL)을 제공하여 산업 생태계의 마중물 역할을 해야 합니다.</p>
+<p class="ia-para-body">💬 <strong>예상 꼬리질문 및 답변 (면접 대비용)</strong></p>
+<ul>
+<li><strong>Q1. 본인은 탈중국이 단기간에 어렵다고 했는데, 그렇다면 미국의 IRA 혜택을 받기 위해 우리 기업들은 당장 어떻게 대처해야 한다고 생각하십니까?</strong></li>
+<li><strong>A.</strong> 완전한 탈중국은 현시점에서 비용과 인프라 한계로 불가능한 것이 현실입니다. 따라서 단기적으로는 미국이나 FTA 체결국 내 정·제련 합작 투자를 통해 IRA의 핵심 요건인 우려기관(FEOC) 비율을 우회 및 충족시키는 &#x27;현지화 조인트벤처(JV) 전략&#x27;을 취해야 합니다. 동시에 중장기적으로는 호주나 캐나다 등 자원부국과의 공급망 다변화 및 폐배터리 재활용 비율을 높여 중국산 원광 의존도를 서서히 낮추는 &#x27;투트랙 전략&#x27;이 필요하다고 생각합니다.</li>
+<li><strong>Q2. 핵심광물 재자원화(재활용) 산업 육성 시, 금융기관 입장에서 직면할 수 있는 리스크는 무엇이고 어떻게 통제해야 할까요?</strong></li>
+</ul>
+<div class="term-box"><span class="term-name">A.** 가장 큰 리스크는 관련 기술(예</span><span class="term-def">습식/건식 제련을 통한 회수율)이 아직 상용화 초기 단계라는 기술적 불확실성과 막대한 초기 설비투자 비용입니다. 또한, 폐기물 수급 불안정에 따른 가동률 하락 위험도 존재합니다. 이를 통제하기 위해 산업은행은 일시적인 자금 대출보다는 단계별 기술 입증에 따라 자금을 집행하는 &#x27;마일스톤 방식&#x27;을 도입하고, 대기업(원료 수요처)의 확실한 구매 확약서를 기반으로 대출 심사 허들을 유연하게 가져가는 리스크 분담 전략이 필요합니다.</span></div>
+  </div>
+</div>
+</div><div class="card-row" data-text="미국·중국 배터리 공급망 디커플링 가속화 및 k-배터리 대응 전략 미국 정치권은 자국의 핵심 인프라 및 국가안보를 보호하기 위해 중국산 배터리 의존도를 낮추는 법적 조치를 본격화하고 있습니다. 2025년 3월 10일, 미국 하원은 국토안보부(dhs)가 중국 배터리 기업으로부터 제품을 조달하는 것을 전면 금지하는 이른바 **&#x27;적대국 배터리 의존 탈피 법안(decoupling from foreign adversarial ba" style="display:contents">
+<div class="row" id="row-8">
+  <div class="row-body">
+    <h3 class="row-title">미국·중국 배터리 공급망 디커플링 가속화 및 K-배터리 대응 전략</h3>
+    <p class="row-excerpt">미국 정치권은 자국의 핵심 인프라 및 국가안보를 보호하기 위해 중국산 배터리 의존도를 낮추는 법적 조치를 본격화하고 있습니다. 2025년 3월 10일, 미국 하원은 국토안보부(DHS)가 중국 배터리 기업으로부터 제품을 조달하는 것을 전면 금지하는 이른바 **&#x27;적대국 배</p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="미국·중국 배터리 공급망 디커플링 가속화 및 K-배터리 대응 전략"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">미국·중국 배터리 공급망 디커플링 가속화 및 K-배터리 대응 전략</h2>
+  <div class="article-content">
+    <div class="ia-section-h"><strong>미국·중국 배터리 공급망 디커플링 가속화 및 K-배터리 대응 전략</strong></div>
+<h3 class="ia-para-title"><strong>1. 🇺🇸 미국의 대(對)중국 배터리 제재 법안 추진 현황 및 핵심 내용</strong></h3>
+<p class="ia-para-body">미국 정치권은 자국의 핵심 인프라 및 국가안보를 보호하기 위해 중국산 배터리 의존도를 낮추는 법적 조치를 본격화하고 있습니다. 2025년 3월 10일, 미국 하원은 국토안보부(DHS)가 중국 배터리 기업으로부터 제품을 조달하는 것을 전면 금지하는 이른바 <strong>&#x27;적대국 배터리 의존 탈피 법안(Decoupling from Foreign Adversarial Battery Dependence Act)&#x27;</strong>을 통과시켰습니다.</p>
+<p class="ia-para-body">해당 법안이 향후 상원을 통과할 경우, 2027년 10월부터 국토안보부의 예산을 활용하여 중국 공산당과 밀접한 관련이 있는 단체(Entity)가 생산한 배터리를 구매하는 행위가 원천 차단됩니다.</p>
+<p class="ia-para-body">특히 이 법안은 글로벌 배터리 시장을 주도하고 있는 6개의 중국 대표 기업을 구체적인 제재 대상으로 명시하여 강력한 제재 의지를 표명하고 있습니다.</p>
+<ul>
+<li><strong>제재 대상 6개 기업:</strong> ① CATL, ② BYD, ③ Envision Energy, ④ EVE Energy, ⑤ Gotion High-tech, ⑥ Hithium Energy Storage Technology.</li>
+</ul>
+<h3 class="ia-para-title"><strong>2. 글로벌 배터리 시장 내 중국의 독점적 지위와 위협</strong></h3>
+<p class="ia-para-body">미국이 이처럼 강력한 디커플링(Decoupling) 법안을 추진하는 배경에는 글로벌 배터리 시장에서 중국이 차지하고 있는 압도적이고 독점적인 지위가 자리 잡고 있습니다.</p>
+<p class="ia-para-body">현재 중국은 전 세계 글로벌 배터리 생산량의 약 80%를 책임지고 있으며, 전기차 및 에너지저장장치(ESS) 등에 널리 쓰이는 리튬이온 배터리의 경우 전 세계 물량의 약 75%를 생산하고 있습니다. SNE리서치의 2024년 출하 실적 자료에 따르면, 글로벌 EV 및 ESS 시장의 최상위권은 사실상 중국 기업들이 장악한 상태입니다.</p>
+<ul>
+<li><strong>글로벌 시장 점유율 현황:</strong> 1위 CATL (38%), 2위 BYD (15%), 공동 5위 EVE Energy 및 CALB (각 5%), 공동 6위 Gotion High-tech 및 삼성SDI (각 4%).</li>
+</ul>
+<p class="ia-para-body">한국의 대표 기업인 삼성SDI조차 중국의 Gotion High-tech와 함께 공동 6위에 머무르고 있다는 점은 중국 배터리 산업의 규모의 경제와 글로벌 장악력이 어느 정도인지 시사합니다.</p>
+<div class="term-box"><span class="term-name">에너지저장장치(ESS)</span><span class="term-def">발전소에서 생산된 잉여 전력을 저장해 두었다가 전력이 필요할 때 공급하여 전력 사용 효율을 높이는 시스템</span></div>
+<h3 class="ia-para-title"><strong>3. 미국의 정책적 목적과 중국의 맞대응 전략</strong></h3>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> 미국의 디커플링 추진 목적 (국가안보 및 자립화)</h4>
+<p class="ia-para-body">하원 국토안보위원회에 따르면, 이번 법안의 가장 큰 목적은 단순히 산업 보호를 넘어선 <strong>&#x27;국가안보 위협에 대한 선제적 대응&#x27;</strong>입니다. 미국의 최대 지정학적 경쟁자인 중국이 쥐고 있는 배터리 공급망 지배력을 억제하고, 그 영향력에서 완전히 벗어나겠다는 강력한 의지입니다. 법안을 발의한 공화당의 카를로스 히메네스(Carlos Gimenez) 의원은 &quot;미래 산업에서 배터리 기술에 대한 의존도가 극도로 높아지고 있는 만큼, 적대국이 아닌 신뢰할 수 있는 국가로부터 배터리를 공급받아야 한다&quot;고 강조하며, 핵심 소재의 &#x27;미국 내 자체 생산(On-shoring)&#x27;을 강력히 촉구했습니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> 중국의 맞대응 전략 (광물 무기화 및 우회 진출)</h4>
+<p class="ia-para-body">이러한 미국의 전방위적 압박에 맞서 중국 역시 수세에 머물지 않고 공세적인 맞대응을 펼칠 것으로 전망됩니다.</p>
+<ul>
+<li><strong>정부 차원:</strong> EV 배터리의 핵심이 되는 광물 기술 및 자원에 대한 수출 통제를 강화하여, 배터리 소재 밸류체인을 무기화할 가능성이 높습니다.</li>
+<li><strong>기업 차원:</strong> 미국의 강력한 제재망을 피하기 위해 미국 외 시장(유럽, 신흥국 등)으로 공급망 다변화를 추진하며 글로벌 주도권을 잃지 않으려는 공격적인 우회 전략을 전개할 것입니다.</li>
+</ul>
+<h3 class="ia-para-title"><strong>4. 한국 배터리 산업에 미치는 영향 및 최우선 대응 과제</strong></h3>
+<p class="ia-para-body">미국 국내외 언론은 동 법안이 상원을 무난히 통과할 것으로 예측하고 있습니다. 미국의 이러한 대(對)중국 배터리 디커플링 가속화는 한국(K-배터리) 기업들에게 위기이자 거대한 기회입니다. 단기적으로는 미국의 배터리 공급망 재편 및 중국산 배터리 퇴출에 따른 뚜렷한 반사이익(수혜)을 기대할 수 있으며, 북미 시장 내 점유율을 크게 확대할 수 있는 호기로 작용할 것입니다.</p>
+<p class="ia-para-body">하지만 원문에서 제시하는 가장 중요한 해결방안은 이러한 단기적 호재에 안주해서는 안 된다는 점입니다. 궁극적으로는 중국의 공격적인 제3시장 진출과 핵심 광물 통제 압박을 이겨낼 수 있는 <strong>&#x27;기술경쟁력&#x27;에 기반한 중장기적 대응</strong>이 필수적입니다. 글로벌 배터리 공급망의 주도권을 완전히 확보하기 위해서는 결국 대체 불가한 기술적 초격차를 달성하는 것만이 유일한 생존 및 성장 전략입니다.</p>
+<h3 class="ia-para-title"><em>*</em>*</h3>
+<p class="ia-para-body">이번 미국 하원의 배터리 조달 금지 법안 통과는 배터리가 더 이상 단순한 산업용 부품이 아니라 <strong>&#x27;국가 경제안보를 좌우하는 전략 자산&#x27;</strong>으로 격상되었음을 명확히 보여주는 사건입니다. 미국의 디커플링 가속화로 인해 K-배터리는 북미 시장에서 강력한 우위를 점할 기회를 얻었으나, 동시에 중국의 핵심 광물 무기화 리스크와 非미국 시장에서의 출혈 경쟁이라는 이중고를 마주하게 되었습니다.</p>
+<p class="ia-para-body">앞으로 주목해야 할 핵심 관전 포인트는 미국의 규제가 민간 자동차 보조금(IRA 등)을 넘어 공공 조달 시장 원천 배제로까지 진화하고 있다는 점, 그리고 이에 맞선 중국의 자원 통제 수위입니다. 산업은행은 이러한 지정학적 패러다임 변화 속에서 K-배터리가 단순한 &#x27;반사이익 수혜자&#x27;를 넘어 &#x27;글로벌 공급망의 룰 메이커&#x27;로 도약할 수 있도록, 차세대 기술 개발 지원과 공급망 독립을 위한 든든한 정책금융의 역할을 수행해야 합니다.</p>
+<h3 class="ia-para-title"><strong>[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</strong></h3>
+<div class="ia-section-h">핵심 광물 자립을 위한 &#x27;K-배터리 원팀 공급망 펀드&#x27; 조성</div>
+<p class="ia-para-body">원문에서 강조한 &#x27;기술경쟁력 확보&#x27;가 성공하려면, 그 기술을 구현할 &#x27;원재료(핵심 광물)의 안정적 수급&#x27;이 선행되어야 합니다. 중국이 광물 수출 통제를 강화할 것에 대비하여, 산업은행은 국내 배터리 셀 제조사 및 소재 기업들과 함께 호주, 캐나다, 인도네시아 등 자원 부국에 공동 투자하는 &#x27;공급망 다변화 전용 펀드&#x27;를 주도적으로 조성해야 합니다. 개별 기업이 감당하기 힘든 업스트림(광산 개발, 제련) 리스크를 정책금융이 분담함으로써 실질적인 탈중국을 지원해야 합니다.</p>
+<div class="ia-section-h">중국의 제3시장 공략에 대비한 글로벌 맞춤형 진출 금융 지원</div>
+<p class="ia-para-body">중국 기업들이 미국 시장이 막히면서 유럽, 동남아, 남미 등 미국 외 시장으로 눈을 돌리며 점유율 다변화를 꾀할 것입니다. K-배터리 기업들이 미국 시장의 수혜에만 의존하지 않도록, 산업은행은 신흥국 현지에 진출하는 우리 기업들에게 &#x27;현지화 조달 자금 우대 대출&#x27;이나 &#x27;현지 합작법인(JV) 투자 금융&#x27;을 확대 제공하여, 글로벌 전역에서 중국과의 시장 점유율 방어전을 치를 수 있도록 지원해야 합니다.</p>
+<ul>
+<li><strong>Q1. 미국의 중국 배터리 제재가 우리 기업에게 무조건적인 호재라고 평가하시나요?</strong></li>
+<li><strong>A.</strong> 단기적으로는 미국 공공 및 민간 시장에서 중국 기업들이 배제되므로 명백한 점유율 확대의 기회입니다. 그러나 장기적으로 볼 때 무조건적인 호재는 아닙니다. 중국이 보복성으로 배터리 핵심 광물에 대한 수출 통제를 단행할 경우, 원자재의 중국 의존도가 높은 우리 기업들은 심각한 원가 상승과 조달 차질을 겪을 수 있습니다. 따라서 진정한 호재로 만들기 위해서는 공급망 내재화와 차세대 기술 개발이 반드시 병행되어야 합니다.</li>
+<li><strong>Q2. 산업은행 입장에서 국내 배터리 산업을 지원할 때, 가장 우선적으로 고려해야 할 리스크 요소는 무엇이라 생각합니까?</strong></li>
+<li><strong>A.</strong> 가장 큰 리스크는 &#x27;지정학적 리스크에 따른 밸류체인 붕괴&#x27;입니다. 배터리는 생산능력(CAPEX) 확충도 중요하지만, 원물이 없으면 공장이 멈추는 산업입니다. 따라서 단순한 시설 투자 자금 대출을 넘어, 우리 기업들이 칠레, 호주 등에서 광물 장기 공급 계약을 맺거나 지분 투자를 할 때 환율 리스크나 정치적 리스크를 어떻게 헤징(Hedging)해 줄 것인지를 심도 있게 검토하는 것이 정책금융의 최우선 역할이라고 생각합니다.</li>
+</ul>
+  </div>
+</div>
+</div><div class="card-row" data-text="산업별·광물별 &#x27;선택과 집중&#x27;을 통한 차별화된 공급망 구축 " style="display:contents">
+<div class="row" id="row-9">
+  <div class="row-body">
+    <h3 class="row-title">산업별·광물별 &#x27;선택과 집중&#x27;을 통한 차별화된 공급망 구축</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="산업별·광물별 &#x27;선택과 집중&#x27;을 통한 차별화된 공급망 구축"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">산업별·광물별 &#x27;선택과 집중&#x27;을 통한 차별화된 공급망 구축</h2>
+  <div class="article-content">
+    <h3 class="ia-para-title">핵심광물을 둘러싼 글로벌 환경 변화: 자원의 무기화와 특정국 독점 심화</h3>
+<p class="ia-para-body">최근 글로벌 경제안보의 가장 큰 화두는 &#x27;핵심광물의 전략 자산화&#x27;입니다. 첨단 산업과 에너지 전환에 필수적인 핵심광물의 공급망을 특정 국가가 독점하면서, 이를 통상 협상과 외교 분쟁의 무기로 활용하는 추세가 노골화되고 있습니다.</p>
+<ul>
+<li><strong>중국의 압도적 시장 지배력과 수출 통제 무기화</strong></li>
+<li>중국은 핵심광물 채굴을 넘어 정·제련 및 소재 가공 분야에서 압도적인 독점력을 구축했습니다. 갈륨(99%), 흑연(98%), 희토류(92%) 등 주요 광물의 정·제련 공정을 장악하고 있으며, LFP 배터리 양극재 기술 지배율은 98%에 달합니다.</li>
+<li>미국의 반도체 장비 제재나 관세 정책에 대응하여, 중국은 2023년부터 갈륨·게르마늄·흑연 수출 통제를 시작으로, 2025년에는 7개 희토류, 2026년 1월에는 대일본 이중용도 품목 수출 통제까지 제재 범위를 공격적으로 확대하고 있습니다.</li>
+<li>단순한 통제를 넘어 중국 내 리튬 광산 채굴 인허가를 고의로 지연시키는 등 실질적인 글로벌 공급량과 가격을 쥐고 흔드는 양상을 보입니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">희토류</span><span class="term-def">단기간에 공급선 대체가 어렵고 영구자석 및 방위산업 등에 필수적인 17개 희귀 광물 원소</span></div>
+<h3 class="ia-para-title">주요국의 핵심광물 패권 전략: 역내 생산 능력 확보와 전략적 연대</h3>
+<p class="ia-para-body">미국과 유럽연합(EU)은 대중국 의존도를 낮추기 위해 보조금 지급을 넘어선 &#x27;역내 직접 생산&#x27;과 &#x27;우방국 중심의 공급망 내재화&#x27;로 정책의 패러다임을 전환하고 있습니다.</p>
+<div class="term-box"><span class="term-name">미국</span><span class="term-def">독자적 국내 공급망 구축 및 철저한 자국 이익 중심의 양자 협력**</span></div>
+<ul>
+<li>과거 보조금을 통한 외국 기업 유치(바이든 정부)에서 벗어나, 트럼프 2기 정부는 미국 내 광산 개발, 정·제련, 해저 광물 자원 개발 등 자국 내 직접 생산 프로젝트를 강력하게 추진 중입니다 [6-8].</li>
+<li>안보 핵심인 희토류 자립을 위해 국방부가 직접 자국 광산기업(MP Materials)의 지분을 취득하고 장기 최저 가격을 보장하는 등 파격적인 시장 개입을 단행하고 있습니다.</li>
+<li>다자간 연대보다는 호주, 일본, 우크라이나 등 핵심 자원을 보유하거나 기술력이 있는 국가와 철저히 자국 중심의 &#x27;양자 협력&#x27;을 강화하고 있으며, 우크라이나 재건 기금 조성 시 자원 취득 우선권을 확보하는 등 경제 안보적 실리를 극대화하고 있습니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">유럽연합(EU)</span><span class="term-def">핵심원자재법(CRMA) 기반의 역내 인프라 대규모 확충**</span></div>
+<ul>
+<li>단일 국가(중국) 의존도를 65% 이하로 낮추는 것을 목표로 하는 핵심원자재법(CRMA)을 2024년 발효했습니다.</li>
+<li>이를 달성하기 위해 2030년까지 채굴(10%), 정·제련(40%), 재활용(25%) 역량을 갖추겠다는 구체적인 수치를 제시했습니다.</li>
+<li>약 280억 유로(약 47조 원) 규모의 60개 전략 프로젝트(역내 47개, 역외 13개)를 선정하여 리튬 등 전기차·ESS 관련 원자재 인프라를 전폭적으로 지원하고 있습니다.</li>
+</ul>
+<h3 class="ia-para-title">한국의 정책 현황과 맞춤형 공급망 생존 전략 (대응방안)</h3>
+<p class="ia-para-body">우리나라는 2025년 10월 &#x27;공급망 3법(소부장특별법, 공급망기본법, 자원안보특별법)&#x27;을 전면 시행하며 조기경보시스템 구축 및 전략핵심광물 10종(리튬, 니켈, 희토류 등)을 지정해 관리하고 있습니다 [14-17]. 하지만 국토 내 매장 광물이 전무한 &#x27;자원 빈국&#x27;의 현실을 고려할 때, 독자적인 생태계 구축은 불가능하므로 보다 전략적이고 입체적인 접근이 필수적입니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">①</span> 산업별·광물별 &#x27;선택과 집중&#x27;을 통한 차별화된 공급망 구축</h4>
+<p class="ia-para-body">우리나라는 배터리, 전기모터(영구자석), 반도체에 필요한 광물 수요가 절대적입니다. 따라서 모든 정·제련 시설을 국내에 두는 비효율을 피하고 광물별 특성에 맞춘 전략이 필요합니다.</p>
+<ul>
+<li><strong>업스트림(Upstream) 투자:</strong> 니켈, 리튬, 흑연 등 대규모 수요가 있는 배터리 광물은 해외 원광 확보 후 국내 정·제련 시설을 고도화하는 방향이 유리합니다. (예: 포스코의 탄자니아 흑연 도입, 호주/아르헨티나 리튬 확보 후 국내 정·제련 체계 구축).</li>
+<li><strong>대체재 및 재활용 기술 R&amp;D:</strong> 대체가 어려운 리튬, 희토류 등은 나트륨 배터리, 전고체 배터리, 무희토류 영구자석 등 차세대 기술 개발에 국가적 역량을 집중해야 합니다. 백금족 등은 재활용 산업 육성만으로는 부족하므로 장기적 비축을 병행해야 합니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">업스트림(Upstream)</span><span class="term-def">자원의 탐사, 채굴부터 초기 정·제련 단계까지를 아우르는 공급망의 최상위 단계</span></div>
+<h4 class="ia-sub-title"><span class="sub-num">②</span> 민·관 역할 분담: 기업 주도 공급망 구축 + 정부의 끈기 있는 인프라 지원</h4>
+<p class="ia-para-body">일부 핵심광물의 탈중국 공급망 확보는 시장의 생존 본능에 따라 이미 민간 기업(포스코 등) 주도로 활발히 진행 중입니다. 따라서 정부는 직접 플레이어로 뛰기보다는 기업이 하기 어려운 중장기 대체 소재 R&amp;D 지원, 전문 인력 양성, 과감한 세제 및 금융 지원 등 조력자(Facilitator) 역할에 집중해야 합니다.</p>
+<h4 class="ia-sub-title"><span class="sub-num">③</span> 입체적이고 전략적인 국제 통상 및 협력 연대</h4>
+<ul>
+<li><strong>미·EU 프로젝트 선제적 탑승:</strong> 미·EU가 추진하는 대규모 역내 생산 프로젝트에 한국의 우수한 소재·가공 기업들이 공동 투자나 지분 참여 형태로 진입하여 밸류체인에 묶여야 합니다.</li>
+<li><strong>ODA 연계 및 자원 부국 스킨십 강화:</strong> 아세안, 남미, 아프리카 국가들의 &#x27;원광 수출 통제 및 자국 내 산업 육성&#x27; 기조를 역이용하여, 국제개발협력(ODA)과 인프라 투자를 패키지로 제공하며 자원을 확보해야 합니다.</li>
+<li><strong>현실적인 대중국/대일본 리스크 관리:</strong> 대중국 완전한 디리스킹은 단기적으로 불가능하므로, 꾸준한 대화 채널을 유지해 수출 통제 리스크를 지연시켜야 합니다. 또한, 일찍이 중국의 희토류 무기화를 겪고 공급선을 다변화한 일본의 위기 대응 시스템과 대체 소재 기술을 벤치마킹할 필요가 있습니다.</li>
+</ul>
+<h3 class="ia-para-title">요약 및 산업은행의 역할 전망</h3>
+<p class="ia-para-body">글로벌 핵심광물 패권 경쟁은 단순한 무역 갈등을 넘어, 다가올 전기차·신재생에너지·첨단 반도체 시대의 국가 생존을 결정짓는 &#x27;자원 무기화 2.0&#x27; 시대의 진입을 의미합니다. 미국과 유럽은 막대한 자본과 행정력을 동원해 자국 중심의 공급망 장벽을 높이고 있으며, 중국은 쥐고 있는 자원을 언제든 외교적 보복 수단으로 쓸 준비가 되어 있습니다.</p>
+<p class="ia-para-body">자원 빈국인 한국이 이 틈바구니에서 살아남기 위해서는 민간 기업의 신속한 해외 자원망 구축과 함께 <strong>&#x27;압도적이고 인내하는 자본(Patient Capital)&#x27;의 뒷받침이 필수적입니다. 이 지점에서 대한민국 경제의 혈관을 책임지는 &#x27;산업은행&#x27;의 역할이 그 어느 때보다 중요</strong>합니다.</p>
+<p class="ia-para-body">산업은행은 단순한 대출 기관을 넘어, 기업들이 아프리카나 남미 등 고위험 국가에서 광산을 개발하거나 정·제련소 지분을 인수할 때 발생하는 지정학적·재무적 리스크를 분담해 주는 <strong>&#x27;글로벌 자원개발 프로젝트파이낸싱(PF)의 앵커 투자자&#x27;</strong> 역할을 수행해야 합니다. 또한, &#x27;공급망 안정화 기금&#x27;의 핵심 운용 주체로서, 단기적인 수익성보다는 국가 안보적 관점에서 배터리 재활용 기업 및 대체 소재 R&amp;D 벤처기업에 선제적으로 모험 자본을 공급하는 마중물 역할을 해야 할 것입니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 및 제언]</h3>
+<div class="ia-section-h">제언 1: K-도시광산(배터리 재활용) 밸류체인 전용 &#x27;순환경제 인프라 펀드&#x27; 조성</div>
+<p class="ia-para-body">원문에서 언급된 바와 같이, 자원이 부족한 한국은 폐배터리 및 희토류를 추출해 내는 &#x27;재활용(Recycling)&#x27; 분야를 업스트림의 핵심 전략으로 삼아야 합니다. 산업은행이 주도하여 지자체 및 대기업과 함께 <strong>&#x27;순환경제 인프라 펀드&#x27;</strong>를 조성할 것을 제안합니다. 폐배터리 수거-방전-파쇄-광물 추출로 이어지는 밸류체인 전반에 투자하며, 유럽의 CRMA 재활용 목표치(25%)에 부합하는 현지 재활용 공장 진출을 지원하는 전용 금융 상품을 신설한다면, 자원 한계를 극복하는 강력한 무기가 될 것입니다.</p>
+<div class="ia-section-h">제언 2: 핵심광물 스왑(Swap) 및 다국적 ECA 공동 보증 플랫폼 구축</div>
+<p class="ia-para-body">국내 기업이 자금력의 한계로 미국이나 EU의 60대 전략 프로젝트 등에 단독으로 참여하기 어렵습니다. 따라서 수출입은행, 무역보험공사 등 국내 정책금융기관은 물론, 핵심 자원 부국(호주, 캐나다 등)의 공적수출신용기관(ECA)들과 <strong>&#x27;다국적 광물 협력 공동 보증 플랫폼&#x27;</strong>을 구축해야 합니다. 이를 통해 우리 기업의 프로젝트 진출 시 금리 인하와 보증을 패키지로 지원하고, 투자 대가로 생산된 광물 자원의 일정 비율을 국내로 도입하는 &#x27;금융-실물자원 스왑&#x27; 구조를 정착시킬 수 있습니다.</p>
+<h3 class="ia-para-title"></h3>
+<div class="ia-section-h">Q1. 보고서에서 다자간 국제 연대보다 우방국과의 양자 협력이나 미·EU 프로젝트 공동 투자를 강조했는데, 그 이유는 무엇인가요?</div>
+<p class="ia-para-body"><strong>A.</strong> 다자간 협의체는 선언적인 의미에 그치거나 이해관계가 복잡해 실제 광물 조달 및 인허가 문제를 신속하게 해결하는 데 한계가 있기 때문입니다. 반면, 양자 협력이나 특정 국가(미국, EU)가 주도하는 전략 프로젝트에 직접 지분을 태우고 참여하는 것은 &#x27;현지 채굴 및 정제 가공&#x27;이라는 실질적인 자산과 공급망을 확실하게 확보할 수 있는 가장 빠르고 강력한 방법입니다. 기업의 속도전에 발맞추기 위해서는 구속력 있는 양자 협력과 직접 투자가 훨씬 실효성이 높다고 생각합니다.</p>
+<div class="ia-section-h">Q2. 중국과의 탈동조화(디리스킹)가 현실적으로 불가능하다고 하셨는데, 그렇다면 향후 대중국 전략은 어떤 스탠스를 취해야 한다고 생각하십니까?</div>
+<p class="ia-para-body"><strong>A.</strong> 투트랙(Two-track) 전략이 필요합니다. 장기적으로는 아프리카 원광 확보, 나트륨 배터리 등 대체 소재 개발을 통해 대중국 의존도를 천천히 낮춰가야 하는 것이 맞습니다. 하지만 단기적으로는 대체가 불가능하므로, 중국을 자극하지 않고 실리를 챙기는 &#x27;전략적 모호성 및 대화 채널 강화&#x27;가 필수적입니다. 단순히 중국을 배제하는 것이 아니라, 중국 내 우량 공급망 기업과의 합작법인(JV) 설립이나 제3국 공동 진출 등을 통해 파트너십을 끈끈하게 유지하여 수출 통제 리스크의 순위를 뒤로 미루는 유연한 경제 외교가 필요합니다.</p>
+  </div>
+</div>
+</div><div class="card-row" data-text="서론: 미중 패권 경쟁의 신전선, 전략 자산이 된 희토류 " style="display:contents">
+<div class="row" id="row-10">
+  <div class="row-body">
+    <h3 class="row-title">서론: 미중 패권 경쟁의 신전선, 전략 자산이 된 희토류</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="서론: 미중 패권 경쟁의 신전선, 전략 자산이 된 희토류"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">서론: 미중 패권 경쟁의 신전선, 전략 자산이 된 희토류</h2>
+  <div class="article-content">
+    <p class="ia-para-body">📊 <strong>희토류 자원 무기화와 한국의 다층적 공급망 안정화 전략</strong></p>
+<div class="ia-section-h">미중 패권 경쟁의 신전선, 전략 자산이 된 희토류</div>
+<p class="ia-para-body">미중 무역전쟁이 구조적 패권 경쟁으로 심화되면서, 희토류가 글로벌 공급망을 통제하는 새로운 &#x27;전략적 무기&#x27;로 급부상하고 있습니다. 2024년 중국이 7종의 희토류에 대한 수출통제를 전격 발표한 것은 원소재를 정치·외교적 카드로 활용하려는 노골적인 의도를 보여줍니다. 희토류는 F-35 전투기 같은 최첨단 방산 무기뿐만 아니라, 풍력터빈, 영구자석 등 친환경·미래 첨단산업의 핵심 동력원으로 쓰이기 때문에 자원 의존도가 높은 국가는 심각한 지정학적 리스크에 직면하게 되었습니다. 특히 한국은 첨단 제조업 중심의 경제 구조를 가지고 있음에도 불구하고 희토류의 대다수를 중국에 의존하고 있어, 국가 안보와 경제의 명운을 좌우할 &#x27;공급망 다각화&#x27;가 그 어느 때보다 시급한 시점입니다.</p>
+<div class="ia-section-h">중국의 희토류 독점 구조와 한국 산업의 구조적 취약성</div>
+<p class="ia-para-body">중국이 글로벌 희토류 시장에서 행사하는 지배력은 단순히 광물을 많이 보유하고 있다는 수준을 넘어섭니다. 중국은 전 세계 희토류 매장량의 약 49%를 보유하고 있으나, 실제 채굴 단계에서는 전 세계 물량의 69%, 나아가 최종 가공 단계인 정제 능력에서는 무려 91%를 독점하며 글로벌 공급망의 병목(Bottleneck)을 완벽히 장악하고 있습니다.</p>
+<p class="ia-para-body">첨단산업 발전과 탄소중립 전환에 따라 희토류의 수요는 기하급수적으로 폭증할 전망입니다. 예를 들어 F-35 전투기 1대 생산에 약 400kg, 3MW급 풍력터빈 1기에 약 240kg, 영구자석 1kg 생산에 약 36g의 희토류가 필수적으로 투입되어야 합니다.</p>
+<p class="ia-para-body">문제는 한국의 압도적인 대중국 의존도입니다. 한국은 국내 매장량이 한정적인 데다 환경 및 비용 문제로 고도화된 정제 기술을 확보하지 못했습니다. 그 결과 희토류 화합물의 61%, 희토류 금속의 80%, 특히 전기차 모터 등에 필수적인 영구자석은 87%를 중국 수입에 절대적으로 의존하고 있습니다. 중국이 단기적으로 공급을 차단할 경우, 한국의 미래 성장동력인 전기차·배터리·방산 밸류체인 전체가 마비될 수 있는 심각한 경제적 타격이 예상됩니다.</p>
+<div class="term-box"><span class="term-name">영구자석</span><span class="term-def">자기장을 스스로 지속적으로 발생시키는 물질로, 전기차 모터와 풍력발전기 터빈의 구동 핵심 부품</span></div>
+<div class="ia-section-h">글로벌 탈중국(De-risking) 동향 및 자급화 움직임</div>
+<p class="ia-para-body">자원 무기화의 위험성을 인지한 미국과 유럽 등 주요국들은 2030년까지 대중국 희토류 의존도를 50% 이하로 낮춘다는 강력한 목표 아래 공급망 내재화와 다변화에 천문학적 자본을 투입하고 있습니다.</p>
+<ul>
+<li><strong>미국의 자급화 및 공급망 내재화:</strong> 미국은 안보 차원에서 캘리포니아 마운틴 패스(Mountain Pass) 광산을 운영하는 MP Materials를 통해 연간 2만 톤 규모의 생산을 목표로 채굴을 재개했습니다. 또한, 호주의 광업 대기업인 Lynas Rare Earths와 협력하여 텍사스에 대규모 정제 공장을 증설하는 등 채굴부터 가공까지의 자국 내 밸류체인을 구축 중입니다.</li>
+<li><strong>유럽의 원료 확보 다변화:</strong> 주요 원자재법(CRMA)을 필두로 그린란드, 노르웨이 등 비중국 지역에서의 채굴 프로젝트를 적극적으로 추진하며 독자적인 공급망 루트를 개척하고 있습니다.</li>
+</ul>
+<div class="ia-section-h">한국의 다층적 공급망 안정화 전략 및 해결방안 (최우선 과제)</div>
+<p class="ia-para-body">한국이 직면한 자원안보 위기를 극복하기 위해서는 원문에서 제시된 &#x27;3중 안정화 전략&#x27;을 바탕으로, 단순한 수입 국가 다변화를 넘어선 기술 집약적 생태계를 구축해야 합니다. 핵심은 희토류 공급망의 진짜 병목이 &#x27;매장량&#x27;이 아니라 &#x27;정제 기술&#x27;에 있다는 점을 정확히 공략하는 것입니다.</p>
+<ul>
+<li><strong>① 공급처 다각화 및 자원 외교 강화:</strong> 호주, 말레이시아, 베트남 등 희토류 매장량은 풍부하나 자본과 정제 기술이 부족한 신흥 공급국과 장기 구매(Off-take) 계약을 체결해야 합니다. 이는 중국을 우회하는 강력한 1차 방어선이 됩니다.</li>
+<li><strong>② 정제·가공 가치사슬 육성 및 &#x27;솔루션 프로바이더&#x27; 도약:</strong> 한국은 국내 직접 채굴보다는 고도화된 기술·설비를 제공하는 &#x27;솔루션 프로바이더(Solution Provider)&#x27; 모델이 가장 현실적이고 강력한 대안입니다. 기존 중국의 방식이 환경 오염을 수반했다면, 한국은 후발주자로서 친환경적이고 효율적인 정제 공법을 상용화하는 &#x27;Late Mover Advantage&#x27;를 극대화해 중간재 자립도를 획기적으로 높여야 합니다.</li>
+<li><strong>③ 재자원화(도시광산) 및 대체물질 기술 투자:</strong> 폐가전, 폐배터리, 폐모터 등에서 희토류를 추출·회수하는 완결적 순환 체계(Closed-loop)를 구축해야 합니다. 또한, 장기적으로는 아예 희토류를 사용하지 않거나 사용량을  최소화하는 대체 모터 기술 개발을 병행해야 합니다.</li>
+<li><strong>④ 정책금융 및 국가 주도의 전방위적 지원 체계:</strong> 산업통상자원부의 &#x27;33종 핵심광물 전략 수립&#x27;에 발맞춰, 수출입은행(KEXIM)은 10조 원 규모의 공급망 기금을 조성해 기업들의 해외 광산 지분 투자 및 정제 기술 개발을 지원하고 있습니다. 한국광해광업공단(KOMIR)의 희토류 전략 비축 및 대여제도 역시 단기적 충격을 완화하는 핵심 완충재 역할을 수행해야 합니다.</li>
+</ul>
+<div class="term-box"><span class="term-name">솔루션 프로바이더</span><span class="term-def">자원을 단순 구매하는 것을 넘어, 채굴 국가에 고도화된 친환경 정제 기술과 설비를 패키지로 제공하여 상호 윈윈(Win-Win)하는 사업 모델</span></div>
+<div class="term-box"><span class="term-name">Late Mover Advantage</span><span class="term-def">후발주자가 선도자(중국)의 과거 기술적 한계와 환경오염 등 시행착오를 분석하여, 처음부터 더 고도화되고 친환경적인 혁신 기술로 시장에 진입하는 전략</span></div>
+<h3 class="ia-para-title"></h3>
+<p class="ia-para-body">희토류는 더 이상 단순한 광물이 아니라 전기차, 신재생에너지, 국방 등 미래 국가 경쟁력을 결정짓는 핵심 안보 자산입니다. 글로벌 밸류체인이 경제적 효율성 중심에서 &#x27;지정학적 안보와 동맹&#x27; 중심으로 급속히 재편되는 가운데, 채굴부터 정제까지 중국이 쥐고 있는 독점적 구조를 탈피하지 못하면 한국의 첨단산업은 언제든 멈춰 설 수 있습니다.</p>
+<p class="ia-para-body">따라서 앞으로 주목해야 할 것은 단순한 &#x27;자원 확보량&#x27;이 아니라 &#x27;우리만의 정제 기술과 재자원화 역량&#x27;입니다. 산업은행(KDB)은 이 과정에서 시장의 실패를 보완하는 중추적 역할을 수행해야 합니다. 민간 기업이 감당하기 어려운 해외 정제 시설 인프라 투자에 대규모 인내 자본(Patient Capital)을 공급하고, 친환경 분리·정제 기술을 연구하는 딥테크 혁신기업을 적극 발굴·육성함으로써 대한민국이 &#x27;글로벌 핵심광물 밸류체인의 허브&#x27;로 도약할 수 있도록 금융의 마중물 역할을 완수해야 할 것입니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 / 제언]</h3>
+<div class="ia-section-h">제언 1: &quot;희토류 친환경 정제·가공 특화 펀드&quot; 조성 및 동맹국 조인트벤처(JV) 금융 지원</div>
+<p class="ia-para-body">원문에서 언급된 &#x27;솔루션 프로바이더&#x27; 전략을 실행하기 위해서는 기술 개발 자금 확보가 필수적입니다. 산업은행 주도로 (가칭) &#x27;희토류 정제혁신 특화 펀드&#x27;를 조성할 것을 제안합니다. 자원은 풍부하지만 가공 인프라가 없는 베트남, 호주 등의 국가에 한국 기업이 &#x27;친환경 정제 기술&#x27;을 들고 조인트벤처(JV)를 설립할 때, KDB가 지분 참여 및 장기 저리 대출을 패키지로 지원하는 것입니다. 이는 채굴권 확보에만 집중했던 과거 자원외교의 실패를 극복하고, 기술 동맹을 통해 밸류체인의 핵심(정제)을 장악하는 차별화된 전략이 될 것입니다.</p>
+<div class="ia-section-h">제언 2: &quot;도시광산(재자원화) 생태계 구축을 위한 공급망 금융(SCF) 도입&quot;</div>
+<p class="ia-para-body">폐배터리와 폐전자제품에서 희토류를 추출하는 재자원화 사업은 초기 설비 투자비용이 크고 수익화까지 시간이 걸려 중소·중견기업의 진입이 어렵습니다. 산업은행은 대기업(전기차·배터리 제조사)과 재자원화 중소기업 간의 거래 데이터를 기반으로 한 &#x27;핵심광물 전용 공급망 금융(SCF)&#x27; 프로그램을 도입해야 합니다. 재자원화 기업이 추출한 희토류를 대기업이 안정적으로 수매한다는 장기 계약(Off-take)을 근거로, KDB가 중소기업에 운영 자금과 설비 증설 자금을 선제적으로 지원하여 내수 순환(Closed-loop) 생태계를 조기에 안착시킬 수 있습니다.</p>
+<div class="ia-section-h">예상 꼬리질문 및 답변 2선</div>
+<ul>
+<li><strong>Q1. 중국이 아닌 제3국으로 희토류 수입선을 다변화하거나 국내에서 직접 정제하면 필연적으로 원가 상승이 발생할 텐데, 우리 기업들의 원가 경쟁력 하락 문제는 어떻게 해결해야 합니까?</strong></li>
+<li><strong>A.</strong> 단기적인 원가 상승은 불가피한 사실입니다. 그러나 중국의 수출 통제로 인해 공장 가동이 전면 중단되는 리스크 비용을 고려한다면, 수입선 다변화로 인한 비용은 일종의 &#x27;안보 프리미엄(보험료)&#x27;으로 보아야 합니다. 정책금융기관은 공급망 다변화를 적극 추진하는 기업에게 금리 우대를 제공하거나, 핵심광물 비축과 연계된 헷징(Hedging) 파생상품을 지원하여 초기 비용 충격을 완화해 주어야 합니다. 장기적으로는 친환경 공정의 고도화와 폐자원 재활용 비율 확대를 통해 단가를 다시 낮출 수 있습니다.</li>
+<li><strong>Q2. 한국이 후발주자로서 &#x27;친환경 정제 기술(Late Mover Advantage)&#x27;로 승부해야 한다고 제안했는데, 이미 가격 경쟁력을 갖춘 중국을 기술력만으로 극복할 수 있을까요?</strong></li>
+<li><strong>A.</strong> 극복할 수 있습니다. 최근 미국과 유럽연합(EU)은 탄소국경조정제도(CBAM)나 배터리 여권 제도 등을 도입하며 &#x27;생산 과정에서의 친환경성&#x27;을 납품의 핵심 조건으로 강제하고 있습니다. 즉, 중국의 값싼 희토류라도 환경 오염을 유발하는 방식으로 정제되었다면 향후 선진국 시장에 수출하기 어려워집니다. 한국이 ESG 기준을 충족하는 친환경 정제 공법을 상용화한다면, 다소 가격이 높더라도 서방 진영의 완성차 및 방산 업체들로부터 안정적인 수요를 확보하는 강력한 비교 우위를 가질 수 있습니다.</li>
+</ul>
+  </div>
+</div>
+</div><div class="card-row" data-text="패러다임의 변화: 일시적 교란에서 ‘상시적 고위험 구조’로의 고착화 " style="display:contents">
+<div class="row" id="row-11">
+  <div class="row-body">
+    <h3 class="row-title">패러다임의 변화: 일시적 교란에서 ‘상시적 고위험 구조’로의 고착화</h3>
+    <p class="row-excerpt"></p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="패러다임의 변화: 일시적 교란에서 ‘상시적 고위험 구조’로의 고착화"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> 공급망</div>
+  <h2 class="ia-title">패러다임의 변화: 일시적 교란에서 ‘상시적 고위험 구조’로의 고착화</h2>
+  <div class="article-content">
+    <div class="ia-section-h">패러다임의 변화: 일시적 교란에서 ‘상시적 고위험 구조’로의 고착화</div>
+<p class="ia-para-body">한국의 수입 공급망은 더 이상 특정 외부 충격 발생 시에만 흔들리는 일시적 불안정 상태가 아닙니다. 2019년 일본 수출규제, 코로나19 팬데믹, 러시아-우크라이나 전쟁 등 대형 외생 충격을 반복적으로 겪으면서, 위험이 이전 수준으로 복귀하지 않고 누적되는 ‘계단식(stepwise) 위험 상향 구조’로 변모했습니다. 과거 2018년 15~20% 수준이던 경보 품목 비중은 현재 35~45% 구간에 상시 머무르고 있습니다. 이는 우리 산업이 수입품 3~4개 중 1개는 상시 경보 상태인 ‘구조적 고위험 구간’에 완전히 진입했음을 의미합니다.</p>
+<div class="ia-section-h">‘평균의 함정’과 병목(Chokepoint) 중심의 집단 위험 가시화</div>
+<p class="ia-para-body">기존의 연간 무역 통계나 평균 의존도 지표는 기업의 재고 조정이나 가격 전가 등의 미시적 대응에 가려져 실제 공급망 위험을 과소평가하게 만드는 ‘안정성의 착시’를 유발합니다. 실제로 공급망 위험지수 85 이상의 최고위험 구간에 진입한 품목은 약 800여 개에 달하며, 이 위험은 소비재가 아닌 기계·장비, 전기전자, 화학소재 등 ‘핵심 전략 제조업’에 집중되어 있습니다. 특히 30%의 산업군에서는 단 1개의 고위험 품목이 전체 산업 위험도의 절반 이상을 차지하는 비대칭적 병목 구조를 띠고 있습니다. 최근의 미국-이란 갈등과 같은 중동 리스크 역시, 의존도는 0.4%에 불과하나 사우디(원유), 튀르키예(니켈 매트, 정련동), 이스라엘(요오드) 등 소수 국가에 배터리·반도체 핵심 투입재가 집중되어 있어 파급력은 치명적입니다.</p>
+<div class="term-box"><span class="term-name">공급망 위험지수</span><span class="term-def">수입 변동성, 물량 및 가격 충격, 공급 집중도 등을 종합하여 0~100으로 산출한 통합 위험 평가지표</span></div>
+<div class="term-box"><span class="term-name">수입안정성</span><span class="term-def">특정 품목의 공급선 다변화 정도와 수입 경로의 구조적 회복력을 나타내는 지표</span></div>
+<div class="ia-section-h">위험 확산 메커니즘과 선제적 공급망 관리(EWS)로의 정책 패러다임 전환</div>
+<p class="ia-para-body">매월 전체 수입 품목의 20~25%에서 새로운 위험 신호가 켜지거나(신규 진입) 기존 위험이 급등하고 있습니다. 단기적 충격(이벤트) 자체보다 기존에 누적된 ‘구조적 취약성’이 위험의 장기화를 결정합니다. 따라서 이미 비용이 급등하고 구조가 경직된 고위험 단계(사후 조치)에 개입하는 것은 재정적 부담만 키울 뿐 실효성이 낮습니다.</p>
+<p class="ia-para-body">원문에서 최우선으로 강조하는 해결방안은 정책 개입의 ‘골든타임’인 <strong>‘신규 위험 진입 단계(Entrants)’에서의 선제적 차단</strong>입니다. 이를 위해 다음과 같은 3대 정책 전환이 필수적입니다.</p>
+<p class="ia-para-body">첫째, 사건 대응형(Event-driven) 사후 처방에서 벗어나 구조 관리형(Structure-driven) 정책으로 전환해야 합니다.</p>
+<p class="ia-para-body">둘째, 단순한 특정 국가 의존도 축소가 아니라, 위험의 축적 과정을 동태적으로 추적하는 조기경보체계(EWS)를 정책 운영의 핵심 인프라로 격상해야 합니다.</p>
+<p class="ia-para-body">셋째, 단기적인 수급 안정화 지원을 넘어, 대체 기술 R&amp;D, 공급망 다변화, 전략 비축 등 구조 자체를 개선하는 중장기 지원책이 병행되어야 합니다.</p>
+<div class="term-box"><span class="term-name">신규 위험 진입(Entrants)</span><span class="term-def">평시 안정적이던 품목이 조달 변동성 증가 등으로 새롭게 경보 구간에 들어서는 위험 형성 초기 현상</span></div>
+<h3 class="ia-para-title"></h3>
+<p class="ia-para-body">한국의 공급망은 더 이상 ‘일시적 충격 후 회복’되는 탄력적 시스템이 아니라, ‘구조적 취약성이 고착화된 상시 위험 상태’입니다. 핵심 부품 하나가 전체 산업을 멈추게 하는 병목 현상과, 평균 통계에 가려진 &#x27;보이지 않는 위험&#x27;을 직시하는 것이 현시점의 가장 중요한 논점입니다. 앞으로 주목해야 할 것은 단순 지정학적 사건의 발생 여부가 아니라, 그 사건이 우리의 취약한 조달 구조(수입안정성 하위 구간)를 어떻게 타격하고 고착화하는지 추적하는 것입니다.</p>
+<p class="ia-para-body">따라서 <strong>산업은행</strong>은 전통적인 재무제표 중심의 여신 심사를 넘어, 국가 경제의 최후 보루로서 ‘기업과 산업의 공급망 회복탄력성(Resilience)’을 금융 지원의 핵심 척도로 삼아야 합니다. 조기경보체계(EWS) 데이터를 금융과 결합하여 위험 형성 초기 단계(Entrants)에 놓인 기업들에게 선제적으로 유동성을 공급하고 조달선 다변화를 유도하는 &#x27;구조적 해결사&#x27; 역할을 수행해야 합니다.</p>
+<h3 class="ia-para-title">[내 생각 / 추가 인사이트 / 정책적 방향성 / 해결방안 / 제언]</h3>
+<p class="ia-para-body"><strong>차별화 포인트 1: EWS 데이터 기반 &#x27;공급망 회복탄력성 연계 대출(Sustainability-Linked Supply Chain Finance)&#x27; 도입</strong></p>
+<p class="ia-para-body">단순히 수급이 끊긴 후 긴급 자금을 수혈하는 사후적 방식을 넘어, 기업이 선제적으로 고위험 품목의 조달선을 다변화하거나 대체 기술을 개발할 때 금리 우대를 제공하는 상품을 제안합니다. KIEP의 조기경보체계(EWS)에서 &#x27;신규 위험 진입&#x27; 경보가 울린 품목을 취급하는 기업을 타겟팅하여, 이들이 골든타임 내에 공급망을 재편할 수 있도록 마중물 자금을 제공함으로써 산업은행이 실물경제의 방파제 역할을 할 수 있습니다.</p>
+<div class="ia-section-h">차별화 포인트 2: 핵심 병목 산업에 대한 &#x27;대체 R&amp;D 및 전략비축 인프라 펀드&#x27; 조성</div>
+<p class="ia-para-body">공급망 위험의 근본 원인은 충격 자체가 아니라 대체 불가한 &#x27;병목(Chokepoint) 구조&#x27;에 있습니다. 니켈 매트, 반도체 희귀가스 등 EWS 상 최고위험(위험도 85 이상)에 장기 고착된 품목을 분석해, 이를 국산화하는 소재·부품·장비(소부장) 강소기업이나 공동 비축 시설을 건립하는 컨소시엄에 대규모 모험자본을 투입하는 전용 펀드 조성이 필요합니다. 이는 단순한 자금 지원을 넘어 국가 산업의 지형을 안전하게 재설계하는 국책은행 본연의 임무와 부합합니다.</p>
+<div class="ia-section-h">예상 꼬리질문 및 답변 2선</div>
+<div class="qa-q">중동 국가에 대한 수입 의존도가 0.4%에 불과하다고 했는데, 왜 이 지역의 지정학적 리스크가 우리 산업 전반을 흔들 수 있는 시스템 리스크로 평가받는 건가요?</div>
+<p class="ia-para-body"><strong>A.</strong> 수입 규모라는 &#x27;평균의 착시&#x27; 때문입니다. 비중은 0.4%로 미미하지만, 그 내용물이 이차전지용 니켈 매트, 반도체 공정에 쓰이는 요오드, 정밀화학 원료 등 첨단 산업의 필수 불가결한 핵심 투입재로 구성되어 있습니다. 이들 품목은 기술적 장벽과 소수 국가(튀르키예, 이스라엘 등)의 독과점적 생산 구조 때문에 단기간 내 타 국가로 대체하기가 매우 어렵습니다. 결국 단 하나의 톱니바퀴만 빠져도 수십조 원 단위의 첨단 제조 공정 전체가 마비되는 &#x27;병목(Chokepoint)&#x27; 역할을 하기 때문에 그 파급력이 치명적입니다.</p>
+<div class="qa-q">원문에서 정책 개입의 &#x27;골든타임&#x27;을 신규 위험 진입(Entrants) 단계라고 강조했습니다. 산업은행 입장에서 이 골든타임에 개입하려면 실무적으로 어떤 조치를 취할 수 있을까요?</div>
+<p class="ia-para-body"><strong>A.</strong> 신규 위험 진입 단계는 위험이 감지되기 시작했으나 아직 전면적인 수급 중단이나 가격 폭등으로 이어지지는 않은 상태입니다. 이때 산업은행은 선제적으로 수입선 다변화를 꾀하는 기업에게 신용장(L/C) 한도를 선제적으로 확대해주거나, 대체 수입국 발굴을 위한 긴급 운영자금을 낮은 금리로 지원할 수 있습니다. 위기가 고착화되어 원자재 가격이 기하급수적으로 폭등한 이후에 구제금융을 투입하는 것보다, 이 시점에 선제적으로 유동성을 윤활유처럼 공급하는 것이 비용 대비 산업 보호 효과가 훨씬 큽니다.</p>
+  </div>
+</div>
+</div>
+    </div>
+  </div>
+</div>
+
+<nav class="mobile-tabs">
+  <a href="../index.html" class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lab">홈</span></a>
+  <button class="tab" id="mFsBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span class="lab">크기</span></button>
+  <button class="tab" id="mSettingsBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="lab">설정</span></button>
+<a href="../pt.html" class="tab">🎤<span class="lab">PT</span></a></nav>
+
+<!-- 설정 패널 -->
+<div class="setting-row">
+      <div class="setting-label">목록 밀도</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="density:compact">컴팩트</button>
+        <button class="setting-btn" data-setting="density:grid">그리드</button>
+        <button class="setting-btn" data-setting="density:magazine">매거진</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">아티클 스타일</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="mode:magazine">매거진</button>
+        <button class="setting-btn" data-setting="mode:newspaper">신문</button>
+        <button class="setting-btn" data-setting="mode:minimal">미니멀</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">글자 크기</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="fs:s">S</button>
+        <button class="setting-btn" data-setting="fs:m">M</button>
+        <button class="setting-btn" data-setting="fs:l">L</button>
+        <button class="setting-btn" data-setting="fs:xl">XL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 발췌 클립 -->
+
+<!-- Clips FAB -->
+<button class="clips-fab"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg> 내 서랍 <span class="num">0</span></button>
+
+<!-- Clips drawer -->
+<div class="clips-drawer-overlay" id="clipsOverlay"></div>
+<aside class="clips-drawer">
+  <div class="cd-head">
+    <h2>내 서랍</h2>
+    <span class="cd-count">0개</span>
+    <button id="clipsClose" style="margin-left:auto;padding:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="cd-tabs">
+    <div class="cd-tab active" data-tab="clips">클립</div>
+    <div class="cd-tab" data-tab="highlights">형광펜</div>
+    <div class="cd-tab" data-tab="memos">메모</div>
+  </div>
+  <div class="cd-list"></div>
+</aside>
+
+<!-- Settings -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-panel">
+    <h3>설정</h3>
+    <div class="setting-row">
+      <div class="setting-label">보기 방식</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="density:compact">컴팩트</button>
+        <button class="setting-btn" data-setting="density:magazine">매거진</button>
+        <button class="setting-btn" data-setting="density:grid">그리드</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">테마</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="theme:white">밝은</button>
+        <button class="setting-btn" data-setting="theme:paper">종이</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">글자 크기</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="fs:s">작게</button>
+        <button class="setting-btn" data-setting="fs:m">보통</button>
+        <button class="setting-btn" data-setting="fs:l">크게</button>
+        <button class="setting-btn" data-setting="fs:xl">아주 크게</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../app.js"></script>
+</body>
+</html>```
+
+## 카테고리 콘텐츠 샘플 — `.card-row` + `.inline-article` 패턴
+
+참고: 41개 카테고리 페이지 전체는 ZIP 파일 `kdb-site-full.zip` 참조.
+
+## 디자인 리뉴얼 시 고려할 점
+
+1. **41개 카테고리 페이지가 동일 템플릿** — 인라인 스타일 중복 제거하고 styles.css 단일화 권장
+2. **app.js 단일 런타임** — 모든 페이지에서 공유 (북마크/클립/폴더/요약박스/KPI/동기화)
+3. **localStorage 키**: `ns_bookmarks`, `ns_clips`, `ns_clip_folders`, `ns_highlights`, `ns_memos`, `ns_summary_overrides`, `ns_pt_notes`, `ns_edits`, `ns_idx_edits`, `ns_density`, `ns_theme`, `ns_mode`, `ns_fs`, `ns_sync_token`, `ns_sync_gist_id`
+4. **GitHub Gist 동기화** — 다기기 동기화 기능 보존 필요
+5. **모바일 우선** — 면접 직전 폰 사용 시나리오
+6. **PT 모드** — 풀스크린 카드 뷰 (큰 글씨, 좌우 키 네비, 발표 메모)

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PT 카드 모드 — 논술 리더</title>
+<meta name="theme-color" content="#f4ede0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-white">
+<div class="pt-shell">
+  <div class="pt-topbar">
+    <a href="bookmarks.html" style="text-decoration:none;color:var(--ink-2);font-size:0.86rem">← 클립</a>
+    <div class="pt-title">PT 카드</div>
+    <select id="folderSelect"></select>
+    <div class="pt-progress-wrap"><div class="pt-progress-bar" id="progressBar"></div></div>
+    <span class="pt-counter" id="counter">0 / 0</span>
+    <button id="shuffleBtn" title="순서 섞기">🔀</button>
+    <button id="noteToggle" class="primary">📝 메모</button>
+  </div>
+  <div class="pt-stage">
+    <button class="pt-nav prev" id="prevBtn">←</button>
+    <div id="cardArea"></div>
+    <button class="pt-nav next" id="nextBtn">→</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+const ptNotes = JSON.parse(localStorage.getItem('ns_pt_notes') || '{}');
+let currentList = [];
+let cursor = 0;
+let showNote = true;
+
+const $ = s => document.querySelector(s);
+const folderSel = $('#folderSelect');
+const progressBar = $('#progressBar');
+const counter = $('#counter');
+const cardArea = $('#cardArea');
+const prevBtn = $('#prevBtn');
+const nextBtn = $('#nextBtn');
+
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+function buildFolderOptions() {
+  const opts = [
+    `<option value="all">전체 (${clips.length})</option>`,
+    `<option value="unfiled">미분류 (${clips.filter(c => !c.folderId).length})</option>`,
+    ...clipFolders.map(f => `<option value="${f.id}">${escapeHtml(f.name)} (${clips.filter(c => c.folderId === f.id).length})</option>`)
+  ];
+  folderSel.innerHTML = opts.join('');
+}
+
+function loadList(folderId) {
+  if (folderId === 'all') currentList = [...clips];
+  else if (folderId === 'unfiled') currentList = clips.filter(c => !c.folderId);
+  else currentList = clips.filter(c => c.folderId === folderId);
+  cursor = 0;
+  render();
+}
+
+function getFolderInfo(id) {
+  if (!id) return {name: '미분류', color: 'var(--muted)'};
+  const f = clipFolders.find(f => f.id === id);
+  return f ? {name: f.name, color: f.color} : {name: '미분류', color: 'var(--muted)'};
+}
+
+function render() {
+  if (!currentList.length) {
+    cardArea.innerHTML = `<div class="pt-empty"><h3>이 폴더에 클립이 없습니다</h3><div>카테고리 페이지에서 텍스트를 클립한 뒤<br><a href="bookmarks.html" style="color:var(--accent-ink)">북마크 페이지</a>에서 폴더로 분류하세요.</div></div>`;
+    counter.textContent = '0 / 0'; progressBar.style.width = '0%';
+    prevBtn.disabled = nextBtn.disabled = true;
+    return;
+  }
+  prevBtn.disabled = cursor === 0;
+  nextBtn.disabled = cursor === currentList.length - 1;
+  const c = currentList[cursor];
+  const fi = getFolderInfo(c.folderId);
+  const note = ptNotes[c.id] || '';
+  counter.textContent = `${cursor + 1} / ${currentList.length}`;
+  progressBar.style.width = ((cursor + 1) / currentList.length * 100) + '%';
+
+  cardArea.innerHTML = `
+    <div class="pt-card" style="position:relative">
+      <span class="pt-num">${cursor + 1} / ${currentList.length}</span>
+      <span class="pt-chip"><span class="chip-dot" style="background:${fi.color}"></span>${escapeHtml(fi.name)}</span>
+      <div class="pt-text">${escapeHtml(c.text)}</div>
+      ${c.title ? `<div class="pt-source">출처: ${escapeHtml(c.title)}</div>` : ''}
+      ${showNote ? `
+        <div class="pt-note-wrap">
+          <div class="pt-note-label">발표 메모 (Cmd+S 저장)</div>
+          <textarea class="pt-note" id="noteInput" placeholder="이 클립으로 무엇을 말할지 적어두세요...">${escapeHtml(note)}</textarea>
+        </div>
+      ` : ''}
+    </div>
+  `;
+
+  const ta = $('#noteInput');
+  if (ta) {
+    ta.addEventListener('blur', () => saveNote(c.id, ta.value));
+    ta.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveNote(c.id, ta.value); ta.blur(); }
+    });
+  }
+}
+
+function saveNote(id, val) {
+  if (val) ptNotes[id] = val; else delete ptNotes[id];
+  localStorage.setItem('ns_pt_notes', JSON.stringify(ptNotes));
+}
+
+function shuffle() {
+  for (let i = currentList.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentList[i], currentList[j]] = [currentList[j], currentList[i]];
+  }
+  cursor = 0; render();
+}
+
+prevBtn.addEventListener('click', () => { if (cursor > 0) { cursor--; render(); } });
+nextBtn.addEventListener('click', () => { if (cursor < currentList.length - 1) { cursor++; render(); } });
+folderSel.addEventListener('change', () => loadList(folderSel.value));
+$('#shuffleBtn').addEventListener('click', shuffle);
+$('#noteToggle').addEventListener('click', () => { showNote = !showNote; render(); });
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.key === 'ArrowLeft') prevBtn.click();
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextBtn.click(); }
+  if (e.key === 'n') $('#noteToggle').click();
+  if (e.key === 's') shuffle();
+});
+
+// Touch swipe
+let touchX = null;
+cardArea.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+cardArea.addEventListener('touchend', e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) (dx > 0 ? prevBtn : nextBtn).click();
+  touchX = null;
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildFolderOptions();
+  loadList('all');
+});
+</script>
+</body>
+</html>

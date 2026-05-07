@@ -1,0 +1,1067 @@
+/* ============================================================
+   KDB 논술 리더 — v2 (가독성 전면 개선)
+   원본 styles.css를 import한 뒤 이 파일이 모든 시각적 결정을
+   덮어씁니다. 원본은 손대지 않고 이것만 추가하면 적용됩니다.
+   ============================================================ */
+
+/* ── 1. 디자인 토큰 재정의 ─────────────────────────────────── */
+:root, body.theme-white, body.theme-paper {
+  /* 종이톤 → 차분한 무채색 + 따뜻한 흰 */
+  --paper:   #fafaf7;
+  --paper-2: #f3f1ec;
+  --paper-3: #e8e4dc;
+  --ink:     #15130f;
+  --ink-2:   #2c2926;
+  --ink-3:   #524e48;
+  --muted:   #8b857c;
+  --muted-2: #b3aea4;
+  --rule:    #d9d4c9;
+  --rule-2:  #ebe7dd;
+  --card:    #ffffff;
+
+  /* 단일 강조색 — 원본의 테라코타 유지하되 톤 정돈 */
+  --accent:      #b54a1f;
+  --accent-soft: #fbeee5;
+  --accent-ink:  #8a3815;
+
+  /* 카테고리 색은 모두 강조색 1개로 통일 */
+  --c-esg: var(--accent);
+  --c-geo: var(--accent);
+  --c-fin: var(--accent);
+  --c-us: var(--accent);
+  --c-realty: var(--accent);
+  --c-tech: var(--accent);
+  --c-energy: var(--accent);
+  --c-cap: var(--accent);
+  --c-heavy: var(--accent);
+  --c-kr: var(--accent);
+
+  /* 타이포 스케일 */
+  --fs-base: 16px;
+  --reading-fs: 18px;
+  --lh-base: 1.6;
+  --lh-reading: 1.9;
+  --measure: 42rem;
+
+  /* 둥근 모서리 — 4px / 8px / 12px 3단계로 통일 */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-card: 8px;
+  --r-pill: 999px;
+
+  /* 그림자 — 1단계만 */
+  --shadow-1: 0 1px 2px rgba(20,18,14,0.04);
+  --shadow-2: 0 8px 24px -10px rgba(20,18,14,0.12);
+}
+
+body.theme-white {
+  --paper:   #ffffff;
+  --paper-2: #f6f5f2;
+  --paper-3: #ebe9e3;
+  --rule:    #e5e2d9;
+  --rule-2:  #f0eee7;
+}
+
+/* ── 2. 베이스 ─────────────────────────────────────────────── */
+html, body {
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
+  letter-spacing: -0.01em;
+}
+
+/* ── 3. 사이드바 정돈 ──────────────────────────────────────── */
+.sidebar {
+  padding: 24px 16px;
+  gap: 18px;
+}
+/* 모든 사이드바 항목: 한 줄로 강제, 넘치면 말줄임 */
+.sidebar .nav-item,
+.sidebar .nav-group-toggle {
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0; /* flex 자식이 부모 폭 넘기지 않게 */
+}
+.sidebar .nav-item > span,
+.sidebar .nav-group-toggle > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+/* 첫 자식(이모지+텍스트)은 가능한 만큼 차지하고 말줄임 */
+.sidebar .nav-item > span:first-child,
+.sidebar .nav-group-toggle > span:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* 카운트는 줄어들지 않게 */
+.sidebar .nav-item .count,
+.sidebar .nav-group-toggle .group-count,
+.sidebar .nav-item .nav-count,
+.sidebar .nav-group-toggle .nav-count {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+.brand {
+  padding-bottom: 16px;
+}
+.brand .mark {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.brand .sub {
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}
+.brand .meta {
+  font-size: 0.74rem;
+  margin-top: 6px;
+}
+
+.nav-section-title {
+  font-size: 0.66rem;
+  letter-spacing: 1.8px;
+  padding: 6px 10px 8px;
+  font-weight: 700;
+}
+.nav-item {
+  font-size: 0.88rem;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  border-left: 2px solid transparent;
+  transition: background 100ms;
+}
+.nav-item.active {
+  background: var(--paper-2);
+  border-left-color: var(--accent);
+  font-weight: 700;
+}
+.nav-item .count {
+  font-size: 0.72rem;
+  color: var(--muted-2);
+  font-variant-numeric: tabular-nums;
+}
+.nav-item.sub {
+  font-size: 0.83rem;
+  padding: 5px 10px 5px 14px;
+  color: var(--ink-3);
+}
+
+/* 깨진 이모지 fallback — 보이는 글자 깨지면 점으로 대체 */
+.nav-group-toggle span:first-child,
+.nav-item span:first-child {
+  font-feature-settings: "tnum";
+}
+
+/* ── 4. 탑바 ───────────────────────────────────────────────── */
+.topbar {
+  padding: 12px 28px;
+  border-bottom: 1px solid var(--rule);
+}
+.topbar .search {
+  border-radius: var(--r-md);
+  padding: 8px 14px;
+  background: var(--paper-2);
+  border: 1px solid transparent;
+  transition: border-color 120ms, background 120ms;
+}
+.topbar .search:focus-within {
+  background: var(--card);
+  border-color: var(--rule);
+}
+.topbar .search input {
+  font-size: 0.9rem;
+}
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+}
+
+/* ── 5. 페이지 헤더 (카테고리 인덱스) ──────────────────────── */
+.page-head {
+  padding: 56px 28px 28px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0;
+}
+.page-head .eyebrow {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.page-head h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+}
+.page-head .ph-sub {
+  color: var(--muted);
+  margin-top: 12px;
+  font-size: 0.92rem;
+}
+
+/* ── 6. 메인 홈 — 카테고리 그리드 정돈 ────────────────────── */
+.masthead {
+  padding: 64px 28px 36px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 32px;
+}
+.masthead .eyebrow {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.masthead h1 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+.masthead .lede {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 1.05rem;
+  color: var(--ink-3);
+  font-weight: 400;
+  line-height: 1.65;
+  max-width: 32rem;
+}
+.masthead .stats {
+  display: flex;
+  gap: 36px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule-2);
+}
+.masthead .stat .n {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+.masthead .stat .l {
+  font-size: 0.66rem;
+  letter-spacing: 1.8px;
+  margin-top: 4px;
+}
+
+/* 카테고리 그리드 — 박스 통일 */
+.sector-grid {
+  padding: 0 28px 56px;
+  gap: 0;
+  display: flex;
+  flex-direction: column;
+  max-width: 880px;
+}
+
+/* standalone & group 헤더를 같은 형태로 통일 */
+.sector-card-standalone,
+.sector-group-header {
+  display: grid !important;
+  grid-template-columns: 28px 1fr auto auto;
+  gap: 14px;
+  align-items: center;
+  padding: 18px 4px;
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--rule-2) !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  transition: background 120ms;
+}
+.sector-card-standalone:hover,
+.sector-group-header:hover {
+  background: var(--paper-2) !important;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.sector-card-standalone .sc-emoji,
+.sector-group-header .group-emoji {
+  font-size: 1.1rem;
+  width: 28px;
+  text-align: center;
+  filter: grayscale(0.3);
+}
+.sector-card-standalone .sc-name,
+.sector-group-header .group-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  color: var(--ink);
+}
+.sector-card-standalone .sc-count,
+.sector-group-header .group-count {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.sector-card-standalone::after {
+  content: '→';
+  font-size: 0.9rem;
+  color: var(--muted-2);
+  transition: transform 150ms, color 150ms;
+}
+.sector-card-standalone:hover::after {
+  color: var(--accent);
+  transform: translateX(2px);
+}
+.sector-group-header .group-arrow {
+  width: 14px;
+  height: 14px;
+  color: var(--muted-2);
+}
+.sector-group.open .group-arrow {
+  color: var(--accent);
+}
+
+.sector-group {
+  margin: 0 !important;
+  border-bottom: 1px solid var(--rule-2);
+}
+.sector-group .sector-group-header {
+  border-bottom: 0 !important;
+}
+.group-children {
+  padding: 4px 0 12px 42px !important;
+  background: var(--paper-2);
+  margin: 0 -12px;
+  padding-left: 54px !important;
+  padding-right: 12px !important;
+}
+.group-child {
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  padding: 8px 0 !important;
+  border-radius: var(--r-sm);
+}
+.group-child .gc-name {
+  font-size: 0.9rem;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.group-child .gc-count {
+  background: transparent !important;
+  padding: 0 !important;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+.group-child:hover .gc-name {
+  color: var(--accent);
+}
+
+/* ── 7. 타임라인(글 목록) — 박스 제거, 본문 흐름 ────────── */
+.timeline {
+  padding: 32px 28px 80px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.timeline::before { display: none !important; }
+
+.row {
+  display: block !important;
+  padding: 22px 0 !important;
+  padding-left: 0 !important;
+  border-bottom: 1px solid var(--rule-2);
+  cursor: pointer;
+  transition: padding 150ms;
+  position: relative;
+}
+.row:hover {
+  background: transparent !important;
+  padding-left: 8px !important;
+}
+.row::before { display: none; }
+
+.row-body {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+.row-body::before {
+  content: counter(row, decimal-leading-zero);
+  counter-increment: row;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  width: 28px;
+  align-self: flex-start;
+  padding-top: 4px;
+}
+.timeline { counter-reset: row; }
+
+.row-title {
+  font-family: 'Noto Serif KR', serif !important;
+  font-size: 1.18rem !important;
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+  letter-spacing: -0.5px !important;
+  color: var(--ink) !important;
+  margin-bottom: 6px !important;
+  word-break: keep-all;
+  text-wrap: pretty;
+  flex: 1;
+  transition: color 120ms;
+}
+.row:hover .row-title {
+  color: var(--accent-ink) !important;
+}
+.row-excerpt {
+  font-size: 0.92rem;
+  color: var(--ink-3);
+  line-height: 1.65;
+  margin-left: 48px;
+  margin-top: 4px;
+  -webkit-line-clamp: 2;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+.row-excerpt:empty { display: none; }
+.row-actions {
+  position: absolute !important;
+  top: 18px;
+  right: 0;
+}
+.bookmark-btn {
+  width: 30px;
+  height: 30px;
+  color: var(--muted-2);
+}
+.bookmark-btn:hover {
+  background: var(--paper-2);
+  color: var(--accent);
+}
+
+/* ── 8. 인라인 글 본문 — 핵심 가독성 영역 ────────────────── */
+.inline-article {
+  margin: 12px 0 28px !important;
+  padding: 32px 32px 36px !important;
+  background: var(--card) !important;
+  border: 1px solid var(--rule) !important;
+  border-left: 3px solid var(--accent) !important;
+  border-radius: 0 var(--r-card) var(--r-card) 0 !important;
+}
+
+@media (max-width: 720px) {
+  .inline-article {
+    padding: 22px 18px 26px !important;
+  }
+}
+
+/* 키커 — 카테고리 표시 */
+.ia-kicker {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.ia-kicker .dot {
+  background: var(--accent) !important;
+}
+
+/* 글 제목 (H1) */
+.ia-title, .inline-article .ia-title {
+  font-family: 'Noto Serif KR', serif !important;
+  font-size: clamp(1.55rem, 2.4vw, 2rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: -1px !important;
+  line-height: 1.25 !important;
+  color: var(--ink) !important;
+  margin-bottom: 24px !important;
+  padding-right: 40px;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+/* 본문 — 폭과 행간 */
+.article-content {
+  max-width: var(--measure);
+}
+.article-content p,
+.inline-article .ia-para-body {
+  font-family: 'Pretendard', sans-serif !important;
+  font-size: var(--reading-fs) !important;
+  line-height: var(--lh-reading) !important;
+  color: var(--ink-2) !important;
+  margin-bottom: 1.4em !important;
+  word-break: keep-all;
+  text-wrap: pretty;
+  letter-spacing: -0.01em;
+}
+.article-content ul {
+  padding-left: 1.4em;
+  margin: 1em 0 1.4em;
+}
+.article-content ul li {
+  font-size: var(--reading-fs);
+  line-height: 1.85;
+  color: var(--ink-2);
+  margin-bottom: 0.5em;
+  word-break: keep-all;
+  text-wrap: pretty;
+  padding-left: 4px;
+}
+.article-content ul li::marker {
+  color: var(--accent);
+}
+
+/* 강조 — 노란 형광펜 → 차분한 underline + 굵게 */
+.article-content strong,
+.inline-article strong {
+  font-weight: 700;
+  color: var(--ink);
+  background: linear-gradient(to top, var(--accent-soft) 38%, transparent 38%);
+  padding: 0 2px;
+}
+
+/* ── 9. 소제목 위계 — 4단계 명확화 (핵심) ─────────────────── */
+
+/* H2 — ia-section-h: 대주제. 위에 굵은 룰, 세리프, 큰 폰트 */
+.ia-section-h,
+.inline-article .ia-section-h {
+  font-family: 'Noto Serif KR', serif !important;
+  font-size: 1.35rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.6px !important;
+  line-height: 1.35 !important;
+  color: var(--ink) !important;
+  margin: 56px 0 18px !important;
+  padding: 16px 0 0 !important;
+  border-top: 2px solid var(--ink) !important;
+  border-bottom: 0 !important;
+  display: block !important;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+.ia-section-h::before { display: none !important; }
+.ia-section-h:empty { display: none !important; }
+
+/* 첫 H2는 위 마진 줄임 */
+.article-content > .ia-section-h:first-child {
+  margin-top: 8px !important;
+}
+
+/* H3 — ia-para-title: 소주제. 산세리프, 좌측 막대 (숫자 prefix 자동 제거 안함) */
+.ia-para-title,
+h3.ia-para-title,
+.inline-article .ia-para-title {
+  font-family: 'Pretendard', sans-serif !important;
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.3px !important;
+  line-height: 1.4 !important;
+  color: var(--ink) !important;
+  margin: 36px 0 14px !important;
+  padding: 0 0 0 14px !important;
+  border-left: 4px solid var(--accent) !important;
+  display: block !important;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+.ia-para-title:empty { display: none !important; }
+.ia-para-title strong { background: none; padding: 0; color: inherit; }
+
+/* H4 — ia-sub-title: 번호 항목 ①②③ */
+.ia-sub-title,
+.inline-article .ia-sub-title {
+  font-family: 'Pretendard', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: var(--ink) !important;
+  margin: 28px 0 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  line-height: 1.45 !important;
+  word-break: keep-all;
+  text-wrap: pretty;
+  letter-spacing: -0.2px;
+}
+.ia-sub-title .sub-num,
+.inline-article .ia-sub-title .sub-num {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 22px !important;
+  height: 22px !important;
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  border-radius: 50%;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  flex-shrink: 0;
+  font-family: 'Pretendard', sans-serif;
+  font-feature-settings: "tnum";
+}
+
+/* H3 변형 — ia-tag-title: 칩+제목, ia-para-title과 동일 위계로 처리 */
+.ia-tag-title,
+.inline-article .ia-tag-title {
+  font-family: 'Pretendard', sans-serif !important;
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  color: var(--ink) !important;
+  margin: 36px 0 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  word-break: keep-all;
+}
+.tag-label {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  font-size: 0.66rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.2px !important;
+  padding: 3px 8px !important;
+  border-radius: var(--r-sm) !important;
+  text-transform: uppercase;
+}
+
+/* ── 10. 용어 박스 — 카드 형태 통일 ───────────────────────── */
+.term-box {
+  display: grid !important;
+  grid-template-columns: minmax(110px, max-content) 1fr;
+  gap: 4px 16px !important;
+  padding: 14px 18px !important;
+  margin: 14px 0 18px !important;
+  background: var(--paper-2) !important;
+  border: 0 !important;
+  border-left: 3px solid var(--accent) !important;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0 !important;
+  align-items: baseline;
+  font-family: 'Pretendard', sans-serif;
+}
+.term-name {
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+  color: var(--ink) !important;
+  letter-spacing: -0.3px;
+}
+.term-name::before {
+  content: '용어';
+  display: inline-block;
+  background: var(--accent);
+  color: var(--paper);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-right: 8px;
+  vertical-align: 1px;
+}
+.term-def {
+  font-size: 0.88rem !important;
+  color: var(--ink-3) !important;
+  line-height: 1.65 !important;
+}
+@media (max-width: 600px) {
+  .term-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── 11. Q&A — 면접 대비 핵심 ─────────────────────────────── */
+.qa-q,
+.inline-article .qa-q {
+  font-family: 'Noto Serif KR', serif !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  line-height: 1.55 !important;
+  color: var(--ink) !important;
+  background: var(--paper-2);
+  border-top: 0 !important;
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  padding: 18px 20px 18px 56px !important;
+  margin-top: 32px !important;
+  position: relative;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+.qa-q::before {
+  content: 'Q' !important;
+  position: absolute !important;
+  left: 16px !important;
+  top: 16px !important;
+  width: 28px !important;
+  height: 28px !important;
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  border-radius: 6px !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Pretendard', sans-serif !important;
+}
+.qa-a,
+.inline-article .qa-a {
+  font-family: 'Pretendard', sans-serif !important;
+  font-size: var(--reading-fs) !important;
+  line-height: var(--lh-reading) !important;
+  color: var(--ink-2) !important;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 0;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  padding: 18px 20px 20px 56px !important;
+  margin-bottom: 24px !important;
+  position: relative;
+  word-break: keep-all;
+}
+.qa-a::before {
+  content: 'A' !important;
+  position: absolute !important;
+  left: 16px !important;
+  top: 18px !important;
+  width: 28px !important;
+  height: 28px !important;
+  background: var(--accent) !important;
+  color: var(--paper) !important;
+  border-radius: 6px !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Pretendard', sans-serif !important;
+}
+
+/* qa-q + qa-q (답이 다음 p로 들어간 경우 처리) */
+.qa-q + .ia-para-body {
+  font-family: 'Pretendard', sans-serif !important;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 0;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  padding: 18px 20px 20px 56px !important;
+  margin: 0 0 24px !important;
+  position: relative;
+}
+.qa-q + .ia-para-body::before {
+  content: 'A';
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  color: var(--paper);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── 12. 표 ──────────────────────────────────────────────── */
+.article-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0 24px;
+  font-size: 0.9rem;
+  font-family: 'Pretendard', sans-serif;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.article-content table th {
+  background: var(--paper-2);
+  padding: 10px 14px;
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: 0.85rem;
+  letter-spacing: -0.2px;
+}
+.article-content table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule-2);
+  color: var(--ink-2);
+  line-height: 1.65;
+  vertical-align: top;
+}
+.article-content table tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── 13. 자동 요약 박스 (article.js가 삽입하는 것) ────────── */
+.auto-summary {
+  margin: 0 0 28px !important;
+  padding: 14px 18px !important;
+  background: linear-gradient(135deg, var(--accent-soft), transparent 80%) !important;
+  border: 0 !important;
+  border-left: 3px solid var(--accent) !important;
+  border-radius: 0 var(--r-md) var(--r-md) 0 !important;
+}
+.auto-summary .as-label {
+  background: var(--accent) !important;
+  color: white !important;
+  font-size: 0.62rem !important;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 3px 8px !important;
+  border-radius: 3px !important;
+}
+.auto-summary .as-text {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.92rem !important;
+  line-height: 1.7 !important;
+  color: var(--ink-2) !important;
+}
+
+/* ── 14. TOC 레일 — 깔끔하게 ──────────────────────────────── */
+.toc-rail {
+  background: transparent !important;
+  border: 0 !important;
+  border-left: 1px solid var(--rule) !important;
+  border-radius: 0 !important;
+  padding: 0 0 0 18px !important;
+  width: 220px !important;
+  margin-left: 36px !important;
+}
+.toc-head {
+  font-size: 0.66rem !important;
+  letter-spacing: 1.8px !important;
+  color: var(--muted) !important;
+  font-weight: 700;
+  padding-bottom: 10px !important;
+  border-bottom: 1px solid var(--rule-2);
+  margin-bottom: 8px !important;
+}
+.toc-item a {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.78rem !important;
+  padding: 6px 10px !important;
+  color: var(--ink-3) !important;
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+}
+.toc-item.toc-h3 a {
+  padding-left: 22px !important;
+  font-size: 0.74rem !important;
+  color: var(--muted) !important;
+}
+.toc-item.active a {
+  background: var(--paper-2) !important;
+  color: var(--accent-ink) !important;
+  border-left-color: var(--accent) !important;
+  font-weight: 700;
+}
+
+/* ── 15. 기타 — 모달, 클립, FAB 톤 정리 ──────────────────── */
+.clips-fab {
+  background: var(--ink) !important;
+  border-radius: var(--r-pill) !important;
+  padding: 10px 16px 10px 12px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 6px 20px -6px rgba(20,18,14,0.3);
+}
+.clips-fab .num {
+  background: var(--accent) !important;
+  font-weight: 700;
+}
+
+.settings-panel {
+  border-radius: var(--r-lg) !important;
+  border: 1px solid var(--rule) !important;
+  box-shadow: 0 24px 60px -20px rgba(20,18,14,0.25) !important;
+}
+.settings-panel h3 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.setting-label {
+  font-size: 0.66rem !important;
+  letter-spacing: 1.8px !important;
+  font-weight: 700;
+}
+.setting-btn {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.8rem;
+  border-radius: var(--r-pill) !important;
+  border: 1px solid var(--rule) !important;
+  padding: 6px 14px;
+}
+.setting-btn.active {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+  border-color: var(--ink) !important;
+}
+
+/* ── 16. 모바일 ────────────────────────────────────────────── */
+@media (max-width: 880px) {
+  .sidebar { display: none; }
+  .topbar { padding: 10px 16px; }
+  .masthead { padding: 36px 18px 24px; }
+  .sector-grid { padding: 0 18px 56px; }
+  .page-head { padding: 32px 18px 22px; }
+  .timeline { padding: 24px 18px 80px; }
+  .row-body { gap: 14px; }
+  .row-body::before { width: 22px; font-size: 0.7rem; }
+  .row-title { font-size: 1.05rem !important; }
+  .row-excerpt { margin-left: 36px; font-size: 0.86rem; }
+  .inline-article {
+    padding: 22px 18px 26px !important;
+    margin: 12px 0 24px !important;
+  }
+  .ia-title { font-size: 1.4rem !important; padding-right: 32px; }
+  :root { --reading-fs: 17px; --lh-reading: 1.85; }
+}
+
+/* ── 17. 다크모드 (시스템 prefers-color-scheme 자동 적용 안 함;
+       원본은 theme-white/theme-paper 클래스 토글로 통제) ─── */
+
+/* ── 18. 접근성 ────────────────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+.bookmark-btn:focus-visible {
+  outline-offset: 2px;
+}
+
+/* ── 19. 깨짐 방지 안전망 (가독성 우선) ─────────────────── */
+
+/* 본문 안의 모든 텍스트 박스: 긴 영문 단어/URL이 가로 넘침 막기 */
+.article-content,
+.article-content p,
+.article-content li,
+.article-content td,
+.article-content th,
+.term-def,
+.term-name,
+.qa-q,
+.qa-a,
+.ia-title,
+.ia-section-h,
+.ia-para-title,
+.ia-sub-title,
+.ia-tag-title {
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
+/* 표가 뷰포트보다 넓을 때 가로 스크롤 컨테이너처럼 동작 */
+.article-content {
+  overflow-x: hidden;
+}
+.article-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  white-space: normal;
+}
+.article-content table thead,
+.article-content table tbody {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+.article-content table th,
+.article-content table td {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* 빈 단락/헤딩이 의미 없이 여백 잡지 않게 */
+.article-content p:empty,
+.article-content h2:empty,
+.article-content h3:empty,
+.article-content h4:empty,
+.article-content h5:empty,
+.ia-section-h:empty,
+.ia-para-title:empty,
+.ia-sub-title:empty,
+.ia-tag-title:empty {
+  display: none !important;
+}
+
+/* 헤딩 다음 헤딩이 바로 오면 위 마진 압축 */
+.ia-section-h + .ia-para-title,
+.ia-section-h + .ia-tag-title,
+.ia-para-title + .ia-sub-title { margin-top: 14px !important; }
+
+/* 헤딩 바로 다음 단락의 위 마진 0 */
+.ia-section-h + p,
+.ia-para-title + p,
+.ia-sub-title + p,
+.ia-tag-title + p { margin-top: 0 !important; }
+
+/* 페이지 전체 가로 스크롤 방지 */
+html, body { overflow-x: hidden; max-width: 100%; }
+
+/* 이미지/iframe이 컨테이너를 넘기지 않게 */
+.article-content img,
+.article-content iframe,
+.article-content video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 코드/인라인 코드도 줄바꿈 가능하게 */
+.article-content code,
+.article-content pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 긴 글 제목이 잘리지 않게 패딩 보정 */
+.ia-title {
+  padding-right: 48px;
+}
+
+/* 뷰포트가 너무 좁아질 때 페이지가 가로로 안 흐르게 */
+.article-content,
+.article-content * {
+  max-width: 100%;
+}
+.article-content img,
+.article-content video {
+  height: auto;
+}
+
+/* 인쇄 정돈 */
+@media print {
+  .sidebar, .topbar, .row-actions, .clips-fab, .toc-rail { display: none !important; }
+  .inline-article {
+    border: 0 !important;
+    padding: 0 !important;
+    page-break-inside: avoid;
+  }
+}

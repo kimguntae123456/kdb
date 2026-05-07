@@ -1,0 +1,350 @@
+/* ============================================================
+   ESG-C : HTML 구조까지 시맨틱화한 버전 전용 스타일
+   - 거의 모든 셀렉터는 태그 기반
+   - 클래스는 의미가 다른 변형(.post-tag 등)에만 사용
+   ============================================================ */
+
+/* ── 인라인 편집 (편집 가능한 헤딩만) ─────────────────────── */
+.row-title:hover,
+.ia-title:hover,
+.post-section:hover,
+.post-h4:hover,
+.post-h5:hover,
+.post-title:hover {
+  cursor: text;
+  background: color-mix(in oklab, var(--accent-soft) 50%, transparent);
+  border-radius: 4px;
+  transition: background 150ms;
+}
+[contenteditable="true"] {
+  outline: 2px solid var(--accent) !important;
+  border-radius: 4px;
+  padding: 4px 8px;
+  background: var(--card);
+}
+
+/* ── 접기/펼치기 ─────────────────────────────────────────── */
+.inline-article { display: none !important; }
+.row.expanded + .inline-article {
+  display: block !important;
+  animation: ia-in 200ms ease-out;
+}
+@keyframes ia-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   ARTICLE-CONTENT : 하나의 글의 본문
+   ============================================================ */
+.article-content {
+  word-break: keep-all;
+  text-wrap: pretty;
+  /* 본문 폭 제한 — 가독성 */
+  max-width: var(--measure);
+}
+
+/* 본문 단락 (p.ia-para-body 클래스 무관, 모든 p에 적용) */
+.article-content p {
+  font-size: var(--reading-fs);
+  line-height: var(--lh-reading);
+  color: var(--ink-2);
+  margin: 0 0 1.35em;
+  word-break: keep-all;
+}
+.article-content p:last-child { margin-bottom: 0; }
+
+/* 리스트 */
+.article-content ul,
+.article-content ol {
+  padding-left: 1.4em;
+  margin: 0.6em 0 1.2em;
+}
+.article-content li {
+  font-size: var(--reading-fs);
+  line-height: var(--lh-reading);
+  color: var(--ink-2);
+  margin-bottom: 0.5em;
+  word-break: keep-all;
+}
+.article-content li::marker { color: var(--muted-2); }
+
+/* 강조 */
+.article-content strong {
+  font-weight: 700;
+  color: var(--ink);
+  background: linear-gradient(transparent 65%, var(--accent-soft) 65%);
+  padding: 0 1px;
+}
+.article-content em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+/* 표 */
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  margin: 1.4em 0;
+  border-top: 2px solid var(--ink);
+}
+.article-content th {
+  background: transparent;
+  padding: 12px 14px;
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: 0.92rem;
+  letter-spacing: -0.2px;
+}
+.article-content td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule-2);
+  vertical-align: top;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+/* ============================================================
+   POST-HEAD : 글 안의 추가 헤더 (태그 + 제목)
+   ============================================================ */
+.article-content .post-head {
+  margin: 8px 0 28px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid var(--rule);
+}
+.article-content .post-head + * { margin-top: 0; }
+
+.post-tag {
+  display: inline-block;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 4px 10px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.post-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.6px;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* ============================================================
+   소제목 위계 (h3 > h4 > h5)
+   ============================================================ */
+
+/* H3 — 대단원 (이전 ia-section-h) */
+.article-content h3.post-section {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.28rem;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+  line-height: 1.35;
+  color: var(--ink);
+  margin: 56px 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+  position: relative;
+}
+.article-content h3.post-section::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 40px; height: 2px;
+  background: var(--accent);
+}
+
+/* H4 — 단락 소제목 (이전 ia-para-title) */
+.article-content h4.post-h4 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.12rem;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 40px 0 12px;
+  padding-left: 14px;
+  border-left: 4px solid var(--accent);
+}
+
+/* H5 — ① ② 항목 소제목 (이전 ia-sub-title) */
+.article-content h5.post-h5 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 28px 0 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.article-content h5.post-h5 .sub-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  background: var(--accent);
+  color: var(--paper);
+  border-radius: 50%;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* 빈 헤딩 안전망 */
+.article-content h3:empty,
+.article-content h4:empty,
+.article-content h5:empty { display: none; }
+
+/* 헤딩 다음 첫 단락의 위 여백 압축 */
+.article-content h3 + p,
+.article-content h4 + p,
+.article-content h5 + p { margin-top: 0; }
+
+/* ============================================================
+   DL.TERMS : 용어 정의 묶음
+   ============================================================ */
+.article-content dl.terms {
+  margin: 18px 0 24px;
+  padding: 18px 22px;
+  background: var(--paper-2);
+  border-left: 3px solid var(--muted-2);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  font-size: 0.95rem;
+}
+.article-content dl.terms dt {
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 700;
+  font-size: 0.96rem;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+  margin-top: 12px;
+}
+.article-content dl.terms dt:first-child { margin-top: 0; }
+.article-content dl.terms dd {
+  margin: 4px 0 0;
+  font-size: 0.94rem;
+  line-height: 1.7;
+  color: var(--ink-3);
+  word-break: keep-all;
+}
+.article-content dl.terms dt + dd { margin-top: 4px; }
+.article-content dl.terms dd + dt { margin-top: 14px; }
+
+/* dl 안의 strong은 강조색 처리 줄이기 */
+.article-content dl.terms strong {
+  background: none;
+  color: var(--ink);
+}
+
+/* ============================================================
+   DETAILS.QA : 예상 꼬리질문 (펼쳐보기)
+   ============================================================ */
+.article-content details.qa {
+  margin: 14px 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  background: var(--card);
+  overflow: hidden;
+  transition: border-color 150ms;
+}
+.article-content details.qa[open] { border-color: var(--accent); }
+
+.article-content details.qa summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 48px 16px 20px;
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
+  word-break: keep-all;
+  position: relative;
+  user-select: none;
+  letter-spacing: -0.2px;
+}
+.article-content details.qa summary::-webkit-details-marker { display: none; }
+
+/* Q. 라벨 */
+.article-content details.qa summary::before {
+  content: 'Q.';
+  display: inline-block;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 800;
+  color: var(--accent);
+  margin-right: 8px;
+  font-size: 0.95rem;
+}
+
+/* 펼침 화살표 */
+.article-content details.qa summary::after {
+  content: '';
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  width: 8px; height: 8px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: translateY(-65%) rotate(45deg);
+  transition: transform 200ms;
+}
+.article-content details.qa[open] summary::after {
+  transform: translateY(-35%) rotate(-135deg);
+}
+
+.article-content details.qa .qa-body {
+  padding: 4px 20px 20px;
+  font-size: 0.98rem;
+  line-height: 1.85;
+  color: var(--ink-2);
+  border-top: 1px solid var(--rule-2);
+  margin-top: 0;
+  padding-top: 16px;
+  word-break: keep-all;
+}
+.article-content details.qa .qa-body strong {
+  font-weight: 700;
+  color: var(--accent);
+  background: none;
+  padding: 0;
+}
+
+/* 외톨이 Q/A (드물게 남은 경우) */
+.article-content .qa-q-orphan,
+.article-content .qa-a-orphan {
+  font-size: 0.98rem;
+  line-height: 1.8;
+  margin: 8px 0;
+}
+
+/* ============================================================
+   ARTICLE 컨테이너
+   ============================================================ */
+.article-content article.post {
+  margin: 0;
+  padding: 0;
+}
+
+/* ============================================================
+   첫 자식 여백 정리
+   ============================================================ */
+.article-content > *:first-child { margin-top: 0; }
+.article-content > h3.post-section:first-child,
+.article-content > h4.post-h4:first-child { margin-top: 8px; }

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>논술 요약 리더</title>
+<meta name="theme-color" content="#f4ede0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="논술 리더">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ── Group cards ── */
+.sector-group { margin-bottom: 8px; }
+.sector-group-header {
+  display: flex; align-items: center; gap: 12px; padding: 18px 20px;
+  background: var(--card); border: 1px solid var(--rule-2); border-radius: var(--r-card);
+  cursor: pointer; transition: all 150ms; user-select: none;
+}
+.sector-group-header:hover { background: var(--paper-2); }
+.sector-group-header .group-emoji { font-size: 1.5rem; }
+.sector-group-header .group-name {
+  font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 800;
+  letter-spacing: -0.5px; flex: 1;
+}
+.sector-group-header .group-count {
+  font-size: 0.82rem; color: var(--muted); font-weight: 600;
+}
+.sector-group-header .group-arrow {
+  width: 20px; height: 20px; color: var(--muted); transition: transform 200ms;
+}
+.sector-group.open .group-arrow { transform: rotate(90deg); }
+.group-children {
+  display: none; padding: 4px 0 4px 20px;
+}
+.sector-group.open .group-children { display: block; }
+.group-child {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  border-radius: var(--r-card); color: var(--ink-2); transition: all 120ms;
+}
+.group-child:hover { background: var(--paper-2); color: var(--ink); }
+.group-child .gc-name { flex: 1; font-size: 0.95rem; font-weight: 600; }
+.group-child .gc-count {
+  font-size: 0.78rem; color: var(--muted); background: var(--paper-2);
+  padding: 2px 10px; border-radius: var(--r-pill);
+}
+
+/* ── Standalone cards (no sub) ── */
+.sector-card-standalone {
+  display: flex; align-items: center; gap: 14px; padding: 18px 20px;
+  background: var(--card); border: 1px solid var(--rule-2); border-radius: var(--r-card);
+  margin-bottom: 8px; transition: all 150ms;
+}
+.sector-card-standalone:hover { background: var(--paper-2); border-color: var(--rule); }
+.sector-card-standalone .sc-emoji { font-size: 1.5rem; }
+.sector-card-standalone .sc-name {
+  font-family: 'Noto Serif KR', serif; font-size: 1.1rem; font-weight: 800;
+  letter-spacing: -0.5px; flex: 1;
+}
+.sector-card-standalone .sc-count {
+  font-size: 0.82rem; color: var(--muted); font-weight: 600;
+}
+
+/* ── Settings ── */
+.settings-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 300; display: none; }
+.settings-overlay.open { display: block; }
+.settings-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 28px; z-index: 301; width: min(400px, 90vw); box-shadow: var(--shadow-2); }
+.settings-panel h3 { font-family: 'Noto Serif KR',serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; }
+.setting-row { margin-bottom: 16px; }
+.setting-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+.setting-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.setting-btn { padding: 6px 14px; border-radius: var(--r-pill); border: 1px solid var(--rule); font-size: 0.82rem; cursor: pointer; transition: all 120ms; background: var(--card); }
+.setting-btn:hover { background: var(--paper-2); }
+.setting-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.sync-ui { margin-top: 8px; }
+.sync-token-input { width: 100%; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 6px; font-size: 0.85rem; background: var(--card); color: var(--ink); margin-bottom: 8px; }
+.sync-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.sync-status { font-size: 0.72rem; margin-left: 4px; }
+.sync-status.synced { color: green; }
+.sync-status.error { color: red; }
+</style>
+</head>
+<body data-fs="m" class="density-magazine theme-white mode-magazine">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark" id="idx-brand" data-edit="brand">논술 리더</div>
+      <div class="sub" id="idx-sub" data-edit="sub">Essay Reader</div>
+      <div class="meta">489편 · 41개 카테고리</div>
+    </div>
+    <div class="nav-list">
+      <a href="bookmarks.html" class="nav-item"><span>📌 내 북마크 / 클립</span></a>
+      <a href="pt.html" class="nav-item"><span>🎤 PT 카드 모드</span></a>
+    </div>
+    <div class="nav-list">
+      <div class="nav-section-title">카테고리</div>
+      <!-- 독립 -->
+      <a href="ESG/index.html" class="nav-item"><span>🌱 ESG</span><span class="count">20</span></a>
+      <!-- 가계 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>👨‍👩‍👧 가계</span><span class="count">22</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="가계_고령문제/index.html" class="nav-item sub"><span>고령문제</span><span class="count">10</span></a>
+          <a href="가계_금융문제/index.html" class="nav-item sub"><span>금융문제</span><span class="count">3</span></a>
+          <a href="가계_인력문제/index.html" class="nav-item sub"><span>인력문제</span><span class="count">9</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="공급망/index.html" class="nav-item"><span>🔗 공급망</span><span class="count">12</span></a>
+      <!-- 글로벌 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🌍 글로벌</span><span class="count">35</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="글로벌_관세_통상_국제/index.html" class="nav-item sub"><span>관세·통상·국제</span><span class="count">18</span></a>
+          <a href="글로벌_외화/index.html" class="nav-item sub"><span>외화</span><span class="count">17</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="금융업/index.html" class="nav-item"><span>🏦 금융업</span><span class="count">31</span></a>
+      <!-- 디지털 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>💻 디지털</span><span class="count">24</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="디지털_기타/index.html" class="nav-item sub"><span>기타</span><span class="count">5</span></a>
+          <a href="디지털_코인/index.html" class="nav-item sub"><span>코인</span><span class="count">19</span></a>
+        </div>
+      </div>
+      <!-- 벤처 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🚀 벤처</span><span class="count">41</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="벤처_창업_스케일업/index.html" class="nav-item sub"><span>창업·스케일업</span><span class="count">16</span></a>
+          <a href="벤처_투자_모험자본/index.html" class="nav-item sub"><span>투자·모험자본</span><span class="count">25</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="부동산/index.html" class="nav-item"><span>🏠 부동산</span><span class="count">4</span></a>
+      <!-- 산업 과제 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🏗️ 산업 과제</span><span class="count">35</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="산업_과제_산업_과제/index.html" class="nav-item sub"><span>산업 과제</span><span class="count">18</span></a>
+          <a href="산업_과제_생산적금융/index.html" class="nav-item sub"><span>생산적금융</span><span class="count">17</span></a>
+        </div>
+      </div>
+      <!-- 산업별 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🏭 산업별</span><span class="count">146</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="산업별_AI_AI_도입/index.html" class="nav-item sub"><span>AI/AI 도입</span><span class="count">13</span></a>
+          <a href="산업별_AI_일자리/index.html" class="nav-item sub"><span>AI/일자리</span><span class="count">7</span></a>
+          <a href="산업별_AI_도입/index.html" class="nav-item sub"><span>AI/도입</span><span class="count">7</span></a>
+          <a href="산업별_가전_스마트폰_디스플레이/index.html" class="nav-item sub"><span>가전·디스플레이</span><span class="count">6</span></a>
+          <a href="산업별_건설_제조_기계_철강/index.html" class="nav-item sub"><span>건설·제조·철강</span><span class="count">10</span></a>
+          <a href="산업별_로봇/index.html" class="nav-item sub"><span>로봇</span><span class="count">4</span></a>
+          <a href="산업별_바이오_헬스/index.html" class="nav-item sub"><span>바이오·헬스</span><span class="count">10</span></a>
+          <a href="산업별_반도체/index.html" class="nav-item sub"><span>반도체</span><span class="count">9</span></a>
+          <a href="산업별_방산/index.html" class="nav-item sub"><span>방산</span><span class="count">5</span></a>
+          <a href="산업별_섬유패션산업/index.html" class="nav-item sub"><span>섬유·패션</span><span class="count">6</span></a>
+          <a href="산업별_우주/index.html" class="nav-item sub"><span>우주</span><span class="count">4</span></a>
+          <a href="산업별_원전/index.html" class="nav-item sub"><span>원전</span><span class="count">6</span></a>
+          <a href="산업별_유통_서비스_컨텐츠/index.html" class="nav-item sub"><span>유통·서비스</span><span class="count">11</span></a>
+          <a href="산업별_이차전지/index.html" class="nav-item sub"><span>이차전지</span><span class="count">10</span></a>
+          <a href="산업별_자동차/index.html" class="nav-item sub"><span>자동차</span><span class="count">9</span></a>
+          <a href="산업별_조선_해운/index.html" class="nav-item sub"><span>조선·해운</span><span class="count">13</span></a>
+          <a href="산업별_항공/index.html" class="nav-item sub"><span>항공</span><span class="count">2</span></a>
+          <a href="산업별_화학_에너지/index.html" class="nav-item sub"><span>화학·에너지</span><span class="count">15</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="시사/index.html" class="nav-item"><span>📰 시사</span><span class="count">27</span></a>
+      <!-- 자본시장 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>📈 자본시장</span><span class="count">30</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="자본시장_국장/index.html" class="nav-item sub"><span>국장</span><span class="count">25</span></a>
+          <a href="자본시장_채권/index.html" class="nav-item sub"><span>채권</span><span class="count">5</span></a>
+        </div>
+      </div>
+      <!-- 정책금융 그룹 -->
+      <div class="nav-group">
+        <div class="nav-group-toggle nav-item"><span>🏛️ 정책금융</span><span class="count">23</span><svg class="nav-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="nav-group-items">
+          <a href="정책금융_소상공인/index.html" class="nav-item sub"><span>소상공인</span><span class="count">6</span></a>
+          <a href="정책금융_정책금융개선/index.html" class="nav-item sub"><span>정책금융개선</span><span class="count">5</span></a>
+          <a href="정책금융_중소기업/index.html" class="nav-item sub"><span>중소기업</span><span class="count">12</span></a>
+        </div>
+      </div>
+      <!-- 독립 -->
+      <a href="중동이슈/index.html" class="nav-item"><span>🕌 중동이슈</span><span class="count">28</span></a>
+      <a href="지역균형/index.html" class="nav-item"><span>🗺️ 지역균형</span><span class="count">10</span></a>
+    </div>
+    <div class="sidebar-footer">논술 대비 요약 보고서 489편을<br>카테고리별로 정리한 리더입니다.</div>
+  </aside>
+  <div class="content">
+    <div class="topbar">
+      <div class="search">
+        <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" placeholder="카테고리 검색…" id="catSearch">
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="settingsBtn" title="설정"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      </div>
+    </div>
+    <header class="masthead">
+      <div class="eyebrow" id="idx-eyebrow" data-edit="eyebrow">논술 대비 · 요약 보고서</div>
+      <h1 id="idx-title" data-edit="title">읽고, 정리하고,<br>내 것으로 만드는</h1>
+      <p class="lede" id="idx-lede" data-edit="lede">41개 카테고리, 489편의 논술 대비 요약 보고서를 한 곳에서 읽습니다.</p>
+      <div class="stats">
+        <div class="stat"><div class="n">489</div><div class="l">총 요약</div></div>
+        <div class="stat"><div class="n">41</div><div class="l">카테고리</div></div>
+      </div>
+    </header>
+    <div class="sector-grid" id="sectorGrid">
+
+      <!-- ── ESG (독립) ── -->
+      <a href="ESG/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🌱</div><div class="sc-name">ESG</div><div class="sc-count">20편</div>
+      </a>
+
+      <!-- ── 가계 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">👨‍👩‍👧</div>
+          <div class="group-name">가계</div>
+          <div class="group-count">22편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="가계_고령문제/index.html" class="group-child"><div class="gc-name">고령문제</div><div class="gc-count">10편</div></a>
+          <a href="가계_금융문제/index.html" class="group-child"><div class="gc-name">금융문제</div><div class="gc-count">3편</div></a>
+          <a href="가계_인력문제/index.html" class="group-child"><div class="gc-name">인력문제</div><div class="gc-count">9편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 공급망 (독립) ── -->
+      <a href="공급망/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🔗</div><div class="sc-name">공급망</div><div class="sc-count">12편</div>
+      </a>
+
+      <!-- ── 글로벌 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🌍</div>
+          <div class="group-name">글로벌</div>
+          <div class="group-count">35편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="글로벌_관세_통상_국제/index.html" class="group-child"><div class="gc-name">관세·통상·국제</div><div class="gc-count">18편</div></a>
+          <a href="글로벌_외화/index.html" class="group-child"><div class="gc-name">외화</div><div class="gc-count">17편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 금융업 (독립) ── -->
+      <a href="금융업/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🏦</div><div class="sc-name">금융업</div><div class="sc-count">31편</div>
+      </a>
+
+      <!-- ── 디지털 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">💻</div>
+          <div class="group-name">디지털</div>
+          <div class="group-count">24편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="디지털_기타/index.html" class="group-child"><div class="gc-name">기타</div><div class="gc-count">5편</div></a>
+          <a href="디지털_코인/index.html" class="group-child"><div class="gc-name">코인</div><div class="gc-count">19편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 벤처 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🚀</div>
+          <div class="group-name">벤처</div>
+          <div class="group-count">41편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="벤처_창업_스케일업/index.html" class="group-child"><div class="gc-name">창업·스케일업</div><div class="gc-count">16편</div></a>
+          <a href="벤처_투자_모험자본/index.html" class="group-child"><div class="gc-name">투자·모험자본</div><div class="gc-count">25편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 부동산 (독립) ── -->
+      <a href="부동산/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🏠</div><div class="sc-name">부동산</div><div class="sc-count">4편</div>
+      </a>
+
+      <!-- ── 산업 과제 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🏗️</div>
+          <div class="group-name">산업 과제</div>
+          <div class="group-count">35편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="산업_과제_산업_과제/index.html" class="group-child"><div class="gc-name">산업 과제</div><div class="gc-count">18편</div></a>
+          <a href="산업_과제_생산적금융/index.html" class="group-child"><div class="gc-name">생산적금융</div><div class="gc-count">17편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 산업별 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🏭</div>
+          <div class="group-name">산업별</div>
+          <div class="group-count">146편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="산업별_AI_AI_도입/index.html" class="group-child"><div class="gc-name">AI / AI 도입</div><div class="gc-count">13편</div></a>
+          <a href="산업별_AI_일자리/index.html" class="group-child"><div class="gc-name">AI / 일자리</div><div class="gc-count">7편</div></a>
+          <a href="산업별_AI_도입/index.html" class="group-child"><div class="gc-name">AI / 도입</div><div class="gc-count">7편</div></a>
+          <a href="산업별_가전_스마트폰_디스플레이/index.html" class="group-child"><div class="gc-name">가전·스마트폰·디스플레이</div><div class="gc-count">6편</div></a>
+          <a href="산업별_건설_제조_기계_철강/index.html" class="group-child"><div class="gc-name">건설·제조·기계·철강</div><div class="gc-count">10편</div></a>
+          <a href="산업별_로봇/index.html" class="group-child"><div class="gc-name">로봇</div><div class="gc-count">4편</div></a>
+          <a href="산업별_바이오_헬스/index.html" class="group-child"><div class="gc-name">바이오·헬스</div><div class="gc-count">10편</div></a>
+          <a href="산업별_반도체/index.html" class="group-child"><div class="gc-name">반도체</div><div class="gc-count">9편</div></a>
+          <a href="산업별_방산/index.html" class="group-child"><div class="gc-name">방산</div><div class="gc-count">5편</div></a>
+          <a href="산업별_섬유패션산업/index.html" class="group-child"><div class="gc-name">섬유·패션</div><div class="gc-count">6편</div></a>
+          <a href="산업별_우주/index.html" class="group-child"><div class="gc-name">우주</div><div class="gc-count">4편</div></a>
+          <a href="산업별_원전/index.html" class="group-child"><div class="gc-name">원전</div><div class="gc-count">6편</div></a>
+          <a href="산업별_유통_서비스_컨텐츠/index.html" class="group-child"><div class="gc-name">유통·서비스·컨텐츠</div><div class="gc-count">11편</div></a>
+          <a href="산업별_이차전지/index.html" class="group-child"><div class="gc-name">이차전지</div><div class="gc-count">10편</div></a>
+          <a href="산업별_자동차/index.html" class="group-child"><div class="gc-name">자동차</div><div class="gc-count">9편</div></a>
+          <a href="산업별_조선_해운/index.html" class="group-child"><div class="gc-name">조선·해운</div><div class="gc-count">13편</div></a>
+          <a href="산업별_항공/index.html" class="group-child"><div class="gc-name">항공</div><div class="gc-count">2편</div></a>
+          <a href="산업별_화학_에너지/index.html" class="group-child"><div class="gc-name">화학·에너지</div><div class="gc-count">15편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 시사 (독립) ── -->
+      <a href="시사/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">📰</div><div class="sc-name">시사</div><div class="sc-count">27편</div>
+      </a>
+
+      <!-- ── 자본시장 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">📈</div>
+          <div class="group-name">자본시장</div>
+          <div class="group-count">30편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="자본시장_국장/index.html" class="group-child"><div class="gc-name">국장</div><div class="gc-count">25편</div></a>
+          <a href="자본시장_채권/index.html" class="group-child"><div class="gc-name">채권</div><div class="gc-count">5편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 정책금융 ── -->
+      <div class="sector-group">
+        <div class="sector-group-header">
+          <div class="group-emoji">🏛️</div>
+          <div class="group-name">정책금융</div>
+          <div class="group-count">23편</div>
+          <svg class="group-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="group-children">
+          <a href="정책금융_소상공인/index.html" class="group-child"><div class="gc-name">소상공인</div><div class="gc-count">6편</div></a>
+          <a href="정책금융_정책금융개선/index.html" class="group-child"><div class="gc-name">정책금융개선</div><div class="gc-count">5편</div></a>
+          <a href="정책금융_중소기업/index.html" class="group-child"><div class="gc-name">중소기업</div><div class="gc-count">12편</div></a>
+        </div>
+      </div>
+
+      <!-- ── 중동이슈 (독립) ── -->
+      <a href="중동이슈/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🕌</div><div class="sc-name">중동이슈</div><div class="sc-count">28편</div>
+      </a>
+
+      <!-- ── 지역균형 (독립) ── -->
+      <a href="지역균형/index.html" class="sector-card-standalone">
+        <div class="sc-emoji">🗺️</div><div class="sc-name">지역균형</div><div class="sc-count">10편</div>
+      </a>
+
+    </div>
+  </div>
+</div>
+<nav class="mobile-tabs">
+  <a href="index.html" class="tab active"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="lab">홈</span></a>
+</nav>
+
+<!-- Settings overlay -->
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-panel">
+    <h3>설정</h3>
+    <div class="setting-row">
+      <div class="setting-label">테마</div>
+      <div class="setting-options">
+        <button class="setting-btn" data-setting="theme:white">밝은</button>
+        <button class="setting-btn" data-setting="theme:paper">종이</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+// Group toggle for main page
+document.querySelectorAll('.sector-group-header').forEach(header => {
+  header.addEventListener('click', () => {
+    header.closest('.sector-group').classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>
