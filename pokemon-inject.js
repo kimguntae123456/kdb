@@ -752,7 +752,6 @@
         if (e.target.tagName === 'BUTTON') return;
         map.classList.toggle('pk-collapsed');
       });
-    }
 
     const cols = {
       s: map.querySelector('.pk-cards-col[data-col="s"] .pk-cards-canvas'),
