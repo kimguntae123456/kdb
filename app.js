@@ -1170,7 +1170,12 @@ async function openGlobalSearch() {
         <div style="font-size:.82rem;opacity:.75;margin-top:3px;line-height:1.45;">${highlight(it.excerpt, q)}</div>
       </a>`).join('');
     results.querySelectorAll('.gs-row').forEach(a => {
-      a.addEventListener('mouseenter', () => { cursor = +a.dataset.i; render(); });
+      a.addEventListener('mouseenter', () => {
+        cursor = +a.dataset.i;
+        results.querySelectorAll('.gs-row').forEach(el => {
+          el.style.background = (+el.dataset.i === cursor) ? '#ffe890' : '';
+        });
+      });
     });
   }
   function escHtml(s){return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
