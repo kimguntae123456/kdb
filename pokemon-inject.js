@@ -638,33 +638,45 @@
   ══════════════════════════════════════ */
   function buildMindmap(article, rowIdx) {
     if (article.querySelector('.pk-mindmap')) return;
-    const map = document.createElement('div');
-    map.className = 'pk-mindmap';
+    const map = document.createElement('aside');
+    map.className = 'pk-mindmap pk-cards';
     map.innerHTML = `
       <div class="pk-mindmap-header">
-        <span>▶ MIND-MAP MEMO</span>
+        <span>📌 핵심카드</span>
         <span>
           <button class="pk-mm-add">+ 노드</button>
           <button class="pk-mm-clear">초기화</button>
         </span>
       </div>
-      <div class="pk-mindmap-canvas">
+      <div class="pk-cards-cols">
         <svg class="pk-mm-edges"></svg>
-        <div class="pk-mm-hint">캔버스 더블클릭=노드 추가 · 노드 더블클릭=수정 · Shift+클릭 두 노드=연결</div>
+        <div class="pk-cards-col" data-col="s"><div class="pk-cards-coltitle">서론</div><div class="pk-cards-canvas"></div></div>
+        <div class="pk-cards-col" data-col="m"><div class="pk-cards-coltitle">본론</div><div class="pk-cards-canvas"></div></div>
+        <div class="pk-cards-col" data-col="c"><div class="pk-cards-coltitle">결론</div><div class="pk-cards-canvas"></div></div>
       </div>
+      <div class="pk-mm-hint">컬럼 더블클릭=노드 · 노드 더블클릭=수정 · 컬럼 간 드래그 가능 · Shift+클릭 두 노드=연결(같은 컬럼)</div>
     `;
     article.appendChild(map);
 
-    const canvas = map.querySelector('.pk-mindmap-canvas');
+    const cols = {
+      s: map.querySelector('.pk-cards-col[data-col="s"] .pk-cards-canvas'),
+      m: map.querySelector('.pk-cards-col[data-col="m"] .pk-cards-canvas'),
+      c: map.querySelector('.pk-cards-col[data-col="c"] .pk-cards-canvas'),
+    };
+    const colsWrap = map.querySelector('.pk-cards-cols');
     const svg = map.querySelector('svg.pk-mm-edges');
     const storeKey = `pk-mm::${pageKey()}::${rowIdx}`;
 
-    /** state: { nodes: [{id, x, y, t}], edges: [[a,b]] } */
+    /** state: { nodes: [{id, x, y, t, column:'s'|'m'|'c'}], edges: [[a,b]] } */
     let state = { nodes: [], edges: [] };
     try {
       const raw = localStorage.getItem(storeKey);
       if (raw) state = JSON.parse(raw);
     } catch (_) {}
+    // 마이그레이션: column 없는 기존 노드는 본론(m)으로
+    let migrated = false;
+    state.nodes.forEach(n => { if (!n.column) { n.column = 'm'; migrated = true; } });
+    if (migrated) try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (_) {}
 
     const save = () => {
       try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (_) {}
@@ -673,15 +685,18 @@
     let selectedForEdge = null;
 
     const renderEdges = () => {
-      const rect = canvas.getBoundingClientRect();
+      const rect = colsWrap.getBoundingClientRect();
       svg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`);
       svg.innerHTML = '';
       state.edges.forEach(([a, b]) => {
-        const na = canvas.querySelector(`[data-id="${a}"]`);
-        const nb = canvas.querySelector(`[data-id="${b}"]`);
-        if (!na || !nb) return;
-        const ra = na.getBoundingClientRect();
-        const rb = nb.getBoundingClientRect();
+        const na = state.nodes.find(n => n.id === a);
+        const nb = state.nodes.find(n => n.id === b);
+        if (!na || !nb || na.column !== nb.column) return; // 같은 컬럼만
+        const ea = colsWrap.querySelector(`[data-id="${a}"]`);
+        const eb = colsWrap.querySelector(`[data-id="${b}"]`);
+        if (!ea || !eb) return;
+        const ra = ea.getBoundingClientRect();
+        const rb = eb.getBoundingClientRect();
         const x1 = ra.left - rect.left + ra.width / 2;
         const y1 = ra.top  - rect.top  + ra.height / 2;
         const x2 = rb.left - rect.left + rb.width / 2;
@@ -696,12 +711,22 @@
       });
     };
 
+    const findColAt = (clientX, clientY) => {
+      for (const k of ['s','m','c']) {
+        const r = cols[k].getBoundingClientRect();
+        if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) return k;
+      }
+      return null;
+    };
+
     const makeNode = (n) => {
+      const canvas = cols[n.column] || cols.m;
       const el = document.createElement('div');
       el.className = 'pk-mm-node';
       el.dataset.id = n.id;
-      el.style.left = n.x + 'px';
-      el.style.top  = n.y + 'px';
+      el.dataset.col = n.column;
+      el.style.left = (n.x || 10) + 'px';
+      el.style.top  = (n.y || 10) + 'px';
       el.textContent = n.t || '메모';
       const del = document.createElement('div');
       del.className = 'pk-mm-del';
@@ -717,7 +742,6 @@
       });
       el.appendChild(del);
 
-      /* 더블클릭 = 편집 */
       el.addEventListener('dblclick', e => {
         e.stopPropagation();
         el.setAttribute('contenteditable', 'true');
@@ -731,11 +755,17 @@
         save();
       });
 
-      /* Shift+클릭 = 엣지 연결 */
       el.addEventListener('click', e => {
         if (!e.shiftKey) return;
         e.stopPropagation();
         if (selectedForEdge && selectedForEdge !== n.id) {
+          const other = state.nodes.find(x => x.id === selectedForEdge);
+          if (!other || other.column !== n.column) {
+            // 다른 컬럼이면 연결 거부
+            selectedForEdge = null;
+            [...colsWrap.querySelectorAll('.pk-mm-node')].forEach(x => x.style.outline = '');
+            return;
+          }
           const pair = [selectedForEdge, n.id].sort();
           const exists = state.edges.some(([a, b]) => {
             const s = [a, b].sort();
@@ -750,7 +780,7 @@
             state.edges.push([selectedForEdge, n.id]);
           }
           selectedForEdge = null;
-          [...canvas.querySelectorAll('.pk-mm-node')].forEach(x => x.style.outline = '');
+          [...colsWrap.querySelectorAll('.pk-mm-node')].forEach(x => x.style.outline = '');
           save(); renderEdges();
         } else {
           selectedForEdge = n.id;
@@ -758,35 +788,54 @@
         }
       });
 
-      /* 드래그 */
       let dragging = false, dx = 0, dy = 0;
-      el.addEventListener('mousedown', e => {
+      const onDown = (e) => {
         if (el.getAttribute('contenteditable') === 'true') return;
         if (e.target === del) return;
+        const pt = e.touches ? e.touches[0] : e;
         dragging = true;
         const r = el.getBoundingClientRect();
-        const c = canvas.getBoundingClientRect();
-        dx = e.clientX - r.left;
-        dy = e.clientY - r.top;
+        dx = pt.clientX - r.left;
+        dy = pt.clientY - r.top;
         el.classList.add('dragging');
-        e.preventDefault();
-      });
-      window.addEventListener('mousemove', e => {
+        if (e.cancelable) e.preventDefault();
+      };
+      const onMove = (e) => {
         if (!dragging) return;
-        const c = canvas.getBoundingClientRect();
-        const x = Math.max(0, Math.min(c.width  - el.offsetWidth,  e.clientX - c.left - dx));
-        const y = Math.max(0, Math.min(c.height - el.offsetHeight, e.clientY - c.top  - dy));
+        const pt = e.touches ? e.touches[0] : e;
+        const targetCol = findColAt(pt.clientX, pt.clientY) || n.column;
+        const cv = cols[targetCol];
+        const c = cv.getBoundingClientRect();
+        const x = Math.max(0, Math.min(c.width  - el.offsetWidth,  pt.clientX - c.left - dx));
+        const y = Math.max(0, Math.min(c.height - el.offsetHeight, pt.clientY - c.top  - dy));
+        if (targetCol !== n.column) {
+          n.column = targetCol;
+          el.dataset.col = targetCol;
+          cv.appendChild(el);
+        }
         el.style.left = x + 'px';
         el.style.top  = y + 'px';
         n.x = x; n.y = y;
         renderEdges();
-      });
-      window.addEventListener('mouseup', () => {
+      };
+      const onUp = () => {
         if (!dragging) return;
         dragging = false;
         el.classList.remove('dragging');
-        save();
-      });
+        // 컬럼 변경 시 다른 컬럼의 엣지 자동 정리
+        state.edges = state.edges.filter(([a, b]) => {
+          const na = state.nodes.find(x => x.id === a);
+          const nb = state.nodes.find(x => x.id === b);
+          return na && nb && na.column === nb.column;
+        });
+        save(); renderEdges();
+      };
+      el.addEventListener('mousedown', onDown);
+      el.addEventListener('touchstart', onDown, {passive:false});
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, {passive:false});
+      window.addEventListener('mouseup', onUp);
+      window.addEventListener('touchend', onUp);
 
       canvas.appendChild(el);
     };
@@ -794,43 +843,48 @@
     state.nodes.forEach(makeNode);
     requestAnimationFrame(renderEdges);
 
-    /* 캔버스 더블클릭 → 새 노드 */
-    canvas.addEventListener('dblclick', e => {
-      if (e.target !== canvas && e.target !== svg) return;
-      const c = canvas.getBoundingClientRect();
-      const n = {
-        id: 'n' + Date.now() + Math.floor(Math.random() * 999),
-        x: e.clientX - c.left - 40,
-        y: e.clientY - c.top  - 14,
-        t: '메모'
-      };
-      state.nodes.push(n);
-      save();
-      makeNode(n);
+    // 컬럼 캔버스 더블클릭 → 새 노드
+    Object.entries(cols).forEach(([key, canvas]) => {
+      canvas.addEventListener('dblclick', e => {
+        if (e.target !== canvas) return;
+        const c = canvas.getBoundingClientRect();
+        const n = {
+          id: 'n' + Date.now() + Math.floor(Math.random() * 999),
+          x: e.clientX - c.left - 40,
+          y: e.clientY - c.top  - 14,
+          t: '메모',
+          column: key,
+        };
+        state.nodes.push(n);
+        save();
+        makeNode(n);
+      });
     });
 
-    /* 헤더 버튼 */
     map.querySelector('.pk-mm-add').addEventListener('click', () => {
+      const canvas = cols.m;
       const c = canvas.getBoundingClientRect();
       const n = {
         id: 'n' + Date.now() + Math.floor(Math.random() * 999),
-        x: 30 + Math.random() * (c.width - 160),
-        y: 30 + Math.random() * (c.height - 80),
-        t: '메모'
+        x: 20 + Math.random() * Math.max(20, c.width - 160),
+        y: 20 + Math.random() * Math.max(20, c.height - 80),
+        t: '메모',
+        column: 'm',
       };
       state.nodes.push(n);
       save();
       makeNode(n);
     });
     map.querySelector('.pk-mm-clear').addEventListener('click', () => {
-      if (!confirm('이 글의 마인드맵을 모두 지울까요?')) return;
+      if (!confirm('이 글의 핵심카드를 모두 지울까요?')) return;
       state = { nodes: [], edges: [] };
       save();
-      [...canvas.querySelectorAll('.pk-mm-node')].forEach(x => x.remove());
+      [...colsWrap.querySelectorAll('.pk-mm-node')].forEach(x => x.remove());
       renderEdges();
     });
 
     window.addEventListener('resize', renderEdges);
+    window.addEventListener('scroll', renderEdges, {passive:true});
   }
 
   /* ══════════════════════════════════════
@@ -1014,6 +1068,17 @@
     });
     document.querySelectorAll('.row').forEach(row => {
       observer.observe(row, { attributes: true });
+      // 이미 expanded 상태인 row(해시 진입 등)도 한 번 처리
+      if (row.classList.contains('expanded')) {
+        const art = row.nextElementSibling;
+        if (art && art.classList.contains('inline-article')) {
+          setTimeout(() => {
+            injectBattleBanner(art);
+            const idx = [...row.parentNode.children].indexOf(row);
+            buildMindmap(art, row.id || ('row-' + idx));
+          }, 30);
+        }
+      }
     });
   }
 
