@@ -361,7 +361,7 @@ body .ia-para-body strong, body strong {
     grid-column: 2;
     grid-row: 2 / span 999;
     position: sticky;
-    top: 16px;
+    top: max(16px, calc(50vh - 240px));
     align-self: start;
     max-height: calc(100vh - 32px);
     overflow: auto;
