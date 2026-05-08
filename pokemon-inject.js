@@ -644,6 +644,8 @@
       <div class="pk-mindmap-header">
         <span>📌 핵심카드</span>
         <span>
+          <button class="pk-mm-fs-down" title="글자 작게">A-</button>
+          <button class="pk-mm-fs-up" title="글자 크게">A+</button>
           <button class="pk-mm-add">+ 노드</button>
           <button class="pk-mm-clear">초기화</button>
         </span>
@@ -779,6 +781,27 @@
       header.addEventListener('dblclick', e => {
         if (e.target.tagName === 'BUTTON') return;
         map.classList.toggle('pk-collapsed');
+      });
+
+      // 글자 크기 조절 (panel 내부 전용)
+      const FS_KEY = 'pk-mindmap-fs-v1';
+      const applyFs = (scale) => {
+        map.style.setProperty('--pk-fs', scale);
+      };
+      let curFs = parseFloat(localStorage.getItem(FS_KEY) || '1');
+      if (!isFinite(curFs) || curFs < 0.6) curFs = 1;
+      applyFs(curFs);
+      map.querySelector('.pk-mm-fs-up').addEventListener('click', e => {
+        e.stopPropagation();
+        curFs = Math.min(2.4, +(curFs + 0.1).toFixed(2));
+        applyFs(curFs);
+        localStorage.setItem(FS_KEY, String(curFs));
+      });
+      map.querySelector('.pk-mm-fs-down').addEventListener('click', e => {
+        e.stopPropagation();
+        curFs = Math.max(0.7, +(curFs - 0.1).toFixed(2));
+        applyFs(curFs);
+        localStorage.setItem(FS_KEY, String(curFs));
       });
 
     const cols = {

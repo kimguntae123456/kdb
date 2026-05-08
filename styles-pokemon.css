@@ -1409,3 +1409,11 @@ p.row-excerpt:empty { display: none !important; }
   flex-shrink: 0;
 }
 .hl-snippet-del:hover { color: #d42b2b; font-weight: 800; }
+
+/* 핵심카드 panel 자체 폰트 스케일 (--pk-fs) */
+body .pk-mindmap.pk-floating { --pk-fs: 1; }
+body .pk-mindmap.pk-floating .pk-mindmap-header { font-size: calc(.34rem * var(--pk-fs)); }
+body .pk-mindmap.pk-floating .pk-mindmap-header button { font-size: calc(.26rem * var(--pk-fs)); }
+body .pk-mindmap.pk-floating .pk-cards-coltitle { font-size: calc(.28rem * var(--pk-fs)); }
+body .pk-mindmap.pk-floating .pk-mm-node { font-size: calc(.85rem * var(--pk-fs)); }
+body .pk-mindmap.pk-floating .pk-mm-hint { font-size: calc(.7rem * var(--pk-fs)); }
