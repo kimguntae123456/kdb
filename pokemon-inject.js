@@ -661,6 +661,19 @@
     // ── floating 패널: 드래그 이동 + 크기/위치 영구 저장 ──
     if (window.matchMedia('(min-width: 960px)').matches) {
       map.classList.add('pk-floating');
+      // 부모(.inline-article)의 animation transform이 fixed 컨테이닝 블록을
+      // 만들어 패널이 사라지는 문제를 회피 — 패널을 body 직속으로 이동
+      document.body.appendChild(map);
+      // 부모 row의 expanded 상태에 따라 표시 토글
+      const row = article.previousElementSibling;
+      const syncVisible = () => {
+        const expanded = row && row.classList.contains('expanded');
+        map.style.display = expanded ? 'flex' : 'none';
+      };
+      syncVisible();
+      if (row) {
+        new MutationObserver(syncVisible).observe(row, { attributes: true, attributeFilter: ['class'] });
+      }
       const POS_KEY = 'pk-mindmap-floating-v1';
       const applyPos = () => {
         try {
