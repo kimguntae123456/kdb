@@ -482,13 +482,26 @@ function showPopover(sel) {
     pop.style.top = rect.top + 'px';
   }
 
+  // onclick 인라인 속성에 따옴표·특수문자 들어가면 HTML이 깨져 핸들러가 죽음 → addEventListener로 바인딩
   pop.innerHTML =
-    `<button onclick="addClip('${safeText}','${safeTitle}');this.parentElement.remove();window.getSelection().removeAllRanges()">${SVG_CLIP} 클립</button>` +
-    `<button onclick="window.__pendingHlRange=window.getSelection().rangeCount?window.getSelection().getRangeAt(0).cloneRange():null;addHighlight('${safeText}','${safeTitle}');this.parentElement.remove();window.getSelection().removeAllRanges()" class="pop-hl">` +
-      `<svg width="14" height="14" viewBox="0 0 24 24" fill="oklch(0.85 0.18 90)" stroke="none"><rect x="1" y="6" width="22" height="12" rx="2"/></svg> 형광펜</button>` +
-    `<button onclick="startMemo('${safeText}','${safeTitle}');this.parentElement.remove()" class="pop-memo">` +
-      `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 메모</button>` +
-    `<button onclick="navigator.clipboard?.writeText('${safeText}');this.parentElement.remove();window.getSelection().removeAllRanges()">복사</button>`;
+    `<button data-act="clip">${SVG_CLIP} 클립</button>` +
+    `<button data-act="hl" class="pop-hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="oklch(0.85 0.18 90)" stroke="none"><rect x="1" y="6" width="22" height="12" rx="2"/></svg> 형광펜</button>` +
+    `<button data-act="memo" class="pop-memo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 메모</button>` +
+    `<button data-act="copy">복사</button>`;
+
+  pop.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const act = btn.dataset.act;
+      const liveSel = window.getSelection();
+      const liveRange = liveSel && liveSel.rangeCount ? liveSel.getRangeAt(0).cloneRange() : null;
+      if (act === 'clip') addClip(text, title);
+      else if (act === 'hl') { window.__pendingHlRange = liveRange; addHighlight(text, title); }
+      else if (act === 'memo') { startMemo(text, title); }
+      else if (act === 'copy') { navigator.clipboard?.writeText(text); }
+      pop.remove(); clipPopover = null;
+      if (act !== 'memo') liveSel?.removeAllRanges();
+    });
+  });
 
   document.body.appendChild(pop);
   clipPopover = pop;
@@ -556,10 +569,15 @@ function initSelectionPopover() {
   document.addEventListener('touchstart', (e) => {
     if (clipPopover && !e.target.closest('.clip-popover')) { clipPopover.remove(); clipPopover = null; }
   });
-  // Keyboard shortcut: 'e' on drag-selection → highlight directly (popover-free path)
+  // 단축키: 드래그 후 e=형광펜, c=클립, m=메모. 한글 IME에서도 동작하도록 ev.code 우선 매칭
   document.addEventListener('keydown', (ev) => {
-    if (ev.key !== 'e' && ev.key !== 'E') return;
     if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    const code = ev.code;
+    let act = null;
+    if (code === 'KeyE' || ev.key === 'e' || ev.key === 'E' || ev.key === 'ㄷ') act = 'hl';
+    else if (code === 'KeyC' || ev.key === 'c' || ev.key === 'C' || ev.key === 'ㅊ') act = 'clip';
+    else if (code === 'KeyM' || ev.key === 'm' || ev.key === 'M' || ev.key === 'ㅡ') act = 'memo';
+    else return;
     const t = ev.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
     const sel = window.getSelection();
@@ -574,8 +592,9 @@ function initSelectionPopover() {
     ev.preventDefault();
     const card = cacEl.closest('.card-row') || art;
     const title = card.querySelector('.ia-title, .row-title')?.textContent || '';
-    window.__pendingHlRange = range.cloneRange();
-    addHighlight(text, title);
+    if (act === 'hl') { window.__pendingHlRange = range.cloneRange(); addHighlight(text, title); }
+    else if (act === 'clip') addClip(text, title);
+    else if (act === 'memo') { startMemo(text, title); return; }
     if (clipPopover) { clipPopover.remove(); clipPopover = null; }
     sel.removeAllRanges();
   });
@@ -594,6 +613,21 @@ function initInlineEditing() {
       this.focus();
       const done = () => {
         this.contentEditable = 'false';
+        const newText = (this.textContent || '').trim();
+        // 제목 빈값 저장 차단 — 실수로 비우고 blur해도 기존 텍스트 복구
+        if (field === 'title' && !newText) {
+          const card = this.closest('.card-row');
+          const fallback = card?.querySelector('.bookmark-btn')?.dataset.title
+            || card?.dataset.text
+            || card?.querySelector('.ia-title')?.textContent
+            || card?.querySelector('.row-title')?.textContent
+            || '';
+          if (fallback.trim()) {
+            this.textContent = fallback.trim();
+            if (edits[saveKey]) { delete edits[saveKey][field]; localStorage.setItem(EDITS_KEY, JSON.stringify(edits)); }
+            return;
+          }
+        }
         if (!edits[saveKey]) edits[saveKey] = {};
         edits[saveKey][field] = this.textContent;
         localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
