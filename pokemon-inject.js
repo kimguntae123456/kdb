@@ -696,6 +696,10 @@
         try {
           const saved = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
           if (saved) {
+            // 저장된 위치가 있으면 중앙정렬 transform 해제
+            if (saved.left != null || saved.top != null) {
+              map.style.transform = 'none';
+            }
             if (saved.left != null) { map.style.left = saved.left + 'px'; map.style.right = 'auto'; }
             if (saved.top  != null) { map.style.top  = saved.top  + 'px'; }
             if (saved.w    != null) { map.style.width  = saved.w + 'px'; }
@@ -712,6 +716,11 @@
         dragging = true;
         const r = map.getBoundingClientRect();
         sx = e.clientX; sy = e.clientY; ox = r.left; oy = r.top;
+        // 드래그 시작 시 중앙정렬 transform 해제 — 좌상단 좌표 기준 이동
+        map.style.transform = 'none';
+        map.style.left = r.left + 'px';
+        map.style.top  = r.top  + 'px';
+        map.style.right = 'auto';
         e.preventDefault();
       });
       window.addEventListener('mousemove', e => {
