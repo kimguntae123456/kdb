@@ -1050,8 +1050,162 @@ document.addEventListener('DOMContentLoaded', () => {
   initSidebarGroups();
   initSyncUI();
   initReadabilityEnhancements();
+  initGlobalSearch();
+  initHashAutoExpand();
   applyState();
   applyHighlightsToDOM();
   // Auto pull on load
   if (syncToken && syncGistId) syncPull();
 });
+
+// ── Hash navigation: #row-N 으로 진입 시 자동 펼침 ──
+function initHashAutoExpand() {
+  function tryExpand() {
+    const m = location.hash.match(/^#(row-\d+)/);
+    if (!m) return;
+    const row = document.getElementById(m[1]);
+    if (!row) return;
+    if (!row.classList.contains('expanded')) row.classList.add('expanded');
+    setTimeout(() => {
+      row.scrollIntoView({block:'start', behavior:'smooth'});
+      window.scrollBy({top:-60, behavior:'instant'});
+    }, 80);
+  }
+  tryExpand();
+  window.addEventListener('hashchange', tryExpand);
+}
+
+// ── Global Search (전체 사이트 통합 검색) ──
+let __searchIndex = null;
+async function loadSearchIndex() {
+  if (__searchIndex) return __searchIndex;
+  try {
+    const r = await fetch(BASE + 'search-index.json');
+    __searchIndex = await r.json();
+  } catch (e) { __searchIndex = []; }
+  return __searchIndex;
+}
+function initGlobalSearch() {
+  // FAB 버튼
+  if (!document.getElementById('gsBtn')) {
+    const btn = document.createElement('button');
+    btn.id = 'gsBtn';
+    btn.title = '전체 검색 (/)';
+    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';
+    Object.assign(btn.style, {
+      position:'fixed', right:'18px', bottom:'82px', zIndex:'400',
+      width:'48px', height:'48px', borderRadius:'50%',
+      background:'#fff8d8', border:'2.5px solid #1c2040',
+      boxShadow:'3px 3px 0 #1c2040', cursor:'pointer', color:'#1c2040',
+      display:'flex', alignItems:'center', justifyContent:'center'
+    });
+    btn.addEventListener('click', openGlobalSearch);
+    document.body.appendChild(btn);
+  }
+  // 단축키: '/' 또는 Ctrl/Cmd+K
+  document.addEventListener('keydown', (e) => {
+    const t = e.target;
+    const inField = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+    if ((e.key === '/' && !inField) || ((e.ctrlKey||e.metaKey) && e.key.toLowerCase() === 'k')) {
+      e.preventDefault();
+      openGlobalSearch();
+    }
+  });
+}
+function closeGlobalSearch() {
+  const o = document.getElementById('gsOverlay');
+  if (o) o.remove();
+}
+async function openGlobalSearch() {
+  closeGlobalSearch();
+  const overlay = document.createElement('div');
+  overlay.id = 'gsOverlay';
+  Object.assign(overlay.style, {
+    position:'fixed', inset:'0', zIndex:'9999',
+    background:'rgba(28,32,64,.4)', display:'flex',
+    alignItems:'flex-start', justifyContent:'center', padding:'8vh 16px 16px'
+  });
+  overlay.innerHTML = `
+    <div id="gsModal" style="width:100%;max-width:640px;background:#fff8d8;border:2.5px solid #1c2040;box-shadow:6px 6px 0 #1c2040;display:flex;flex-direction:column;max-height:80vh;">
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:2px solid #1c2040;background:#fff;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c2040" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="gsInput" type="search" placeholder="제목·본문 통합 검색…" autofocus
+          style="flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:#1c2040;">
+        <button id="gsClose" style="border:none;background:transparent;cursor:pointer;font-size:1.2rem;color:#1c2040;">✕</button>
+      </div>
+      <div id="gsResults" style="overflow:auto;padding:6px;"></div>
+      <div id="gsFoot" style="padding:6px 12px;font-size:.75rem;color:#1c2040;border-top:1px solid #1c2040;background:#fff;">↑↓ 이동 · Enter 열기 · Esc 닫기</div>
+    </div>`;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeGlobalSearch(); });
+  overlay.querySelector('#gsClose').addEventListener('click', closeGlobalSearch);
+  document.body.appendChild(overlay);
+
+  const input = overlay.querySelector('#gsInput');
+  const results = overlay.querySelector('#gsResults');
+  const foot = overlay.querySelector('#gsFoot');
+  let items = [], filtered = [], cursor = 0;
+  foot.textContent = '인덱스 로드 중…';
+  items = await loadSearchIndex();
+  foot.textContent = `${items.length}개 글 인덱스 · ↑↓ 이동 · Enter 열기 · Esc 닫기`;
+
+  function render() {
+    if (!filtered.length) {
+      results.innerHTML = `<div style="padding:24px;text-align:center;color:#666;">검색어를 입력하세요</div>`;
+      return;
+    }
+    results.innerHTML = filtered.slice(0, 60).map((it, i) => `
+      <a href="${BASE}${it.url}" data-i="${i}" class="gs-row" style="display:block;padding:10px 12px;border-bottom:1px solid #1c204022;text-decoration:none;color:#1c2040;${i===cursor?'background:#ffe890;':''}">
+        <div style="font-size:.7rem;opacity:.65;text-transform:uppercase;letter-spacing:.04em;">${escHtml(it.label)}</div>
+        <div style="font-weight:700;font-size:.95rem;margin-top:2px;">${highlight(it.title, q)}</div>
+        <div style="font-size:.82rem;opacity:.75;margin-top:3px;line-height:1.45;">${highlight(it.excerpt, q)}</div>
+      </a>`).join('');
+    results.querySelectorAll('.gs-row').forEach(a => {
+      a.addEventListener('mouseenter', () => { cursor = +a.dataset.i; render(); });
+    });
+  }
+  function escHtml(s){return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function highlight(text, q) {
+    text = escHtml(text || '');
+    if (!q) return text;
+    const tokens = q.split(/\s+/).filter(t => t.length).map(t => t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+    if (!tokens.length) return text;
+    const re = new RegExp('(' + tokens.join('|') + ')', 'gi');
+    return text.replace(re, '<mark style="background:#ffe890;padding:0 2px;">$1</mark>');
+  }
+  let q = '';
+  function search() {
+    q = input.value.trim();
+    cursor = 0;
+    if (!q) { filtered = []; render(); return; }
+    const tokens = q.toLowerCase().split(/\s+/).filter(t=>t);
+    filtered = items.map(it => {
+      const hay = (it.title + ' ' + it.excerpt + ' ' + it.body + ' ' + it.label).toLowerCase();
+      let score = 0;
+      for (const t of tokens) {
+        const titleHits = (it.title.toLowerCase().match(new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'))||[]).length;
+        const bodyHits = (hay.match(new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'))||[]).length;
+        if (!bodyHits) return null;
+        score += titleHits * 10 + bodyHits;
+      }
+      return {it, score};
+    }).filter(Boolean).sort((a,b)=>b.score-a.score).map(x=>x.it);
+    render();
+  }
+  input.addEventListener('input', search);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); closeGlobalSearch(); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); cursor = Math.min(cursor+1, Math.min(filtered.length, 60)-1); render(); scrollToCursor(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); cursor = Math.max(cursor-1, 0); render(); scrollToCursor(); }
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      const sel = filtered[cursor];
+      if (sel) location.href = BASE + sel.url;
+    }
+  });
+  function scrollToCursor() {
+    const el = results.querySelector(`.gs-row[data-i="${cursor}"]`);
+    el?.scrollIntoView({block:'nearest'});
+  }
+  render();
+  setTimeout(() => input.focus(), 30);
+}
