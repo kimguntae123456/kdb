@@ -287,8 +287,17 @@ function applyHighlightsToDOM() {
     parent.normalize?.();
   });
   if (!highlights.length) return;
-  document.querySelectorAll('.article-content, .inline-article').forEach(content => {
-    highlights.forEach(h => highlightTextInRoot(content, h.text, h.id));
+  // 각 글의 highlight는 그 글 안에서만 재적용 — 짧은 단어("핵심" 등)가 다른 글까지 번지는 것 방지
+  document.querySelectorAll('.inline-article, .article-content').forEach(content => {
+    const card = content.closest('.card-row, .row') || content.previousElementSibling || content.parentElement;
+    const titleEl = card?.querySelector?.('.ia-title, .row-title') || content.querySelector?.('.ia-title, .row-title');
+    const myTitle = (titleEl?.textContent || '').trim();
+    highlights.forEach(h => {
+      const hTitle = (h.title || '').trim();
+      // title이 비어있으면(레거시) 모든 글에 적용, 아니면 동일 제목에만
+      if (hTitle && myTitle && hTitle !== myTitle) return;
+      highlightTextInRoot(content, h.text, h.id);
+    });
   });
 }
 function highlightTextInRoot(root, search, hlId) {
