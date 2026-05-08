@@ -686,6 +686,25 @@
       };
       window.addEventListener('scroll', window._pkFloatingUpdate, { passive: true });
       window.addEventListener('resize', window._pkFloatingUpdate);
+      // 핀치/Ctrl 줌 대응 — visualViewport 변화 시 panel 위치 보정
+      if (window.visualViewport) {
+        const syncToVisualVP = () => {
+          const vv = window.visualViewport;
+          const panels = window._pkFloatingPanels || [];
+          panels.forEach(p => {
+            if (p.style.display === 'none') return;
+            // 사용자가 드래그한 적 있으면 transform 해제 상태 — vv 보정 X
+            if (p.style.transform === 'none') return;
+            // 기본(중앙) 모드: visualViewport 기준 정중앙 좌표로 강제
+            p.style.top  = (vv.offsetTop  + vv.height / 2) + 'px';
+            p.style.left = (vv.offsetLeft + vv.width  - 24 - p.offsetWidth) + 'px';
+            p.style.right = 'auto';
+          });
+        };
+        window.visualViewport.addEventListener('scroll', syncToVisualVP);
+        window.visualViewport.addEventListener('resize', syncToVisualVP);
+        window._pkSyncVV = syncToVisualVP;
+      }
     }
     if (map._sourceRow) {
       new MutationObserver(window._pkFloatingUpdate).observe(map._sourceRow, { attributes: true, attributeFilter: ['class'] });
