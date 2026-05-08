@@ -342,30 +342,22 @@ body .ia-para-body strong, body strong {
   body .timeline { max-width: 1060px !important; }
 }
 
-/* inline-article 그리드 — 본문|핵심카드 사이드 sticky (≥960px) */
+/* inline-article — 본문 | 핵심카드 fixed 패널 (≥960px) */
 @media (min-width: 960px) {
   body .row.expanded + .inline-article {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) clamp(300px, 30vw, 380px) !important;
-    column-gap: 20px;
-    align-items: start;
+    padding-right: clamp(320px, 32vw, 420px) !important;
+    position: relative;
   }
-  body .row.expanded + .inline-article > .pk-battle-banner { grid-column: 1 / -1; }
-  body .row.expanded + .inline-article > .ia-close { grid-column: 2; grid-row: 1; justify-self: end; align-self: start; }
-  body .row.expanded + .inline-article > .ia-kicker,
-  body .row.expanded + .inline-article > .ia-title,
-  body .row.expanded + .inline-article > .ia-source,
-  body .row.expanded + .inline-article > .article-content,
-  body .row.expanded + .inline-article > .ia-body { grid-column: 1; min-width: 0; }
   body .row.expanded + .inline-article > .pk-mindmap {
-    grid-column: 2;
-    grid-row: 2 / span 999;
-    position: sticky;
-    top: max(16px, calc(50vh - 240px));
-    align-self: start;
+    position: fixed;
+    top: 50%;
+    right: 24px;
+    transform: translateY(-50%);
+    width: clamp(300px, 30vw, 380px);
     max-height: calc(100vh - 32px);
     overflow: auto;
     margin: 0;
+    z-index: 50;
   }
 }
 .pk-mm-node {
