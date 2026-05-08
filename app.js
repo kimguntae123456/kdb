@@ -117,6 +117,68 @@ function initExpandCollapse() {
     });
   });
   initPrintButtons();
+  initEditableMeta();
+}
+
+// ── 제목/메타 인라인 편집 (localStorage 영구 저장) ──
+function initEditableMeta() {
+  const KEY = 'ns_meta_edits_v1';
+  const store = JSON.parse(localStorage.getItem(KEY) || '{}');
+  const path = location.pathname.replace(/\/index\.html$/, '');
+
+  function save() { localStorage.setItem(KEY, JSON.stringify(store)); }
+  function rowKey(el) {
+    const row = el.closest('.inline-article')?.previousElementSibling;
+    return row?.id ? `${path}#${row.id}#${el.dataset.field}` : null;
+  }
+  function restore(el) {
+    const k = rowKey(el);
+    if (k && store[k] != null) el.textContent = store[k];
+  }
+  function makeEditable(el, field) {
+    if (!el || el.dataset.editable) return;
+    el.dataset.editable = '1';
+    el.dataset.field = field;
+    el.contentEditable = 'true';
+    el.spellcheck = false;
+    el.title = '클릭 후 수정 · 자동 저장';
+    el.style.outline = 'none';
+    el.style.cursor = 'text';
+    el.addEventListener('focus', () => { el.style.background = '#fff5b8'; });
+    el.addEventListener('blur', () => {
+      el.style.background = '';
+      const k = rowKey(el);
+      if (!k) return;
+      const v = el.textContent.trim();
+      if (v) store[k] = v; else delete store[k];
+      save();
+    });
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+      if (e.key === 'Escape') { e.preventDefault(); restore(el); el.blur(); }
+    });
+    restore(el);
+  }
+
+  document.querySelectorAll('.inline-article').forEach(art => {
+    const h2 = art.querySelector('.ia-title');
+    if (h2) makeEditable(h2, 'title');
+    let src = art.querySelector('.ia-source');
+    // 메타블록 없으면 빈 placeholder 주입 (편집 가능)
+    if (!src && h2) {
+      src = document.createElement('div');
+      src.className = 'ia-source';
+      src.style.cssText = 'margin:8px 0 14px;padding:8px 12px;background:#f4f1e0;border-left:3px solid #1c2040;font-size:.82rem;color:#1c2040;line-height:1.5;';
+      src.innerHTML = '<span style="opacity:.55;">📄 기관 · 날짜</span><div style="margin-top:2px;opacity:.55;"><strong>원제:</strong> <span class="orig-input">제목 입력</span></div>';
+      h2.parentNode.insertBefore(src, h2.nextSibling);
+    }
+    if (src) {
+      const orgDate = src.querySelector('span');
+      if (orgDate) makeEditable(orgDate, 'orgdate');
+      const titleDiv = src.querySelector('div');
+      if (titleDiv) makeEditable(titleDiv, 'orig');
+    }
+  });
 }
 
 // ── Print/PDF (현재 펼쳐진 글만 출력) ──
