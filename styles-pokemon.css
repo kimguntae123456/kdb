@@ -342,28 +342,33 @@ body .ia-para-body strong, body strong {
   body .timeline { max-width: 1060px !important; }
 }
 
-/* 핵심카드 — floating 드래그+리사이즈 패널 (모든 뷰포트) */
-body .pk-mindmap.pk-floating {
-  position: fixed !important;
-  top: 80px;
-  right: 24px;
-  width: 380px;
-  height: 480px;
-  min-width: 260px;
-  min-height: 200px;
-  max-width: 95vw;
-  max-height: 95vh;
-  margin: 0 !important;
-  z-index: 9999;
-  resize: both;
-  overflow: hidden;
-  box-shadow: 6px 6px 0 #1c2040;
+/* 핵심카드 — floating 드래그+리사이즈 패널 (≥960px) */
+@media (min-width: 960px) {
+  body .pk-mindmap.pk-floating {
+    position: fixed !important;
+    top: 80px;
+    right: 24px;
+    width: 380px;
+    height: 480px;
+    min-width: 280px;
+    min-height: 240px;
+    max-width: 95vw;
+    max-height: 95vh;
+    margin: 0 !important;
+    z-index: 9999;
+    resize: both;
+    overflow: hidden;
+    box-shadow: 6px 6px 0 #1c2040;
+  }
+  body .pk-mindmap.pk-floating .pk-mindmap-header {
+    cursor: move;
+    user-select: none;
+  }
+  body .pk-mindmap.pk-floating .pk-mindmap-header button { cursor: pointer; }
+  body .pk-mindmap.pk-floating.pk-collapsed { height: auto !important; }
+  body .pk-mindmap.pk-floating.pk-collapsed .pk-cards-cols,
+  body .pk-mindmap.pk-floating.pk-collapsed .pk-mm-hint { display: none; }
 }
-body .pk-mindmap.pk-floating .pk-mindmap-header { cursor: move; user-select: none; }
-body .pk-mindmap.pk-floating .pk-mindmap-header button { cursor: pointer; }
-body .pk-mindmap.pk-floating.pk-collapsed { height: auto !important; }
-body .pk-mindmap.pk-floating.pk-collapsed .pk-cards-cols,
-body .pk-mindmap.pk-floating.pk-collapsed .pk-mm-hint { display: none; }
 .pk-mm-node {
   position: absolute;
   min-width: 100px; max-width: 200px;
