@@ -28,6 +28,16 @@ let clipFolders = JSON.parse(localStorage.getItem('ns_clip_folders') || '[]');
 let summaryOverrides = JSON.parse(localStorage.getItem('ns_summary_overrides') || '{}');
 // Migration: ensure each clip has folderId field
 clips.forEach(c => { if (c.folderId === undefined) c.folderId = null; });
+// Migration: 너무 짧은(<=3자) 형광펜 항목 제거 — '핵심' 같은 단어가 모든 글에 번지는 것 차단.
+// 또한 사용자가 의도하지 않은 단어 단위 highlight 자동 정리. (1회성)
+if (!localStorage.getItem('ns_hl_purge_v1')) {
+  const before = highlights.length;
+  highlights = highlights.filter(h => (h.text || '').trim().length > 3);
+  if (highlights.length !== before) {
+    localStorage.setItem('ns_highlights', JSON.stringify(highlights));
+  }
+  localStorage.setItem('ns_hl_purge_v1', '1');
+}
 
 const SVG_CLIP = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg>';
 
