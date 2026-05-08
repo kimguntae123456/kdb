@@ -342,8 +342,8 @@ body .ia-para-body strong, body strong {
   body .timeline { max-width: 1060px !important; }
 }
 
-/* 핵심카드 — floating 드래그+리사이즈 패널 (≥960px) */
-@media (min-width: 960px) {
+/* 핵심카드 — floating 드래그+리사이즈 패널 (모든 뷰포트) */
+@media (min-width: 0px) {
   body .pk-mindmap.pk-floating {
     position: fixed !important;
     top: 80px;
