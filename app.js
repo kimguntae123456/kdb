@@ -556,6 +556,29 @@ function initSelectionPopover() {
   document.addEventListener('touchstart', (e) => {
     if (clipPopover && !e.target.closest('.clip-popover')) { clipPopover.remove(); clipPopover = null; }
   });
+  // Keyboard shortcut: 'e' on drag-selection → highlight directly (popover-free path)
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key !== 'e' && ev.key !== 'E') return;
+    if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    const t = ev.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return;
+    const text = sel.toString().trim();
+    if (text.length < 2) return;
+    const range = sel.getRangeAt(0);
+    const cac = range.commonAncestorContainer;
+    const cacEl = cac.nodeType === 1 ? cac : cac.parentElement;
+    const art = cacEl?.closest('.inline-article, .row-excerpt, .row-body, .article-content');
+    if (!art) return;
+    ev.preventDefault();
+    const card = cacEl.closest('.card-row') || art;
+    const title = card.querySelector('.ia-title, .row-title')?.textContent || '';
+    window.__pendingHlRange = range.cloneRange();
+    addHighlight(text, title);
+    if (clipPopover) { clipPopover.remove(); clipPopover = null; }
+    sel.removeAllRanges();
+  });
 }
 
 // ── Inline editing ──
