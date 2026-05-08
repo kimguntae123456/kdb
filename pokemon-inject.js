@@ -691,7 +691,7 @@
       new MutationObserver(window._pkFloatingUpdate).observe(map._sourceRow, { attributes: true, attributeFilter: ['class'] });
     }
     requestAnimationFrame(window._pkFloatingUpdate);
-      const POS_KEY = 'pk-mindmap-floating-v1';
+      const POS_KEY = 'pk-mindmap-floating-v2';
       const applyPos = () => {
         try {
           const saved = JSON.parse(localStorage.getItem(POS_KEY) || 'null');

@@ -346,7 +346,7 @@ body .ia-para-body strong, body strong {
 @media (min-width: 0px) {
   body .pk-mindmap.pk-floating {
     position: fixed !important;
-    top: 80px;
+    top: calc(50vh - 240px);
     right: 24px;
     width: 380px;
     height: 480px;
