@@ -658,6 +658,72 @@
     `;
     article.appendChild(map);
 
+    // ── floating 패널: 드래그 이동 + 크기/위치 영구 저장 ──
+    if (window.matchMedia('(min-width: 960px)').matches) {
+      map.classList.add('pk-floating');
+      const POS_KEY = 'pk-mindmap-floating-v1';
+      const applyPos = () => {
+        try {
+          const saved = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
+          if (saved) {
+            if (saved.left != null) { map.style.left = saved.left + 'px'; map.style.right = 'auto'; }
+            if (saved.top  != null) { map.style.top  = saved.top  + 'px'; }
+            if (saved.w    != null) { map.style.width  = saved.w + 'px'; }
+            if (saved.h    != null) { map.style.height = saved.h + 'px'; }
+          }
+        } catch (_) {}
+      };
+      applyPos();
+
+      const header = map.querySelector('.pk-mindmap-header');
+      let dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+      header.addEventListener('mousedown', e => {
+        if (e.target.tagName === 'BUTTON') return;
+        dragging = true;
+        const r = map.getBoundingClientRect();
+        sx = e.clientX; sy = e.clientY; ox = r.left; oy = r.top;
+        e.preventDefault();
+      });
+      window.addEventListener('mousemove', e => {
+        if (!dragging) return;
+        const nx = Math.max(0, Math.min(window.innerWidth  - 80, ox + (e.clientX - sx)));
+        const ny = Math.max(0, Math.min(window.innerHeight - 40, oy + (e.clientY - sy)));
+        map.style.left = nx + 'px';
+        map.style.top  = ny + 'px';
+        map.style.right = 'auto';
+      });
+      window.addEventListener('mouseup', () => {
+        if (!dragging) return;
+        dragging = false;
+        const r = map.getBoundingClientRect();
+        try {
+          const cur = JSON.parse(localStorage.getItem(POS_KEY) || '{}');
+          cur.left = r.left; cur.top = r.top;
+          localStorage.setItem(POS_KEY, JSON.stringify(cur));
+        } catch (_) {}
+      });
+
+      // resize 변화 저장 (ResizeObserver)
+      const ro = new ResizeObserver(entries => {
+        for (const en of entries) {
+          const w = Math.round(en.contentRect.width);
+          const h = Math.round(en.contentRect.height);
+          try {
+            const cur = JSON.parse(localStorage.getItem(POS_KEY) || '{}');
+            cur.w = w; cur.h = h;
+            localStorage.setItem(POS_KEY, JSON.stringify(cur));
+          } catch (_) {}
+        }
+      });
+      ro.observe(map);
+
+      // 헤더 더블클릭 → 접기/펼치기
+      header.addEventListener('dblclick', e => {
+        if (e.target.tagName === 'BUTTON') return;
+        map.classList.toggle('pk-collapsed');
+      });
+    }
+
     const cols = {
       s: map.querySelector('.pk-cards-col[data-col="s"] .pk-cards-canvas'),
       m: map.querySelector('.pk-cards-col[data-col="m"] .pk-cards-canvas'),

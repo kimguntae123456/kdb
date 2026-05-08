@@ -342,31 +342,32 @@ body .ia-para-body strong, body strong {
   body .timeline { max-width: 1060px !important; }
 }
 
-/* inline-article 그리드 — 본문|핵심카드 사이드 sticky (≥960px) */
+/* 핵심카드 — floating 드래그+리사이즈 패널 (≥960px) */
 @media (min-width: 960px) {
-  body .row.expanded + .inline-article {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) clamp(300px, 30vw, 380px) !important;
-    column-gap: 20px;
-    align-items: start;
+  body .pk-mindmap.pk-floating {
+    position: fixed !important;
+    top: 80px;
+    right: 24px;
+    width: 380px;
+    height: 480px;
+    min-width: 280px;
+    min-height: 240px;
+    max-width: 95vw;
+    max-height: 95vh;
+    margin: 0 !important;
+    z-index: 9999;
+    resize: both;
+    overflow: hidden;
+    box-shadow: 6px 6px 0 #1c2040;
   }
-  body .row.expanded + .inline-article > .pk-battle-banner { grid-column: 1 / -1; }
-  body .row.expanded + .inline-article > .ia-close { grid-column: 2; grid-row: 1; justify-self: end; align-self: start; }
-  body .row.expanded + .inline-article > .ia-kicker,
-  body .row.expanded + .inline-article > .ia-title,
-  body .row.expanded + .inline-article > .ia-source,
-  body .row.expanded + .inline-article > .article-content,
-  body .row.expanded + .inline-article > .ia-body { grid-column: 1; min-width: 0; }
-  body .row.expanded + .inline-article > .pk-mindmap {
-    grid-column: 2;
-    grid-row: 2 / span 999;
-    position: sticky;
-    top: max(16px, calc(50vh - 240px));
-    align-self: start;
-    max-height: calc(100vh - 32px);
-    overflow: auto;
-    margin: 0;
+  body .pk-mindmap.pk-floating .pk-mindmap-header {
+    cursor: move;
+    user-select: none;
   }
+  body .pk-mindmap.pk-floating .pk-mindmap-header button { cursor: pointer; }
+  body .pk-mindmap.pk-floating.pk-collapsed { height: auto !important; }
+  body .pk-mindmap.pk-floating.pk-collapsed .pk-cards-cols,
+  body .pk-mindmap.pk-floating.pk-collapsed .pk-mm-hint { display: none; }
 }
 .pk-mm-node {
   position: absolute;
