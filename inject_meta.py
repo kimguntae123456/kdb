@@ -87,21 +87,23 @@ def build_meta_block(meta):
 def inject(html, mapping):
     """row-id → meta_block dict로 ia-title 다음에 주입."""
     out = html
+    # 1) 기존 ia-source 모두 제거 (inner <div> 포함한 outer를 정확히 매칭)
+    #    형식: <div class="ia-source" ...><span>...</span><div>...</div></div>
+    #    또는: <div class="ia-source" ...><div>...</div></div>
+    #    안전하게 균형 있는 첫 close까지 찾기 위해 두 가지 패턴 모두 시도
+    out = re.sub(
+        r'<div class="ia-source"[^>]*>(?:<span[^>]*>[^<]*</span>)?(?:<div[^>]*><strong>[^<]*</strong>[^<]*</div>)?</div>\s*',
+        '',
+        out
+    )
+    # 2) 새 메타블록 주입
     for row_id, block in mapping.items():
         if not block: continue
-        # 해당 row의 inline-article 안 ia-title 다음에 삽입
-        # row-N 다음의 inline-article 패턴 찾기
         pattern = re.compile(
             rf'(<div class="row" id="{row_id}">.*?<div class="inline-article">.*?<h2 class="ia-title">[^<]*</h2>)',
             re.DOTALL
         )
-        # 이미 ia-source가 있으면 교체
-        if re.search(rf'<div class="row" id="{row_id}">.*?<div class="ia-source"[^>]*>.*?</div>', out, re.DOTALL):
-            old = re.search(rf'(<div class="row" id="{row_id}">.*?)<div class="ia-source"[^>]*>.*?</div>', out, re.DOTALL)
-            if old:
-                out = out.replace(old.group(0), old.group(1) + block, 1)
-        else:
-            out = pattern.sub(lambda m: m.group(1) + '\n' + block, out, count=1)
+        out = pattern.sub(lambda m: m.group(1) + '\n' + block, out, count=1)
     return out
 
 def main():
