@@ -271,10 +271,30 @@ function removeClip(id) {
   syncPush();
 }
 
+// ── Sector detection (URL path 기반) ──
+function getCurrentSector() {
+  try {
+    const p = decodeURIComponent(location.pathname).replace(/\/index\.html$/, '');
+    const segs = p.split('/').filter(Boolean);
+    if (!segs.length) return '메인';
+    const last = segs[segs.length - 1];
+    if (last === '통합' || last === 'kdb') return '메인';
+    return last;
+  } catch (_) { return '기타'; }
+}
+
+// 기존 highlights에 sector 필드 마이그레이션
+if (!localStorage.getItem('ns_hl_sector_v1')) {
+  let migrated = false;
+  highlights.forEach(h => { if (!h.sector) { h.sector = getCurrentSector(); migrated = true; } });
+  if (migrated) localStorage.setItem('ns_highlights', JSON.stringify(highlights));
+  localStorage.setItem('ns_hl_sector_v1', '1');
+}
+
 // ── Highlights ──
 function addHighlight(text, title) {
   const id = Date.now();
-  highlights.unshift({id, text, title, createdAt: id});
+  highlights.unshift({id, text, title, sector: getCurrentSector(), createdAt: id});
   localStorage.setItem('ns_highlights', JSON.stringify(highlights));
   updateClipsFab();
   /* 1차 시도: 라이브 Range 직접 wrap (가장 안정적) */
@@ -472,7 +492,43 @@ function renderDrawer() {
       list.innerHTML = '<div class="cd-empty"><div style="font-size:2.5rem;color:var(--rule);margin-bottom:12px">\uD83D\uDD8D</div><div>형광펜으로 칠한 텍스트가<br>여기에 모입니다.</div></div>';
       return;
     }
-    list.innerHTML = highlights.map(h => `<div class="clip-item"><div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">${esc(h.title || '')}</div><div class="ci-text" style="border-left-color:oklch(0.85 0.18 90)">${esc(h.text)}</div><div class="ci-tools"><button onclick="removeHighlight(${h.id})">삭제</button></div></div>`).join('');
+    // 섹터 → 보고서(title) → 형광펜 묶음 (폴더 구조)
+    const bySector = {};
+    highlights.forEach(h => {
+      const sec = h.sector || '기타';
+      const title = h.title || '(제목없음)';
+      if (!bySector[sec]) bySector[sec] = {};
+      if (!bySector[sec][title]) bySector[sec][title] = [];
+      bySector[sec][title].push(h);
+    });
+    const collapsed = JSON.parse(localStorage.getItem('ns_hl_collapsed_v1') || '{}');
+    list.innerHTML = Object.entries(bySector).map(([sec, reports]) => {
+      const totalCount = Object.values(reports).reduce((a, b) => a + b.length, 0);
+      const sKey = 's::' + sec;
+      const isOpen = collapsed[sKey] !== true;
+      const reportsHTML = Object.entries(reports).map(([title, hs]) => {
+        const tKey = 't::' + sec + '::' + title;
+        const tOpen = collapsed[tKey] !== true;
+        const itemsHTML = hs.map(h => `<div class="hl-snippet"><span class="hl-snippet-text">${esc(h.text)}</span><button class="hl-snippet-del" data-del-id="${h.id}" title="삭제">×</button></div>`).join('');
+        return `<div class="hl-report ${tOpen ? 'open' : ''}"><div class="hl-report-head" data-toggle="${esc(tKey)}"><span class="hl-report-arrow">${tOpen ? '▾' : '▸'}</span><span class="hl-report-title">${esc(title)}</span><span class="hl-report-count">${hs.length}</span></div>${tOpen ? `<div class="hl-report-body">${itemsHTML}</div>` : ''}</div>`;
+      }).join('');
+      return `<div class="hl-sector ${isOpen ? 'open' : ''}"><div class="hl-sector-head" data-toggle="${esc(sKey)}"><span class="hl-sector-arrow">${isOpen ? '▾' : '▸'}</span><span class="hl-sector-icon">📁</span><span class="hl-sector-name">${esc(sec)}</span><span class="hl-sector-count">${totalCount}</span></div>${isOpen ? `<div class="hl-sector-body">${reportsHTML}</div>` : ''}</div>`;
+    }).join('');
+    list.querySelectorAll('[data-toggle]').forEach(el => {
+      el.addEventListener('click', () => {
+        const key = el.dataset.toggle;
+        const cur = JSON.parse(localStorage.getItem('ns_hl_collapsed_v1') || '{}');
+        cur[key] = !cur[key];
+        localStorage.setItem('ns_hl_collapsed_v1', JSON.stringify(cur));
+        renderDrawer();
+      });
+    });
+    list.querySelectorAll('[data-del-id]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        removeHighlight(Number(btn.dataset.delId));
+      });
+    });
   } else if (drawerTab === 'memos') {
     if (countEl) countEl.textContent = memos.length + '\uAC1C';
     if (!memos.length) {
