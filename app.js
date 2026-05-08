@@ -454,17 +454,20 @@ const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
   (/Mac/.test(navigator.platform) && navigator.maxTouchPoints > 1 && !('chrome' in window) && !matchMedia('(pointer: fine)').matches);
 
 function showPopover(sel) {
-  if (clipPopover) { clipPopover.remove(); clipPopover = null; }
   if (!sel || sel.isCollapsed) return;
   const text = sel.toString().trim();
   if (text.length < 2) return;
   const range = sel.getRangeAt(0);
   const cac = range.commonAncestorContainer;
   const cacEl = cac.nodeType === 1 ? cac : cac.parentElement;
-  const art = cacEl?.closest('.inline-article, .row-excerpt, .row-body, .article-content');
+  // 본문 영역 판정: row 단위까지 포괄. 못 찾으면 ia-body/row 보조 selector도 시도.
+  const art = cacEl?.closest('.inline-article, .row-excerpt, .row-body, .article-content, .ia-body, .row, [class*="article"], [class*="ia-"]');
   if (!art) return;
+  // 같은 selection 으로 popover 이미 떠 있으면 재생성 스킵 (mouseup 재트리거로 인한 클릭 유실 방지)
+  if (clipPopover && clipPopover.dataset.selKey === text) return;
+  if (clipPopover) { clipPopover.remove(); clipPopover = null; }
   const rect = range.getBoundingClientRect();
-  const card = cacEl.closest('.card-row') || art;
+  const card = cacEl.closest('.card-row, .row') || art;
   const title = card.querySelector('.ia-title, .row-title')?.textContent || '';
   const safeText = text.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
   const safeTitle = title.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');
@@ -489,6 +492,7 @@ function showPopover(sel) {
     `<button data-act="memo" class="pop-memo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 메모</button>` +
     `<button data-act="copy">복사</button>`;
 
+  pop.dataset.selKey = text;
   pop.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
       const act = btn.dataset.act;
@@ -545,23 +549,27 @@ function startMemo(text, title) {
 }
 
 function initSelectionPopover() {
-  // Desktop: mouseup
-  document.addEventListener('mouseup', () => {
+  // Desktop: mouseup. popover 자체에서 발생한 mouseup은 무시(클릭 유실 방지)
+  document.addEventListener('mouseup', (e) => {
+    if (e.target && e.target.closest && e.target.closest('.clip-popover')) return;
     setTimeout(() => showPopover(window.getSelection()), 10);
   });
-  // iOS/mobile: selectionchange with delay
-  if (IS_IOS) {
-    let selTimer = null;
-    document.addEventListener('selectionchange', () => {
-      clearTimeout(selTimer);
-      selTimer = setTimeout(() => showPopover(window.getSelection()), 350);
-    });
-  } else {
-    // Android/other touch
-    document.addEventListener('touchend', () => {
-      setTimeout(() => showPopover(window.getSelection()), 300);
-    });
-  }
+  // 모바일/iOS 모두: selectionchange 기반 폴백 (네이티브 콜아웃과 공존)
+  let selTimer = null;
+  document.addEventListener('selectionchange', () => {
+    clearTimeout(selTimer);
+    selTimer = setTimeout(() => {
+      const s = window.getSelection();
+      if (!s || s.isCollapsed) return;
+      // 이미 popover 있으면 재생성 안 함 (showPopover가 알아서 selKey 비교)
+      showPopover(s);
+    }, IS_IOS ? 250 : 200);
+  });
+  // 추가: touchend도 백업으로 (selectionchange 미발화 케이스)
+  document.addEventListener('touchend', (e) => {
+    if (e.target && e.target.closest && e.target.closest('.clip-popover')) return;
+    setTimeout(() => showPopover(window.getSelection()), 280);
+  });
   // Dismiss
   document.addEventListener('mousedown', (e) => {
     if (clipPopover && !e.target.closest('.clip-popover')) { clipPopover.remove(); clipPopover = null; }
@@ -587,10 +595,10 @@ function initSelectionPopover() {
     const range = sel.getRangeAt(0);
     const cac = range.commonAncestorContainer;
     const cacEl = cac.nodeType === 1 ? cac : cac.parentElement;
-    const art = cacEl?.closest('.inline-article, .row-excerpt, .row-body, .article-content');
+    const art = cacEl?.closest('.inline-article, .row-excerpt, .row-body, .article-content, .ia-body, .row, [class*="article"], [class*="ia-"]');
     if (!art) return;
     ev.preventDefault();
-    const card = cacEl.closest('.card-row') || art;
+    const card = cacEl.closest('.card-row, .row') || art;
     const title = card.querySelector('.ia-title, .row-title')?.textContent || '';
     if (act === 'hl') { window.__pendingHlRange = range.cloneRange(); addHighlight(text, title); }
     else if (act === 'clip') addClip(text, title);
