@@ -116,6 +116,52 @@ function initExpandCollapse() {
       if (art && art.previousElementSibling) art.previousElementSibling.classList.remove('expanded');
     });
   });
+  initPrintButtons();
+}
+
+// ── Print/PDF (현재 펼쳐진 글만 출력) ──
+function initPrintButtons() {
+  if (!document.getElementById('print-style')) {
+    const st = document.createElement('style');
+    st.id = 'print-style';
+    st.textContent = `
+      @media print {
+        @page { margin: 14mm; }
+        body * { visibility: hidden !important; }
+        .row.expanded + .inline-article,
+        .row.expanded + .inline-article * { visibility: visible !important; }
+        .row.expanded + .inline-article {
+          position: absolute !important; left: 0; top: 0; width: 100% !important;
+          max-width: none !important; margin: 0 !important; padding: 0 !important;
+          box-shadow: none !important; border: none !important; background: #fff !important;
+          display: block !important;
+        }
+        .ia-close, .ia-print, .pk-mindmap, .bookmark-btn, #gsBtn { display: none !important; }
+      }
+    `;
+    document.head.appendChild(st);
+  }
+  document.querySelectorAll('.inline-article').forEach(art => {
+    if (art.querySelector('.ia-print')) return;
+    const btn = document.createElement('button');
+    btn.className = 'ia-print';
+    btn.title = 'PDF로 출력';
+    btn.textContent = 'PDF';
+    Object.assign(btn.style, {
+      position:'absolute', top:'12px', right:'56px', zIndex:'5',
+      padding:'4px 10px', fontSize:'.78rem', fontWeight:'700',
+      background:'#fff8d8', color:'#1c2040',
+      border:'2px solid #1c2040', boxShadow:'2px 2px 0 #1c2040',
+      cursor:'pointer', borderRadius:'4px'
+    });
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.print();
+    });
+    const closeBtn = art.querySelector('.ia-close');
+    if (closeBtn) closeBtn.parentNode.insertBefore(btn, closeBtn);
+    else art.appendChild(btn);
+  });
 }
 
 // ── Bookmarks ──
