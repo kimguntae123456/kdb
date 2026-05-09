@@ -106,9 +106,67 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   order: 99;
 }
 /* 북마크 버튼 — 본/안본 배지와 함께 우측 정렬 */
-.row .row-actions { order: 100; flex-shrink: 0 !important; margin-left: 6px; display: flex !important; }
+.row { gap: 6px; }
+.pk-read-badge { margin-right: 8px !important; }
+.row .row-actions { order: 100; flex-shrink: 0 !important; margin-left: 8px !important; display: flex !important; gap: 6px; align-items: center; }
 .row .bookmark-btn { display: inline-flex !important; opacity: .55 !important; }
 .row .bookmark-btn:hover, .row .bookmark-btn.on { opacity: 1 !important; }
+
+/* 글 삭제 버튼 */
+.pk-del-btn {
+  background: transparent; border: 1.5px solid transparent;
+  padding: 3px 8px; cursor: pointer; opacity: .35;
+  font-size: 1rem; border-radius: 6px; line-height: 1;
+  color: #1c2040; transition: all 120ms;
+}
+.pk-del-btn:hover { opacity: 1; background: #ffeaea; color: #d42b2b; border-color: #d42b2b; }
+
+/* 추가된 글 표시 */
+.row.pk-added-row .row-title::before {
+  content: '＋'; display: inline-block; margin-right: 6px;
+  color: #2c8844; font-weight: 900;
+}
+
+/* 태그 / 한 줄 요약 라인 */
+.pk-meta-line {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 6px 0 0; font-size: .82rem;
+}
+.pk-meta-line .pk-tags { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.pk-meta-line .pk-tag {
+  background: #fff8d8; border: 1.5px solid #1c2040;
+  padding: 1px 8px; border-radius: 999px; font-weight: 700;
+  font-size: .74rem; color: #1c2040;
+}
+.pk-meta-line .pk-summary {
+  flex: 1; min-width: 0; color: #555; font-style: italic;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pk-meta-line .pk-meta-edit {
+  background: #fff8d8; border: 1.5px solid #1c2040;
+  padding: 2px 8px; border-radius: 6px; cursor: pointer;
+  font-size: .72rem; font-weight: 700; color: #1c2040;
+  box-shadow: 1px 1px 0 #1c2040;
+}
+.pk-meta-line .pk-meta-edit:hover { background: #fff; }
+.pk-meta-line.empty .pk-summary::before {
+  content: '＋ 태그·한 줄 요약 추가'; color: #999; font-style: normal;
+}
+
+/* MD 업로드 바 */
+#pk-add-bar {
+  margin: 10px 32px 0;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: #f5edd8; border: 3px solid #1c2040;
+  box-shadow: 4px 4px 0 #1c2040; padding: 10px 14px;
+}
+.pk-add-btn {
+  background: #2c8844; color: #fff; border: 2px solid #1c2040;
+  padding: 6px 14px; cursor: pointer; font-weight: 700;
+  font-size: .85rem; box-shadow: 2px 2px 0 #1c2040;
+}
+.pk-add-btn:hover { background: #226633; }
+#pk-add-bar .pk-add-hint { font-size: .76rem; color: #555; }
 .pk-read-badge:hover { transform: translate(-1px,-1px); }
 .pk-read-badge[data-read="1"] {
   background: #2c8844;

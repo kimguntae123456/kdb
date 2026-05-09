@@ -1460,6 +1460,234 @@
   /* ══════════════════════════════════════
      INIT
   ══════════════════════════════════════ */
+  /* ══════════════════════════════════════
+     X. 글 삭제 / MD 업로드 추가 / 태그·한 줄 요약  (localStorage)
+  ══════════════════════════════════════ */
+  const PK_DEL = 'pk-deleted';
+  const PK_ADD = 'pk-added';
+  const PK_META = 'pk-meta';
+  function lsLoad(k){ try{return JSON.parse(localStorage.getItem(k)||'{}');}catch(_){return{};} }
+  function lsSave(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(_){} }
+  function escHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function inlineMd(s){
+    return escHtml(s)
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g,'<em>$1</em>');
+  }
+  function parseMarkdownToReportHtml(md){
+    const lines = md.split(/\r?\n/);
+    let title = '';
+    const out = [];
+    let para = [];
+    const flushPara = ()=>{
+      if (!para.length) return;
+      const text = para.join(' ').trim();
+      if (text) out.push(`<p class="ia-para-body">${inlineMd(text)}</p>`);
+      para = [];
+    };
+    for (const ln of lines){
+      const m1 = ln.match(/^#\s+(.+)$/);
+      const m2 = ln.match(/^##\s+(.+)$/);
+      const m3 = ln.match(/^###\s+(.+)$/);
+      const m4 = ln.match(/^####\s+(.+)$/);
+      if (m1) {
+        flushPara();
+        if (!title) title = m1[1].trim();
+        else out.push(`<div class="ia-section-h">${inlineMd(m1[1])}</div>`);
+      } else if (m2) {
+        flushPara(); out.push(`<div class="ia-section-h">${inlineMd(m2[1])}</div>`);
+      } else if (m3) {
+        flushPara(); out.push(`<h3 class="ia-para-title">${inlineMd(m3[1])}</h3>`);
+      } else if (m4) {
+        flushPara(); out.push(`<h4 class="ia-sub-title">${inlineMd(m4[1])}</h4>`);
+      } else if (/^\s*$/.test(ln)) {
+        flushPara();
+      } else {
+        para.push(ln.trim());
+      }
+    }
+    flushPara();
+    return { title: title || '제목 없음', html: out.join('\n') };
+  }
+  function plainExcerpt(html, n){
+    const tmp = document.createElement('div'); tmp.innerHTML = html;
+    return (tmp.textContent || '').replace(/\s+/g,' ').trim().slice(0, n||140);
+  }
+
+  function applyDeletions(){
+    const all = lsLoad(PK_DEL);
+    const list = all[pageKey()] || [];
+    if (!list.length) return;
+    const ids = new Set(list.map(s => s.split('::').pop()));
+    document.querySelectorAll('.row').forEach(row => {
+      const rid = row.id || rowReadId(row).split('::').pop();
+      if (!ids.has(rid)) return;
+      const cr = row.closest('.card-row');
+      const ia = (cr ? cr.nextElementSibling : row.nextElementSibling);
+      const ia2 = row.parentElement && row.parentElement.querySelector(':scope > .inline-article');
+      if (cr) cr.remove(); else row.remove();
+      if (ia && ia.classList && ia.classList.contains('inline-article')) ia.remove();
+      else if (ia2) ia2.remove();
+    });
+  }
+
+  function renderAddedArticles(){
+    const tl = document.querySelector('.timeline');
+    if (!tl) return;
+    const all = lsLoad(PK_ADD);
+    const list = all[pageKey()] || [];
+    if (!list.length) return;
+    const sectorName = (document.querySelector('.page-head h2')?.textContent || '').trim();
+    list.forEach(a => {
+      if (document.getElementById(a.id)) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'card-row pk-added-card';
+      wrap.style.display = 'contents';
+      wrap.dataset.text = `${a.title} ${a.excerpt||''}`;
+      wrap.innerHTML = `
+<div class="row pk-added-row" id="${a.id}">
+  <div class="row-body">
+    <h3 class="row-title">${escHtml(a.title)}</h3>
+    <p class="row-excerpt">${escHtml(a.excerpt||'')}</p>
+  </div>
+  <div class="row-actions">
+    <button class="bookmark-btn" data-title="${escHtml(a.title)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  </div>
+</div>
+<div class="inline-article">
+  <button class="ia-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <div class="ia-kicker"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--c-default);display:inline-block"></span> ${escHtml(sectorName)} · 추가</div>
+  <h2 class="ia-title">${escHtml(a.title)}</h2>
+  <div class="article-content">${a.html}</div>
+</div>`;
+      tl.insertBefore(wrap, tl.firstChild);
+    });
+  }
+
+  function injectDeleteButtons(){
+    document.querySelectorAll('.row').forEach(row => {
+      if (row.querySelector('.pk-del-btn')) return;
+      let actions = row.querySelector('.row-actions');
+      if (!actions) {
+        actions = document.createElement('div');
+        actions.className = 'row-actions';
+        row.appendChild(actions);
+      }
+      const btn = document.createElement('button');
+      btn.className = 'pk-del-btn';
+      btn.title = '글 숨기기 (이 브라우저)';
+      btn.innerHTML = '🗑';
+      btn.addEventListener('click', e => {
+        e.stopPropagation(); e.preventDefault();
+        const title = row.querySelector('.row-title')?.textContent?.trim() || '이 글';
+        if (!confirm(`"${title}"\n이 글을 숨길까요? (이 브라우저에서만)`)) return;
+        const pk = pageKey();
+        const id = rowReadId(row);
+        const idShort = id.split('::').pop();
+        const all = lsLoad(PK_DEL);
+        all[pk] = all[pk] || [];
+        if (!all[pk].includes(id)) all[pk].push(id);
+        lsSave(PK_DEL, all);
+        // remove from added if applicable
+        const added = lsLoad(PK_ADD);
+        if (added[pk]) {
+          const before = added[pk].length;
+          added[pk] = added[pk].filter(a => a.id !== idShort && a.id !== id);
+          if (added[pk].length !== before) lsSave(PK_ADD, added);
+        }
+        const cr = row.closest('.card-row');
+        const ia = (cr ? cr.nextElementSibling : row.nextElementSibling);
+        if (cr) cr.remove(); else row.remove();
+        if (ia && ia.classList && ia.classList.contains('inline-article')) ia.remove();
+        if (typeof updateProgress === 'function') updateProgress();
+      });
+      actions.appendChild(btn);
+    });
+  }
+
+  function injectMetaEditors(){
+    const all = lsLoad(PK_META);
+    document.querySelectorAll('.row').forEach(row => {
+      if (row.querySelector('.pk-meta-line')) return;
+      const body = row.querySelector('.row-body');
+      if (!body) return;
+      const id = rowReadId(row);
+      const cur = all[id] || { tags: [], summary: '' };
+      const line = document.createElement('div');
+      line.className = 'pk-meta-line';
+      const renderInner = ()=>{
+        const data = (lsLoad(PK_META))[id] || { tags: [], summary: '' };
+        const empty = !data.tags?.length && !data.summary;
+        line.classList.toggle('empty', empty);
+        line.innerHTML = `
+          <span class="pk-tags">${(data.tags||[]).map(t=>`<span class="pk-tag">#${escHtml(t)}</span>`).join('')}</span>
+          <span class="pk-summary">${escHtml(data.summary||'')}</span>
+          <button class="pk-meta-edit" type="button">✎</button>`;
+        line.querySelector('.pk-meta-edit').addEventListener('click', e => {
+          e.stopPropagation(); e.preventDefault();
+          const old = (lsLoad(PK_META))[id] || { tags: [], summary: '' };
+          const tagStr = prompt('해쉬태그 (쉼표로 구분, # 없이 입력)', (old.tags||[]).join(', '));
+          if (tagStr === null) return;
+          const sum = prompt('한 줄 요약', old.summary || '');
+          if (sum === null) return;
+          const tags = tagStr.split(/[,\s]+/).map(s=>s.replace(/^#/,'').trim()).filter(Boolean);
+          const allNow = lsLoad(PK_META);
+          allNow[id] = { tags, summary: (sum||'').trim() };
+          lsSave(PK_META, allNow);
+          renderInner();
+        });
+      };
+      renderInner();
+      // place click handler stop on the line itself so clicks don't expand article
+      line.addEventListener('click', e => {
+        if (e.target.closest('.pk-meta-edit')) return;
+        // allow row expansion otherwise
+      });
+      body.appendChild(line);
+    });
+  }
+
+  function injectAddBar(){
+    if (document.getElementById('pk-add-bar')) return;
+    const tl = document.querySelector('.timeline');
+    if (!tl) return;
+    const bar = document.createElement('div');
+    bar.id = 'pk-add-bar';
+    bar.innerHTML = `
+      <label class="pk-add-btn">
+        ＋ MD 업로드로 글 추가
+        <input type="file" accept=".md,.markdown,text/markdown,text/plain" hidden>
+      </label>
+      <span class="pk-add-hint">첫 # → 제목, ## → 섹션, ### → 단락 제목, #### → 소제목, **굵은**</span>`;
+    const anchor = document.getElementById('pk-progress-bar') || document.querySelector('.page-head');
+    if (anchor) anchor.insertAdjacentElement('afterend', bar);
+    else tl.parentNode.insertBefore(bar, tl);
+    bar.querySelector('input[type=file]').addEventListener('change', async e => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const text = await f.text();
+      const { title, html } = parseMarkdownToReportHtml(text);
+      const pk = pageKey();
+      const id = `pk-added-${Date.now()}`;
+      const item = { id, title, html, excerpt: plainExcerpt(html, 140), addedAt: Date.now() };
+      const all = lsLoad(PK_ADD);
+      all[pk] = all[pk] || [];
+      all[pk].unshift(item);
+      lsSave(PK_ADD, all);
+      e.target.value = '';
+      // re-render new article and decorate
+      renderAddedArticles();
+      injectRowDecorations();
+      injectRowNotes();
+      injectReadBadges();
+      injectDeleteButtons();
+      injectMetaEditors();
+      if (typeof updateProgress === 'function') updateProgress();
+      const newRow = document.getElementById(id);
+      if (newRow) newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
   function init() {
     injectBrandMascot();
     injectNavSprites();
@@ -1471,10 +1699,15 @@
     if (isArticlePage) {
       injectPageHead();
       injectStatsBar();
+      applyDeletions();
+      renderAddedArticles();
       injectRowDecorations();
       injectRowNotes();
       injectReadBadges();
+      injectDeleteButtons();
+      injectMetaEditors();
       injectProgressAndFilter();
+      injectAddBar();
       updateProgress();
       injectDivider();
       fixCloseButtons();
