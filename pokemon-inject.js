@@ -486,9 +486,184 @@
         });
         b.classList.add('active');
         applyFilter(b.dataset.filter);
+        applyFolderFilter();
       });
     });
   }
+
+  /* ── 폴더 분류 시스템 (드래그&드롭) ── */
+  function folderKey() { return `pk-folders::${pageKey()}`; }
+  function loadFolders() {
+    try { return JSON.parse(localStorage.getItem(folderKey())) || { folders: [], rowFolder: {}, active: 'all' }; }
+    catch (e) { return { folders: [], rowFolder: {}, active: 'all' }; }
+  }
+  function saveFolders(d) { localStorage.setItem(folderKey(), JSON.stringify(d)); }
+  function rowFolderId(row) {
+    return row.id || ('row-' + [...row.parentNode.children].filter(c => c.classList.contains('row')).indexOf(row));
+  }
+  function injectFolderBar() {
+    if (document.getElementById('pk-folder-bar')) return;
+    const prog = document.getElementById('pk-progress-bar');
+    if (!prog) return;
+    const bar = document.createElement('div');
+    bar.id = 'pk-folder-bar';
+    prog.insertAdjacentElement('afterend', bar);
+    renderFolderBar();
+    enableRowDrag();
+    applyFolderFilter();
+  }
+  function renderFolderBar() {
+    const bar = document.getElementById('pk-folder-bar');
+    if (!bar) return;
+    const d = loadFolders();
+    const counts = { __all: 0, __none: 0 };
+    d.folders.forEach(f => counts[f] = 0);
+    document.querySelectorAll('.timeline .row').forEach(r => {
+      counts.__all++;
+      const f = d.rowFolder[rowFolderId(r)];
+      if (f && counts[f] != null) counts[f]++;
+      else counts.__none++;
+    });
+    const chip = (key, label, cnt, extra='') =>
+      `<button class="pk-fchip ${d.active === key ? 'active' : ''}" data-folder="${key}" ${extra}>
+         <span class="pk-fchip-label">${label}</span>
+         <span class="pk-fchip-count">${cnt}</span>
+       </button>`;
+    bar.innerHTML = `
+      <span class="pk-folder-title">📁 폴더</span>
+      ${chip('all', '전체', counts.__all)}
+      ${chip('__none', '미분류', counts.__none)}
+      ${d.folders.map(f => chip(f, escFolderHtml(f), counts[f], 'data-deletable="1"')).join('')}
+      <button class="pk-fchip pk-fchip-add" data-action="add-folder">＋ 새 폴더</button>
+      <span class="pk-folder-hint">카드 드래그→폴더 위에 드롭 · 폴더 우클릭=이름변경/삭제</span>
+    `;
+    bar.querySelectorAll('.pk-fchip').forEach(b => {
+      const folder = b.dataset.folder;
+      if (b.dataset.action === 'add-folder') {
+        b.addEventListener('click', () => {
+          const name = (prompt('새 폴더 이름?') || '').trim();
+          if (!name) return;
+          const cur = loadFolders();
+          if (cur.folders.includes(name)) { alert('이미 있는 폴더'); return; }
+          cur.folders.push(name);
+          saveFolders(cur);
+          renderFolderBar();
+        });
+        return;
+      }
+      b.addEventListener('click', () => {
+        const cur = loadFolders();
+        cur.active = folder;
+        saveFolders(cur);
+        renderFolderBar();
+        applyFolderFilter();
+      });
+      b.addEventListener('dragover', e => {
+        if (folder === 'all') return;
+        e.preventDefault();
+        b.classList.add('pk-drop-hover');
+      });
+      b.addEventListener('dragleave', () => b.classList.remove('pk-drop-hover'));
+      b.addEventListener('drop', e => {
+        b.classList.remove('pk-drop-hover');
+        if (folder === 'all') return;
+        e.preventDefault();
+        const rid = e.dataTransfer.getData('text/pk-row');
+        if (!rid) return;
+        const cur = loadFolders();
+        if (folder === '__none') delete cur.rowFolder[rid];
+        else cur.rowFolder[rid] = folder;
+        saveFolders(cur);
+        renderFolderBar();
+        applyFolderFilter();
+      });
+      if (b.dataset.deletable) {
+        b.addEventListener('contextmenu', e => {
+          e.preventDefault();
+          const cur = loadFolders();
+          const choice = prompt(`"${folder}"\n새 이름 입력=이름변경 · 빈 값=삭제 · 취소=그대로`, folder);
+          if (choice === null) return;
+          const newName = choice.trim();
+          if (!newName) {
+            if (!confirm(`폴더 "${folder}" 삭제? (분류된 카드는 미분류로 이동)`)) return;
+            cur.folders = cur.folders.filter(x => x !== folder);
+            Object.keys(cur.rowFolder).forEach(k => { if (cur.rowFolder[k] === folder) delete cur.rowFolder[k]; });
+            if (cur.active === folder) cur.active = 'all';
+          } else if (newName !== folder) {
+            if (cur.folders.includes(newName)) { alert('이미 있는 이름'); return; }
+            cur.folders = cur.folders.map(x => x === folder ? newName : x);
+            Object.keys(cur.rowFolder).forEach(k => { if (cur.rowFolder[k] === folder) cur.rowFolder[k] = newName; });
+            if (cur.active === folder) cur.active = newName;
+          }
+          saveFolders(cur);
+          renderFolderBar();
+          applyFolderFilter();
+        });
+      }
+    });
+    markRowFolderTags();
+  }
+  function enableRowDrag() {
+    document.querySelectorAll('.timeline .card-row').forEach(card => {
+      if (card.dataset.pkDrag) return;
+      card.dataset.pkDrag = '1';
+      card.setAttribute('draggable', 'true');
+      card.addEventListener('dragstart', e => {
+        const row = card.querySelector('.row');
+        if (!row) return;
+        e.dataTransfer.setData('text/pk-row', rowFolderId(row));
+        e.dataTransfer.effectAllowed = 'move';
+        card.classList.add('pk-dragging');
+      });
+      card.addEventListener('dragend', () => card.classList.remove('pk-dragging'));
+    });
+  }
+  function applyFolderFilter() {
+    const d = loadFolders();
+    const active = d.active || 'all';
+    const readBtn = document.querySelector('.pk-filter-btn.active');
+    const readMode = readBtn ? readBtn.dataset.filter : 'all';
+    document.querySelectorAll('.timeline .card-row').forEach(card => {
+      const row = card.querySelector('.row');
+      if (!row) return;
+      const f = d.rowFolder[rowFolderId(row)];
+      let show = true;
+      if (active === '__none') show = !f;
+      else if (active !== 'all') show = f === active;
+      if (show && readMode && readMode !== 'all') {
+        const isRead = row.classList.contains('pk-row-read');
+        if (readMode === 'read') show = isRead;
+        else if (readMode === 'unread') show = !isRead;
+      }
+      card.style.display = show ? '' : 'none';
+    });
+  }
+  function markRowFolderTags() {
+    const d = loadFolders();
+    document.querySelectorAll('.timeline .row').forEach(row => {
+      const id = rowFolderId(row);
+      const f = d.rowFolder[id];
+      let tag = row.querySelector('.pk-folder-tag');
+      if (!f) { if (tag) tag.remove(); return; }
+      if (!tag) {
+        tag = document.createElement('span');
+        tag.className = 'pk-folder-tag';
+        row.appendChild(tag);
+      }
+      tag.textContent = '📁 ' + f;
+      tag.title = '클릭=미분류로 이동';
+      tag.onclick = (e) => {
+        e.stopPropagation(); e.preventDefault();
+        const cur = loadFolders();
+        delete cur.rowFolder[id];
+        saveFolders(cur);
+        renderFolderBar();
+        applyFolderFilter();
+      };
+    });
+  }
+  function escFolderHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
   function applyFilter(mode) {
     const rows = document.querySelectorAll('.card-row');
     rows.forEach(card => {
@@ -1730,6 +1905,7 @@
       injectDeleteButtons();
       injectMetaEditors();
       injectProgressAndFilter();
+      injectFolderBar();
       injectAddBar();
       updateProgress();
       injectDivider();

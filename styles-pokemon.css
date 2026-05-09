@@ -1570,3 +1570,94 @@ html body .timeline .row .row-actions {
 }
 html body .timeline .row::before,
 html body .timeline .row::after { content: none !important; display: none !important; }
+
+/* ── 폴더 분류 바 ── */
+#pk-folder-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  margin: 0 0 8px 0;
+  background: linear-gradient(180deg, #f9fbff 0%, #eef2fb 100%);
+  border: 1px solid #d7dcec;
+  border-radius: 10px;
+}
+#pk-folder-bar .pk-folder-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #374369;
+  margin-right: 4px;
+}
+#pk-folder-bar .pk-folder-hint {
+  margin-left: auto;
+  font-size: 11px;
+  color: #8892b0;
+}
+#pk-folder-bar .pk-fchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid #c2cae0;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c3858;
+  cursor: pointer;
+  transition: all .12s ease;
+  user-select: none;
+}
+#pk-folder-bar .pk-fchip:hover { border-color: #5a7bc2; background: #f0f5ff; }
+#pk-folder-bar .pk-fchip.active {
+  background: #2f4f8f;
+  color: #fff;
+  border-color: #2f4f8f;
+  box-shadow: 0 1px 3px rgba(47,79,143,.25);
+}
+#pk-folder-bar .pk-fchip-count {
+  background: rgba(0,0,0,.08);
+  color: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 8px;
+  min-width: 16px;
+  text-align: center;
+}
+#pk-folder-bar .pk-fchip.active .pk-fchip-count {
+  background: rgba(255,255,255,.22);
+}
+#pk-folder-bar .pk-fchip-add {
+  border-style: dashed;
+  color: #5a7bc2;
+}
+#pk-folder-bar .pk-fchip.pk-drop-hover {
+  background: #ffe9b5 !important;
+  border-color: #e8a93c !important;
+  color: #6b3d00 !important;
+  transform: scale(1.06);
+}
+
+/* 드래그 중 카드 */
+.timeline .card-row[draggable="true"] { cursor: grab; }
+.timeline .card-row.pk-dragging { opacity: .45; cursor: grabbing; }
+
+/* 행에 표시되는 폴더 라벨 */
+.timeline .row .pk-folder-tag {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  background: #fff4d3;
+  border: 1px solid #e8c97a;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #6b4a00;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.timeline .row .pk-folder-tag:hover { background: #ffe9b5; }
