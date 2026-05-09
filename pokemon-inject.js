@@ -1762,6 +1762,111 @@
     });
   }
 
+  /* ── 추가된(MD 업로드) 글 편집 버튼 ── */
+  function injectAddedEditButtons(){
+    document.querySelectorAll('.pk-added-row').forEach(row => {
+      if (row.querySelector('.pk-edit-btn')) return;
+      let actions = row.querySelector('.row-actions');
+      if (!actions) {
+        actions = document.createElement('div');
+        actions.className = 'row-actions';
+        row.appendChild(actions);
+      }
+      const btn = document.createElement('button');
+      btn.className = 'pk-edit-btn';
+      btn.title = 'MD 편집';
+      btn.innerHTML = '✎';
+      btn.addEventListener('click', e => {
+        e.stopPropagation(); e.preventDefault();
+        openMdEditor(row.id);
+      });
+      actions.insertBefore(btn, actions.firstChild);
+    });
+  }
+  function htmlToMdFallback(html){
+    /* 저장된 md가 없을 때 — html에서 대략적인 md 역변환 */
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html || '';
+    const out = [];
+    tmp.childNodes.forEach(n => {
+      if (n.nodeType !== 1) return;
+      const t = (n.textContent || '').trim();
+      if (!t) return;
+      if (n.classList.contains('ia-section-h')) out.push('## ' + t);
+      else if (n.classList.contains('ia-para-title')) out.push('### ' + t);
+      else if (n.classList.contains('ia-sub-title')) out.push('#### ' + t);
+      else out.push(t);
+      out.push('');
+    });
+    return out.join('\n').trim();
+  }
+  function openMdEditor(rowId){
+    const pk = pageKey();
+    const all = lsLoad(PK_ADD);
+    const list = all[pk] || [];
+    const item = list.find(a => a.id === rowId);
+    if (!item) { alert('편집 대상 글을 찾을 수 없습니다.'); return; }
+    const initialMd = item.md || ('# ' + (item.title||'') + '\n\n' + htmlToMdFallback(item.html));
+    let dlg = document.getElementById('pk-md-editor');
+    if (dlg) dlg.remove();
+    dlg = document.createElement('div');
+    dlg.id = 'pk-md-editor';
+    dlg.innerHTML = `
+      <div class="pk-mde-backdrop"></div>
+      <div class="pk-mde-modal">
+        <div class="pk-mde-head">
+          <span>📝 글 편집 — ${escHtml(item.title || '')}</span>
+          <button class="pk-mde-x" type="button">✕</button>
+        </div>
+        <textarea class="pk-mde-area" spellcheck="false"></textarea>
+        <div class="pk-mde-foot">
+          <span class="pk-mde-hint">첫 # → 제목, ## → 섹션, ### → 단락 제목, **굵은**</span>
+          <button class="pk-mde-cancel" type="button">취소</button>
+          <button class="pk-mde-save" type="button">저장</button>
+        </div>
+      </div>`;
+    document.body.appendChild(dlg);
+    const ta = dlg.querySelector('.pk-mde-area');
+    ta.value = initialMd;
+    setTimeout(() => ta.focus(), 30);
+    const close = () => dlg.remove();
+    dlg.querySelector('.pk-mde-x').addEventListener('click', close);
+    dlg.querySelector('.pk-mde-cancel').addEventListener('click', close);
+    dlg.querySelector('.pk-mde-backdrop').addEventListener('click', close);
+    dlg.querySelector('.pk-mde-save').addEventListener('click', () => {
+      const newMd = ta.value;
+      const { title, html } = parseMarkdownToReportHtml(newMd);
+      const allNow = lsLoad(PK_ADD);
+      const arr = allNow[pk] || [];
+      const idx = arr.findIndex(a => a.id === rowId);
+      if (idx < 0) { close(); return; }
+      arr[idx] = Object.assign({}, arr[idx], {
+        title, html, md: newMd, excerpt: plainExcerpt(html, 140),
+        editedAt: Date.now()
+      });
+      allNow[pk] = arr;
+      lsSave(PK_ADD, allNow);
+      // DOM 갱신: 기존 wrap 제거 후 재렌더
+      const old = document.getElementById(rowId);
+      const wrap = old && old.closest('.card-row');
+      if (wrap) wrap.remove();
+      renderAddedArticles();
+      injectRowDecorations();
+      injectRowNotes();
+      injectReadBadges();
+      injectDeleteButtons();
+      injectMetaEditors();
+      injectAddedEditButtons();
+      enableRowDrag();
+      renderFolderBar();
+      applyFolderFilter();
+      if (typeof updateProgress === 'function') updateProgress();
+      close();
+    });
+    // ESC 닫기
+    dlg.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  }
+
   function injectDeleteButtons(){
     document.querySelectorAll('.row').forEach(row => {
       if (row.querySelector('.pk-del-btn')) return;
@@ -1867,7 +1972,7 @@
       const { title, html } = parseMarkdownToReportHtml(text);
       const pk = pageKey();
       const id = `pk-added-${Date.now()}`;
-      const item = { id, title, html, excerpt: plainExcerpt(html, 140), addedAt: Date.now() };
+      const item = { id, title, html, md: text, excerpt: plainExcerpt(html, 140), addedAt: Date.now() };
       const all = lsLoad(PK_ADD);
       all[pk] = all[pk] || [];
       all[pk].unshift(item);
@@ -1880,6 +1985,9 @@
       injectReadBadges();
       injectDeleteButtons();
       injectMetaEditors();
+      injectAddedEditButtons();
+      enableRowDrag();
+      renderFolderBar();
       if (typeof updateProgress === 'function') updateProgress();
       const newRow = document.getElementById(id);
       if (newRow) newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1904,6 +2012,7 @@
       injectReadBadges();
       injectDeleteButtons();
       injectMetaEditors();
+      injectAddedEditButtons();
       injectProgressAndFilter();
       injectFolderBar();
       injectAddBar();
