@@ -568,7 +568,7 @@
         b.classList.remove('pk-drop-hover');
         if (folder === 'all') return;
         e.preventDefault();
-        const rid = e.dataTransfer.getData('text/pk-row');
+        const rid = e.dataTransfer.getData('text/pk-row') || e.dataTransfer.getData('text/plain');
         if (!rid) return;
         const cur = loadFolders();
         if (folder === '__none') delete cur.rowFolder[rid];
@@ -604,18 +604,26 @@
     markRowFolderTags();
   }
   function enableRowDrag() {
-    document.querySelectorAll('.timeline .card-row').forEach(card => {
-      if (card.dataset.pkDrag) return;
-      card.dataset.pkDrag = '1';
-      card.setAttribute('draggable', 'true');
-      card.addEventListener('dragstart', e => {
-        const row = card.querySelector('.row');
-        if (!row) return;
-        e.dataTransfer.setData('text/pk-row', rowFolderId(row));
-        e.dataTransfer.effectAllowed = 'move';
-        card.classList.add('pk-dragging');
+    /* card-row는 display:contents라 드래그 박스가 안 잡힘 → 실제 레이아웃 박스인 .row에 바인딩 */
+    document.querySelectorAll('.timeline .row').forEach(row => {
+      if (row.dataset.pkDrag) return;
+      row.dataset.pkDrag = '1';
+      row.setAttribute('draggable', 'true');
+      row.addEventListener('dragstart', e => {
+        /* 버튼/편집 영역에서 시작된 드래그는 무시 */
+        const t = e.target;
+        if (t.closest && (t.closest('button') || t.closest('[contenteditable="true"]') ||
+            t.closest('.pk-meta-line') || t.closest('.pk-folder-tag'))) {
+          e.preventDefault(); return;
+        }
+        try {
+          e.dataTransfer.setData('text/pk-row', rowFolderId(row));
+          e.dataTransfer.setData('text/plain', rowFolderId(row));
+          e.dataTransfer.effectAllowed = 'move';
+        } catch(_) {}
+        row.classList.add('pk-dragging');
       });
-      card.addEventListener('dragend', () => card.classList.remove('pk-dragging'));
+      row.addEventListener('dragend', () => row.classList.remove('pk-dragging'));
     });
   }
   function applyFolderFilter() {
@@ -1743,6 +1751,7 @@
         newRow.addEventListener('click', function(e){
           if (e.target.closest('.bookmark-btn') || e.target.closest('.ia-close') ||
               e.target.closest('.pk-del-btn') || e.target.closest('.pk-meta-edit') ||
+              e.target.closest('.pk-edit-btn') || e.target.closest('.pk-folder-tag') ||
               e.target.closest('.pk-read-badge') || e.target.closest('.pk-row-ball')) return;
           const wasOpen = this.classList.contains('expanded');
           document.querySelectorAll('.row.expanded').forEach(r => r.classList.remove('expanded'));
@@ -1775,13 +1784,22 @@
       const btn = document.createElement('button');
       btn.className = 'pk-edit-btn';
       btn.title = 'MD 편집';
+      btn.type = 'button';
       btn.innerHTML = '✎';
-      btn.addEventListener('click', e => {
-        e.stopPropagation(); e.preventDefault();
-        openMdEditor(row.id);
-      });
       actions.insertBefore(btn, actions.firstChild);
     });
+  }
+  /* 위임 핸들러 (capture 단계로 등록 — 다른 row 클릭 핸들러보다 먼저 처리) */
+  function bindEditDelegation(){
+    if (window.__pkEditBound) return;
+    window.__pkEditBound = true;
+    document.addEventListener('click', e => {
+      const btn = e.target.closest && e.target.closest('.pk-edit-btn');
+      if (!btn) return;
+      e.stopPropagation(); e.preventDefault();
+      const row = btn.closest('.pk-added-row');
+      if (row) openMdEditor(row.id);
+    }, true);
   }
   function htmlToMdFallback(html){
     /* 저장된 md가 없을 때 — html에서 대략적인 md 역변환 */
@@ -2013,6 +2031,7 @@
       injectDeleteButtons();
       injectMetaEditors();
       injectAddedEditButtons();
+      bindEditDelegation();
       injectProgressAndFilter();
       injectFolderBar();
       injectAddBar();
