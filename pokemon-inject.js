@@ -1561,6 +1561,29 @@
   <div class="article-content">${a.html}</div>
 </div>`;
       tl.insertBefore(wrap, tl.firstChild);
+      const newRow = wrap.querySelector('.row');
+      const newArt = wrap.querySelector('.inline-article');
+      if (newRow && !newRow.dataset.pkExpandBound) {
+        newRow.dataset.pkExpandBound = '1';
+        newRow.addEventListener('click', function(e){
+          if (e.target.closest('.bookmark-btn') || e.target.closest('.ia-close') ||
+              e.target.closest('.pk-del-btn') || e.target.closest('.pk-meta-edit') ||
+              e.target.closest('.pk-read-badge') || e.target.closest('.pk-row-ball')) return;
+          const wasOpen = this.classList.contains('expanded');
+          document.querySelectorAll('.row.expanded').forEach(r => r.classList.remove('expanded'));
+          if (!wasOpen) {
+            this.classList.add('expanded');
+            setTimeout(() => {
+              const top = newArt.getBoundingClientRect().top + window.scrollY - 80;
+              window.scrollTo({ top, behavior: 'smooth' });
+            }, 50);
+          }
+        });
+        const closeBtn = newArt && newArt.querySelector('.ia-close');
+        if (closeBtn) closeBtn.addEventListener('click', e => {
+          e.stopPropagation(); newRow.classList.remove('expanded');
+        });
+      }
     });
   }
 
