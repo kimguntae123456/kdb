@@ -1745,3 +1745,106 @@ html body .timeline .row::after { content: none !important; display: none !impor
 }
 #pk-md-editor .pk-mde-save:hover { background: #25416f; }
 #pk-md-editor .pk-mde-cancel:hover { background: #eaf1ff; }
+
+/* ── 사이드바 해시태그 패널 ── */
+.sidebar #pk-tag-panel { margin-top: 12px; }
+.sidebar #pk-tag-panel .nav-section-title {
+  font-weight: 800;
+  color: #6b4a00;
+}
+.sidebar #pk-tag-panel .pk-tag-link {
+  font-size: 12px;
+}
+.sidebar #pk-tag-panel .pk-tag-link span:first-child {
+  color: #2f4f8f;
+  font-weight: 700;
+}
+.sidebar #pk-tag-panel .pk-tag-empty {
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #8892b0;
+  font-style: italic;
+}
+
+/* 행의 해시태그 칩 클릭 가능 */
+.pk-meta-line .pk-tag {
+  cursor: pointer;
+  transition: background .12s ease;
+}
+.pk-meta-line .pk-tag:hover {
+  background: #e8a93c;
+  color: #fff;
+}
+
+/* ── 해시태그 모아보기 모달 ── */
+#pk-tag-view {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+}
+#pk-tag-view .pk-tv-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(15,22,45,.55);
+}
+#pk-tag-view .pk-tv-modal {
+  position: relative;
+  width: min(720px, 92vw);
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+#pk-tag-view .pk-tv-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px;
+  background: linear-gradient(180deg, #f7d56e 0%, #e8a93c 100%);
+  color: #4a2f00;
+  font-weight: 800;
+  font-size: 15px;
+}
+#pk-tag-view .pk-tv-total {
+  font-size: 12px; opacity: .8; font-weight: 600; margin-left: 6px;
+}
+#pk-tag-view .pk-tv-x {
+  background: transparent; border: 0; color: #4a2f00;
+  font-size: 18px; cursor: pointer; padding: 2px 8px;
+}
+#pk-tag-view .pk-tv-body {
+  padding: 14px 18px;
+  overflow: auto;
+}
+#pk-tag-view .pk-tv-group { margin-bottom: 14px; }
+#pk-tag-view .pk-tv-sector {
+  font-size: 13px; font-weight: 700;
+  color: #2f4f8f;
+  border-bottom: 1px solid #d7dcec;
+  padding-bottom: 4px; margin-bottom: 6px;
+}
+#pk-tag-view .pk-tv-count {
+  display: inline-block;
+  background: #eef2fb; color: #2f4f8f;
+  border-radius: 8px;
+  font-size: 11px; font-weight: 700;
+  padding: 1px 6px; margin-left: 4px;
+}
+#pk-tag-view .pk-tv-list { list-style: none; padding: 0; margin: 0; }
+#pk-tag-view .pk-tv-item {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #1c2040;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.4;
+}
+#pk-tag-view .pk-tv-item:hover { background: #f0f5ff; }
+#pk-tag-view .pk-tv-item.pk-tv-disabled {
+  opacity: .55; pointer-events: none;
+}
+#pk-tag-view .pk-tv-empty {
+  padding: 30px; text-align: center; color: #8892b0;
+}
+
+/* 메타라인에서 한 줄 요약 잔존 요소 강제 숨김 */
+.pk-meta-line .pk-summary { display: none !important; }

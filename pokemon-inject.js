@@ -1927,35 +1927,46 @@
   }
 
   function injectMetaEditors(){
-    const all = lsLoad(PK_META);
     document.querySelectorAll('.row').forEach(row => {
       if (row.querySelector('.pk-meta-line')) return;
       const body = row.querySelector('.row-body');
       if (!body) return;
       const id = rowReadId(row);
-      const cur = all[id] || { tags: [], summary: '' };
       const line = document.createElement('div');
       line.className = 'pk-meta-line';
       const renderInner = ()=>{
-        const data = (lsLoad(PK_META))[id] || { tags: [], summary: '' };
-        const empty = !data.tags?.length && !data.summary;
+        const data = (lsLoad(PK_META))[id] || { tags: [] };
+        const empty = !data.tags?.length;
         line.classList.toggle('empty', empty);
         line.innerHTML = `
-          <span class="pk-tags">${(data.tags||[]).map(t=>`<span class="pk-tag">#${escHtml(t)}</span>`).join('')}</span>
-          <span class="pk-summary">${escHtml(data.summary||'')}</span>
-          <button class="pk-meta-edit" type="button">✎</button>`;
+          <span class="pk-tags">${(data.tags||[]).map(t=>`<span class="pk-tag" data-tag="${escHtml(t)}">#${escHtml(t)}</span>`).join('')}</span>
+          <button class="pk-meta-edit" type="button" title="해시태그 편집">✎ 태그</button>`;
         line.querySelector('.pk-meta-edit').addEventListener('click', e => {
           e.stopPropagation(); e.preventDefault();
-          const old = (lsLoad(PK_META))[id] || { tags: [], summary: '' };
-          const tagStr = prompt('해쉬태그 (쉼표로 구분, # 없이 입력)', (old.tags||[]).join(', '));
+          const old = (lsLoad(PK_META))[id] || { tags: [] };
+          const tagStr = prompt('해시태그 (쉼표로 구분, # 없이 입력)', (old.tags||[]).join(', '));
           if (tagStr === null) return;
-          const sum = prompt('한 줄 요약', old.summary || '');
-          if (sum === null) return;
           const tags = tagStr.split(/[,\s]+/).map(s=>s.replace(/^#/,'').trim()).filter(Boolean);
           const allNow = lsLoad(PK_META);
-          allNow[id] = { tags, summary: (sum||'').trim() };
+          const title = (row.querySelector('.row-title')?.textContent || '').trim();
+          allNow[id] = {
+            tags,
+            pagePath: location.pathname,
+            sector: (document.querySelector('.page-head h2')?.textContent || '').trim(),
+            rowId: id.split('::').pop(),
+            title,
+            updatedAt: Date.now()
+          };
           lsSave(PK_META, allNow);
           renderInner();
+          if (typeof renderHashtagPanel === 'function') renderHashtagPanel();
+        });
+        /* 태그 칩 클릭 → 해당 태그 필터 모달 */
+        line.querySelectorAll('.pk-tag').forEach(chip => {
+          chip.addEventListener('click', e => {
+            e.stopPropagation(); e.preventDefault();
+            openHashtagView(chip.dataset.tag);
+          });
         });
       };
       renderInner();
@@ -1966,6 +1977,105 @@
       });
       body.appendChild(line);
     });
+  }
+
+  /* ── 사이드바 해시태그 패널 (전체 페이지 통합) ── */
+  function collectAllTags(){
+    const all = lsLoad(PK_META);
+    const map = new Map(); // tag -> [{key, pagePath, sector, rowId, title}]
+    Object.keys(all).forEach(key => {
+      const v = all[key] || {};
+      (v.tags || []).forEach(t => {
+        if (!map.has(t)) map.set(t, []);
+        map.get(t).push({
+          key,
+          pagePath: v.pagePath || '',
+          sector: v.sector || '',
+          rowId: v.rowId || (key.split('::').pop()),
+          title: v.title || ''
+        });
+      });
+    });
+    return map;
+  }
+  function injectHashtagPanel(){
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    let panel = sidebar.querySelector('#pk-tag-panel');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'pk-tag-panel';
+      panel.className = 'nav-list';
+      sidebar.appendChild(panel);
+    }
+    renderHashtagPanel();
+  }
+  function renderHashtagPanel(){
+    const panel = document.querySelector('#pk-tag-panel');
+    if (!panel) return;
+    const map = collectAllTags();
+    const tags = [...map.entries()].sort((a,b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+    if (!tags.length) {
+      panel.innerHTML = `<div class="nav-section-title">🏷️ 해시태그</div>
+        <div class="pk-tag-empty">아직 태그가 없어요. 글에서 ✎ 태그로 추가</div>`;
+      return;
+    }
+    panel.innerHTML = `
+      <div class="nav-section-title">🏷️ 해시태그 (${tags.length})</div>
+      ${tags.map(([t, arr]) =>
+        `<a href="#" class="nav-item pk-tag-link" data-tag="${escHtml(t)}">
+           <span>#${escHtml(t)}</span><span class="count">${arr.length}</span>
+         </a>`).join('')}`;
+    panel.querySelectorAll('.pk-tag-link').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        openHashtagView(a.dataset.tag);
+      });
+    });
+  }
+  function openHashtagView(tag){
+    const map = collectAllTags();
+    const items = map.get(tag) || [];
+    let dlg = document.getElementById('pk-tag-view');
+    if (dlg) dlg.remove();
+    dlg = document.createElement('div');
+    dlg.id = 'pk-tag-view';
+    /* 섹터별 그룹 */
+    const bySector = {};
+    items.forEach(it => {
+      const k = it.sector || '(섹터 없음)';
+      (bySector[k] = bySector[k] || []).push(it);
+    });
+    const sectors = Object.keys(bySector).sort();
+    const groups = sectors.map(s => `
+      <div class="pk-tv-group">
+        <div class="pk-tv-sector">${escHtml(s)} <span class="pk-tv-count">${bySector[s].length}</span></div>
+        <ul class="pk-tv-list">
+          ${bySector[s].map(it => {
+            const url = it.pagePath ? (it.pagePath + '#' + it.rowId) : '#';
+            const disabled = !it.pagePath ? 'pk-tv-disabled' : '';
+            return `<li><a href="${escHtml(url)}" class="pk-tv-item ${disabled}" data-key="${escHtml(it.key)}">
+              <span class="pk-tv-title">${escHtml(it.title || '(제목 없음)')}</span>
+            </a></li>`;
+          }).join('')}
+        </ul>
+      </div>
+    `).join('');
+    dlg.innerHTML = `
+      <div class="pk-tv-backdrop"></div>
+      <div class="pk-tv-modal">
+        <div class="pk-tv-head">
+          <span>🏷️ #${escHtml(tag)} <span class="pk-tv-total">${items.length}편</span></span>
+          <button class="pk-tv-x" type="button">✕</button>
+        </div>
+        <div class="pk-tv-body">
+          ${items.length ? groups : '<div class="pk-tv-empty">이 태그의 글이 없습니다.</div>'}
+        </div>
+      </div>`;
+    document.body.appendChild(dlg);
+    const close = () => dlg.remove();
+    dlg.querySelector('.pk-tv-x').addEventListener('click', close);
+    dlg.querySelector('.pk-tv-backdrop').addEventListener('click', close);
   }
 
   function injectAddBar(){
@@ -2018,6 +2128,7 @@
     injectNavSectionHeaders();
     fixNavMojibake();
     injectSidebarProgress();
+    injectHashtagPanel();
 
     const isArticlePage = !!document.querySelector('.timeline');
     if (isArticlePage) {
