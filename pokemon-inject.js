@@ -333,9 +333,7 @@
       const ballEl = document.createElement('div');
       ballEl.className = 'pk-row-ball';
       const id = `${pageKey()}::row-${i}`;
-      const initKind = balls[id] != null
-        ? balls[id]
-        : (i < 3 ? 0 : i < 6 ? 1 : 2);
+      const initKind = balls[id] != null ? balls[id] : 0;
       ballEl.dataset.ball = String(initKind);
       ballEl.innerHTML = ballHTML(initKind);
       ballEl.title = ballLabel(initKind) + ' — 클릭해 변경';
