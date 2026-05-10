@@ -1921,6 +1921,7 @@
         if (cr) cr.remove(); else row.remove();
         if (ia && ia.classList && ia.classList.contains('inline-article')) ia.remove();
         if (typeof updateProgress === 'function') updateProgress();
+        if (typeof renderTrashPanel === 'function') renderTrashPanel();
       });
       actions.appendChild(btn);
     });
@@ -1976,6 +1977,66 @@
         // allow row expansion otherwise
       });
       body.appendChild(line);
+    });
+  }
+
+  /* ── 사이드바 휴지통 패널 (현재 페이지 숨긴 글) ── */
+  function injectTrashPanel(){
+    const sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+    let panel = sidebar.querySelector('#pk-trash-panel');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'pk-trash-panel';
+      panel.className = 'nav-list';
+      sidebar.appendChild(panel);
+    }
+    renderTrashPanel();
+  }
+  function renderTrashPanel(){
+    const panel = document.querySelector('#pk-trash-panel');
+    if (!panel) return;
+    const pk = pageKey();
+    const all = lsLoad(PK_DEL);
+    const list = all[pk] || [];
+    if (!list.length) {
+      panel.innerHTML = `<div class="nav-section-title">🗑 휴지통</div>
+        <div class="pk-trash-empty">숨긴 글이 없어요</div>`;
+      return;
+    }
+    /* 글 추가본(PK_ADD) 정보로 제목 추정, 일반 row는 페이지에서 조회 시도 */
+    const addedAll = lsLoad(PK_ADD)[pk] || [];
+    panel.innerHTML = `
+      <div class="nav-section-title">🗑 휴지통 (${list.length}) <button class="pk-trash-restore-all" type="button">전체복원</button></div>
+      ${list.map(fullId => {
+        const rid = fullId.split('::').pop();
+        const added = addedAll.find(a => a.id === rid);
+        const title = added ? added.title : rid;
+        return `<div class="pk-trash-item">
+          <span class="pk-trash-title" title="${escHtml(title)}">${escHtml(title)}</span>
+          <button class="pk-trash-restore" data-id="${escHtml(fullId)}" title="복원">↺</button>
+        </div>`;
+      }).join('')}`;
+    panel.querySelectorAll('.pk-trash-restore').forEach(b => {
+      b.addEventListener('click', e => {
+        e.preventDefault();
+        const id = b.dataset.id;
+        const cur = lsLoad(PK_DEL);
+        cur[pk] = (cur[pk] || []).filter(x => x !== id);
+        if (!cur[pk].length) delete cur[pk];
+        lsSave(PK_DEL, cur);
+        renderTrashPanel();
+        location.reload();
+      });
+    });
+    const allBtn = panel.querySelector('.pk-trash-restore-all');
+    if (allBtn) allBtn.addEventListener('click', e => {
+      e.preventDefault();
+      if (!confirm('이 페이지에서 숨긴 글 전부 복원할까요?')) return;
+      const cur = lsLoad(PK_DEL);
+      delete cur[pk];
+      lsSave(PK_DEL, cur);
+      location.reload();
     });
   }
 
@@ -2128,6 +2189,7 @@
     injectNavSectionHeaders();
     fixNavMojibake();
     injectSidebarProgress();
+    injectTrashPanel();
     injectHashtagPanel();
 
     const isArticlePage = !!document.querySelector('.timeline');
