@@ -1561,26 +1561,28 @@
     state.nodes.forEach(makeNode);
     requestAnimationFrame(renderEdges);
 
-    // 컬럼 더블클릭 → 새 노드 (canvas + col 전체 영역, 노드/제목/버튼은 제외)
-    Object.entries(colEls).forEach(([key, colEl]) => {
-      colEl.addEventListener('dblclick', e => {
-        /* 노드/제목/버튼 위 dblclick은 무시 */
-        if (e.target.closest('.pk-mm-node')) return;
-        if (e.target.closest('.pk-cards-coltitle')) return;
-        if (e.target.closest('button')) return;
-        const canvas = cols[key];
-        const c = canvas.getBoundingClientRect();
-        const n = {
-          id: 'n' + Date.now() + Math.floor(Math.random() * 999),
-          x: Math.max(0, e.clientX - c.left - 40),
-          y: Math.max(0, e.clientY - c.top  - 14),
-          t: '메모',
-          column: key,
-        };
-        state.nodes.push(n);
-        save();
-        makeNode(n);
-      });
+    // 컬럼 더블클릭 → 새 노드 (cols-wrap 단일 리스너 + 좌표로 컬럼 판정)
+    colsWrap.addEventListener('dblclick', e => {
+      /* 노드/제목/버튼/스플리터 위 dblclick은 무시 */
+      if (e.target.closest('.pk-mm-node')) return;
+      if (e.target.closest('.pk-cards-coltitle')) return;
+      if (e.target.closest('button')) return;
+      if (e.target.closest('.pk-cards-splitter')) return;
+      /* 좌표로 컬럼 판정 */
+      let key = findColAt(e.clientX, e.clientY);
+      if (!key) return;
+      const canvas = cols[key];
+      const c = canvas.getBoundingClientRect();
+      const n = {
+        id: 'n' + Date.now() + Math.floor(Math.random() * 999),
+        x: Math.max(0, e.clientX - c.left - 40),
+        y: Math.max(0, e.clientY - c.top  - 14),
+        t: '메모',
+        column: key,
+      };
+      state.nodes.push(n);
+      save();
+      makeNode(n);
     });
 
     map.querySelector('.pk-mm-add').addEventListener('click', () => {
