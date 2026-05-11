@@ -1086,15 +1086,50 @@
 
     /** state: { nodes: [{id, x, y, t, column:'s'|'m'|'c'}], edges: [[a,b]] } */
     let state = { nodes: [], edges: [] };
+    let loadFailed = false;
     try {
       const raw = localStorage.getItem(storeKey);
       if (raw) state = JSON.parse(raw);
-    } catch (_) {}
+    } catch (err) {
+      loadFailed = true;
+      /* 파싱 실패 시 원본 보존 (덮어쓰기 방지) */
+      try {
+        const raw = localStorage.getItem(storeKey);
+        if (raw) localStorage.setItem('pk-mm-corrupt::' + storeKey + '::' + Date.now(), raw);
+      } catch (_) {}
+      console.error('[핵심카드 로드 실패 — 원본 백업됨]', err);
+    }
     // 마이그레이션: column 없는 기존 노드는 본론(m)으로
     let migrated = false;
     state.nodes.forEach(n => { if (!n.column) { n.column = 'm'; migrated = true; } });
     if (!state.colTitles) { state.colTitles = {}; migrated = true; }
-    if (migrated) try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (_) {}
+    /* 로드 실패 시 절대 자동 저장 금지 (덮어쓰기 방지) */
+    if (migrated && !loadFailed) try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (_) {}
+
+    /* ── Undo 스택 + 자동 백업 ── */
+    const UNDO_MAX = 50;
+    const BAK_MAX = 10;
+    const undoStack = [];
+    const redoStack = [];
+    const snapshot = () => JSON.stringify(state);
+    const pushUndo = () => {
+      undoStack.push(snapshot());
+      if (undoStack.length > UNDO_MAX) undoStack.shift();
+      redoStack.length = 0;
+    };
+    const writeBackup = () => {
+      try {
+        const ts = Date.now();
+        localStorage.setItem('pk-mm-bak::' + storeKey + '::' + ts, snapshot());
+        /* 오래된 백업 정리 */
+        const baks = Object.keys(localStorage)
+          .filter(k => k.startsWith('pk-mm-bak::' + storeKey + '::'))
+          .sort();
+        while (baks.length > BAK_MAX) {
+          localStorage.removeItem(baks.shift());
+        }
+      } catch (_) {}
+    };
 
     /* 컬럼 제목 편집 (서론/본론/결론 → 사용자 정의) */
     const DEFAULT_COL_TITLES = { s: '서론', m: '본론', c: '결론' };
@@ -1134,9 +1169,18 @@
       });
     });
 
+    let _lastSavedSnap = snapshot();
     const save = () => {
+      const cur = snapshot();
+      if (cur !== _lastSavedSnap) {
+        undoStack.push(_lastSavedSnap);
+        if (undoStack.length > UNDO_MAX) undoStack.shift();
+        redoStack.length = 0;
+        _lastSavedSnap = cur;
+        writeBackup();
+      }
       try {
-        localStorage.setItem(storeKey, JSON.stringify(state));
+        localStorage.setItem(storeKey, cur);
       } catch (err) {
         /* localStorage 한도 초과 등 — 사용자에게 즉시 알림 */
         if (window._pkSaveWarned) return;
@@ -1465,6 +1509,58 @@
 
     window.addEventListener('resize', renderEdges);
     window.addEventListener('scroll', renderEdges, {passive:true});
+
+    /* 전체 패널 재구성 (undo/redo 후 호출) */
+    const rebuildAll = () => {
+      [...colsWrap.querySelectorAll('.pk-mm-node')].forEach(x => x.remove());
+      Object.entries(colTitleEls).forEach(([k, el]) => {
+        if (el) el.textContent = state.colTitles[k] || DEFAULT_COL_TITLES[k];
+      });
+      state.nodes.forEach(makeNode);
+      renderEdges();
+    };
+
+    /* Ctrl+Z / Ctrl+Shift+Z (또는 Ctrl+Y) */
+    const onKey = (e) => {
+      const isMeta = e.ctrlKey || e.metaKey;
+      if (!isMeta) return;
+      const expanded = map._sourceRow && map._sourceRow.classList.contains('expanded');
+      if (!expanded || map.style.display === 'none') return;
+      /* contenteditable 내에서는 네이티브 텍스트 undo 우선 */
+      const t = e.target;
+      if (t && t.getAttribute && t.getAttribute('contenteditable') === 'true') return;
+      if (e.key === 'z' || e.key === 'Z') {
+        if (e.shiftKey) {
+          if (redoStack.length === 0) return;
+          e.preventDefault();
+          undoStack.push(_lastSavedSnap);
+          const next = redoStack.pop();
+          state = JSON.parse(next);
+          _lastSavedSnap = next;
+          try { localStorage.setItem(storeKey, next); } catch (_) {}
+          rebuildAll();
+        } else {
+          if (undoStack.length === 0) return;
+          e.preventDefault();
+          redoStack.push(_lastSavedSnap);
+          const prev = undoStack.pop();
+          state = JSON.parse(prev);
+          _lastSavedSnap = prev;
+          try { localStorage.setItem(storeKey, prev); } catch (_) {}
+          rebuildAll();
+        }
+      } else if (e.key === 'y' || e.key === 'Y') {
+        if (redoStack.length === 0) return;
+        e.preventDefault();
+        undoStack.push(_lastSavedSnap);
+        const next = redoStack.pop();
+        state = JSON.parse(next);
+        _lastSavedSnap = next;
+        try { localStorage.setItem(storeKey, next); } catch (_) {}
+        rebuildAll();
+      }
+    };
+    document.addEventListener('keydown', onKey, true);
   }
 
   /* ══════════════════════════════════════
