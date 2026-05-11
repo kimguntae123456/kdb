@@ -1088,74 +1088,9 @@
       c: map.querySelector('.pk-cards-col[data-col="c"]'),
     };
     const colsWrap = map.querySelector('.pk-cards-cols');
-
-    /* 컬럼 너비 (fr 비율) — 저장된 값 적용, 없으면 1:1:1 */
-    if (!state.colFracs) state.colFracs = { s: 1, m: 1, c: 1 };
-    const applyColFracs = () => {
-      const f = state.colFracs;
-      colsWrap.style.gridTemplateColumns =
-        `${f.s}fr 6px ${f.m}fr 6px ${f.c}fr`;
-    };
-    applyColFracs();
-
-    /* splitter 드래그 */
-    map.querySelectorAll('.pk-cards-splitter').forEach(sp => {
-      sp.addEventListener('mousedown', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        const pair = sp.dataset.pair;  // 'sm' or 'mc'
-        const aKey = pair[0], bKey = pair[1];
-        const aEl = colEls[aKey], bEl = colEls[bKey];
-        const startX = e.clientX;
-        const aW0 = aEl.offsetWidth;
-        const bW0 = bEl.offsetWidth;
-        const total = aW0 + bW0;
-        const MIN = 60;
-        document.body.style.cursor = 'col-resize';
-        const onMove = (ev) => {
-          const dx = ev.clientX - startX;
-          let aW = Math.max(MIN, Math.min(total - MIN, aW0 + dx));
-          let bW = total - aW;
-          /* 다른 컬럼은 그대로 두고 a/b만 px로 강제 */
-          const otherKey = ['s','m','c'].find(k => k !== aKey && k !== bKey);
-          const otherW = colEls[otherKey].offsetWidth;
-          colsWrap.style.gridTemplateColumns =
-            pair === 'sm'
-              ? `${aW}px 6px ${bW}px 6px ${otherW}px`
-              : `${otherW}px 6px ${aW}px 6px ${bW}px`;
-          renderEdges();
-        };
-        const onUp = () => {
-          window.removeEventListener('mousemove', onMove);
-          window.removeEventListener('mouseup', onUp);
-          document.body.style.cursor = '';
-          /* 최종 px → fr 비율 저장 */
-          const sw = colEls.s.offsetWidth;
-          const mw = colEls.m.offsetWidth;
-          const cw = colEls.c.offsetWidth;
-          const sum = sw + mw + cw;
-          state.colFracs = {
-            s: +(sw / sum * 3).toFixed(3),
-            m: +(mw / sum * 3).toFixed(3),
-            c: +(cw / sum * 3).toFixed(3),
-          };
-          applyColFracs();
-          save();
-        };
-        window.addEventListener('mousemove', onMove);
-        window.addEventListener('mouseup', onUp);
-      });
-      /* 더블클릭 → 1:1:1 리셋 */
-      sp.addEventListener('dblclick', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        state.colFracs = { s: 1, m: 1, c: 1 };
-        applyColFracs();
-        save();
-        renderEdges();
-      });
-    });
     const svg = map.querySelector('svg.pk-mm-edges');
+    /* applyColFracs/splitter는 state 로드 후 정의 */
+    let applyColFracs = () => {};
     const storeKey = `pk-mm::${pageKey()}::${rowIdx}`;
 
     /** state: { nodes: [{id, x, y, t, column:'s'|'m'|'c'}], edges: [[a,b]] } */
@@ -1265,6 +1200,70 @@
               'copy(JSON.stringify(localStorage))');
       }
     };
+
+    /* 컬럼 너비 (fr 비율) — 저장된 값 적용, 없으면 1:1:1 */
+    if (!state.colFracs) state.colFracs = { s: 1, m: 1, c: 1 };
+    applyColFracs = () => {
+      const f = state.colFracs;
+      colsWrap.style.gridTemplateColumns =
+        `${f.s}fr 6px ${f.m}fr 6px ${f.c}fr`;
+    };
+    applyColFracs();
+
+    /* splitter 드래그 */
+    map.querySelectorAll('.pk-cards-splitter').forEach(sp => {
+      sp.addEventListener('mousedown', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const pair = sp.dataset.pair;
+        const aKey = pair[0], bKey = pair[1];
+        const aEl = colEls[aKey], bEl = colEls[bKey];
+        const startX = e.clientX;
+        const aW0 = aEl.offsetWidth;
+        const bW0 = bEl.offsetWidth;
+        const total = aW0 + bW0;
+        const MIN = 60;
+        document.body.style.cursor = 'col-resize';
+        const onMove = (ev) => {
+          const dx = ev.clientX - startX;
+          let aW = Math.max(MIN, Math.min(total - MIN, aW0 + dx));
+          let bW = total - aW;
+          const otherKey = ['s','m','c'].find(k => k !== aKey && k !== bKey);
+          const otherW = colEls[otherKey].offsetWidth;
+          colsWrap.style.gridTemplateColumns =
+            pair === 'sm'
+              ? `${aW}px 6px ${bW}px 6px ${otherW}px`
+              : `${otherW}px 6px ${aW}px 6px ${bW}px`;
+          renderEdges();
+        };
+        const onUp = () => {
+          window.removeEventListener('mousemove', onMove);
+          window.removeEventListener('mouseup', onUp);
+          document.body.style.cursor = '';
+          const sw = colEls.s.offsetWidth;
+          const mw = colEls.m.offsetWidth;
+          const cw = colEls.c.offsetWidth;
+          const sum = sw + mw + cw;
+          state.colFracs = {
+            s: +(sw / sum * 3).toFixed(3),
+            m: +(mw / sum * 3).toFixed(3),
+            c: +(cw / sum * 3).toFixed(3),
+          };
+          applyColFracs();
+          save();
+        };
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+      });
+      sp.addEventListener('dblclick', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        state.colFracs = { s: 1, m: 1, c: 1 };
+        applyColFracs();
+        save();
+        renderEdges();
+      });
+    });
 
     let selectedForEdge = null;
 
