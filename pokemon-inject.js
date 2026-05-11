@@ -919,22 +919,36 @@
       window._pkFloatingUpdate = () => {
         const panels = window._pkFloatingPanels || [];
         const v = vvOffset();
-        const center = v.t + v.h / 2;
-        // expanded row 중 article center가 visible viewport center에 가장 가까운 1개
-        let best = null, bestDist = Infinity;
-        panels.forEach(p => {
-          const row = p._sourceRow;
-          const art = p._sourceArticle;
-          if (!row || !art || !row.classList.contains('expanded')) return;
+        const inViewport = (art) => {
+          if (!art || !art.getBoundingClientRect) return false;
           const r = art.getBoundingClientRect();
-          const c = (r.top + r.bottom) / 2;
-          const d = Math.abs(c - center);
-          if (d < bestDist) { bestDist = d; best = p; }
-        });
+          return r.bottom > 0 && r.top < v.h;
+        };
+        const expanded = panels.filter(p =>
+          p._sourceRow && p._sourceArticle && p._sourceRow.classList.contains('expanded')
+        );
+        let best = null;
+        /* sticky: 현재 표시 중이고 article이 뷰포트에 조금이라도 보이면 유지 */
+        const current = window._pkCurrentPanel;
+        if (current && expanded.includes(current) && inViewport(current._sourceArticle)) {
+          best = current;
+        } else {
+          /* 뷰포트 안에 article이 보이는 패널 우선 선택, 없으면 중앙 가장 가까운 것 */
+          const visible = expanded.filter(p => inViewport(p._sourceArticle));
+          const pool = visible.length ? visible : expanded;
+          const center = v.t + v.h / 2;
+          let bestDist = Infinity;
+          pool.forEach(p => {
+            const r = p._sourceArticle.getBoundingClientRect();
+            const c = (r.top + r.bottom) / 2;
+            const d = Math.abs(c - center);
+            if (d < bestDist) { bestDist = d; best = p; }
+          });
+        }
+        window._pkCurrentPanel = best;
         panels.forEach(p => {
           const show = (p === best);
           p.style.display = show ? 'flex' : 'none';
-          // 표시 중이면 매번 재배치 — 본문 위치 변화(리사이즈/줌/레이아웃)에 즉시 따라감
           if (show) positionPanel(p);
         });
       };
