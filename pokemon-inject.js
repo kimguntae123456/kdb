@@ -856,7 +856,7 @@
         <div class="pk-cards-col" data-col="m"><div class="pk-cards-coltitle">본론</div><div class="pk-cards-canvas"></div></div>
         <div class="pk-cards-col" data-col="c"><div class="pk-cards-coltitle">결론</div><div class="pk-cards-canvas"></div></div>
       </div>
-      <div class="pk-mm-hint">컬럼 더블클릭=노드 · 노드 더블클릭=수정 · 컬럼 간 드래그 가능 · Shift+클릭 두 노드=연결(같은 컬럼)</div>
+      <div class="pk-mm-hint">컬럼 더블클릭=노드 · 노드 더블클릭=수정(Ctrl+B 볼드) · 드래그=이동 · Shift+클릭=연결 · Ctrl+Z=실행취소</div>
     `;
     article.appendChild(map);
 
@@ -1289,6 +1289,28 @@
       setTimeout(() => document.addEventListener('mousedown', closer, true), 0);
     };
 
+    /* 허용 태그: 볼드/이탤릭/밑줄/줄바꿈만 통과 */
+    const ALLOWED_TAGS = new Set(['B','STRONG','I','EM','U','BR']);
+    const sanitizeNode = (root) => {
+      const walk = (node) => {
+        [...node.childNodes].forEach(c => {
+          if (c.nodeType === 1) {
+            if (c.classList && (c.classList.contains('pk-mm-del') || c.classList.contains('pk-mm-color'))) return;
+            if (ALLOWED_TAGS.has(c.tagName)) {
+              [...c.attributes].forEach(a => c.removeAttribute(a.name));
+              walk(c);
+            } else {
+              const parent = c.parentNode;
+              walk(c);
+              while (c.firstChild) parent.insertBefore(c.firstChild, c);
+              parent.removeChild(c);
+            }
+          }
+        });
+      };
+      walk(root);
+    };
+
     const makeNode = (n) => {
       const canvas = cols[n.column] || cols.m;
       const el = document.createElement('div');
@@ -1297,7 +1319,7 @@
       el.dataset.col = n.column;
       el.style.left = (n.x || 10) + 'px';
       el.style.top  = (n.y || 10) + 'px';
-      el.textContent = n.t || '메모';
+      el.innerHTML = n.t || '메모';
       if (n.color) applyNodeColor(el, n.color);
       const del = document.createElement('div');
       del.className = 'pk-mm-del';
@@ -1355,27 +1377,25 @@
       });
       el.addEventListener('blur', () => {
         el.removeAttribute('contenteditable');
-        /* 텍스트 추출: del 버튼 텍스트("X") 제외 */
-        let txt = '';
-        el.childNodes.forEach(c => {
-          if (c.nodeType === 3) txt += c.nodeValue;
-          else if (c.nodeType === 1 && !c.classList.contains('pk-mm-del') && !c.classList.contains('pk-mm-color')) txt += c.textContent;
-        });
-        txt = txt.trim();
         const delBtn = el.querySelector('.pk-mm-del');
         const colBtn = el.querySelector('.pk-mm-color');
+        /* 버튼 분리 → sanitize → innerHTML 추출 */
+        if (delBtn) delBtn.remove();
+        if (colBtn) colBtn.remove();
+        sanitizeNode(el);
+        const html = el.innerHTML;
+        const plain = (el.textContent || '').trim();
         /* 데이터 손실 가드: 이전에 내용이 있었는데 빈 문자열로 저장하려 하면 무시 */
-        if (!txt && (n.t || '').trim()) {
-          el.textContent = n.t;
+        if (!plain && (n.t || '').replace(/<[^>]+>/g, '').trim()) {
+          el.innerHTML = n.t;
           if (delBtn) el.appendChild(delBtn);
           if (colBtn) el.appendChild(colBtn);
           return;
         }
-        /* 인라인 스타일/자식 정리 — 버튼만 남기고 plain text 재구성 */
-        el.textContent = txt;
+        el.innerHTML = html;
         if (delBtn) el.appendChild(delBtn);
         if (colBtn) el.appendChild(colBtn);
-        n.t = txt;
+        n.t = html;
         save();
       });
 
