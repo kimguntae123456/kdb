@@ -880,8 +880,8 @@
       panel.style.right = 'auto';
       const offX = saved.offX != null ? saved.offX : DEFAULT_OFFX;
       const vy   = saved.vy   != null ? saved.vy   : DEFAULT_VY;
-      const pw = panel.offsetWidth  || 380;
-      const ph = panel.offsetHeight || 480;
+      const pw = panel.offsetWidth  || 480;
+      const ph = panel.offsetHeight || 600;
       let vx;
       if (art && art.getBoundingClientRect) {
         const r = art.getBoundingClientRect();
@@ -981,17 +981,23 @@
         } catch (_) {}
       });
 
-      // resize 변화 저장 (ResizeObserver)
-      const ro = new ResizeObserver(entries => {
-        for (const en of entries) {
-          const w = Math.round(en.contentRect.width);
-          const h = Math.round(en.contentRect.height);
+      /* resize 변화 저장 — box-sizing:border-box 환경에서
+         contentRect는 padding/border 제외값이라 매번 줄어듦.
+         offsetWidth/Height(테두리 포함)로 측정해 저장. */
+      let roDebounce = null;
+      const ro = new ResizeObserver(() => {
+        clearTimeout(roDebounce);
+        roDebounce = setTimeout(() => {
+          const w = map.offsetWidth;
+          const h = map.offsetHeight;
+          if (w < 200 || h < 160) return;  // 잘못 측정된 값 무시
           try {
             const cur = JSON.parse(localStorage.getItem(POS_KEY) || '{}');
+            if (cur.w === w && cur.h === h) return;  // 변화 없으면 skip
             cur.w = w; cur.h = h;
             localStorage.setItem(POS_KEY, JSON.stringify(cur));
           } catch (_) {}
-        }
+        }, 120);
       });
       ro.observe(map);
 

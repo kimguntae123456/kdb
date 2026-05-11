@@ -420,10 +420,10 @@ body .ia-para-body strong, body strong {
     top: 50vh;
     right: 24px;
     transform: translateY(-50%);
-    width: 380px;
-    height: 480px;
-    min-width: 280px;
-    min-height: 240px;
+    width: 480px;
+    height: 600px;
+    min-width: 320px;
+    min-height: 280px;
     max-width: 95vw;
     max-height: 95vh;
     margin: 0 !important;
