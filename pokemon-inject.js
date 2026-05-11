@@ -1079,7 +1079,46 @@
     // 마이그레이션: column 없는 기존 노드는 본론(m)으로
     let migrated = false;
     state.nodes.forEach(n => { if (!n.column) { n.column = 'm'; migrated = true; } });
+    if (!state.colTitles) { state.colTitles = {}; migrated = true; }
     if (migrated) try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (_) {}
+
+    /* 컬럼 제목 편집 (서론/본론/결론 → 사용자 정의) */
+    const DEFAULT_COL_TITLES = { s: '서론', m: '본론', c: '결론' };
+    const colTitleEls = {
+      s: map.querySelector('.pk-cards-col[data-col="s"] .pk-cards-coltitle'),
+      m: map.querySelector('.pk-cards-col[data-col="m"] .pk-cards-coltitle'),
+      c: map.querySelector('.pk-cards-col[data-col="c"] .pk-cards-coltitle'),
+    };
+    Object.entries(colTitleEls).forEach(([k, el]) => {
+      if (!el) return;
+      el.textContent = state.colTitles[k] || DEFAULT_COL_TITLES[k];
+      el.title = '더블클릭하여 제목 수정';
+      el.addEventListener('dblclick', e => {
+        e.stopPropagation();
+        el.setAttribute('contenteditable', 'true');
+        el.focus();
+        document.getSelection().selectAllChildren(el);
+      });
+      el.addEventListener('paste', e => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+        if (text) document.execCommand('insertText', false, text);
+      });
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+        else if (e.key === 'Escape') {
+          el.textContent = state.colTitles[k] || DEFAULT_COL_TITLES[k];
+          el.blur();
+        }
+      });
+      el.addEventListener('blur', () => {
+        el.removeAttribute('contenteditable');
+        const txt = (el.textContent || '').trim() || DEFAULT_COL_TITLES[k];
+        el.textContent = txt;
+        state.colTitles[k] = txt;
+        save();
+      });
+    });
 
     const save = () => {
       try {
@@ -1132,6 +1171,66 @@
       return null;
     };
 
+    /* 노드 색상 팔레트 */
+    const NODE_PALETTE = ['#fff8d8', '#ffd6d6', '#ffe6c4', '#fff2a8', '#d8f3dc', '#cfe8ff', '#e6d6ff', '#1c2040'];
+    const applyNodeColor = (el, color) => {
+      if (color) {
+        el.style.background = color;
+        el.style.color = (color === '#1c2040') ? '#fff8d8' : '#1c2040';
+      } else {
+        el.style.background = '';
+        el.style.color = '';
+      }
+    };
+    const openPalette = (n, el) => {
+      document.querySelectorAll('.pk-mm-palette').forEach(p => p.remove());
+      const pal = document.createElement('div');
+      pal.className = 'pk-mm-palette';
+      NODE_PALETTE.forEach(c => {
+        const sw = document.createElement('button');
+        sw.className = 'pk-mm-swatch';
+        sw.style.background = c;
+        sw.title = c;
+        if (n.color === c) sw.classList.add('selected');
+        sw.addEventListener('click', ev => {
+          ev.stopPropagation();
+          n.color = c;
+          applyNodeColor(el, c);
+          save();
+          pal.remove();
+        });
+        pal.appendChild(sw);
+      });
+      const rst = document.createElement('button');
+      rst.className = 'pk-mm-swatch pk-mm-swatch-reset';
+      rst.textContent = '↺';
+      rst.title = '기본색';
+      rst.addEventListener('click', ev => {
+        ev.stopPropagation();
+        delete n.color;
+        applyNodeColor(el, null);
+        save();
+        pal.remove();
+      });
+      pal.appendChild(rst);
+      const r = el.getBoundingClientRect();
+      pal.style.position = 'fixed';
+      pal.style.left = r.left + 'px';
+      pal.style.top  = (r.bottom + 6) + 'px';
+      document.body.appendChild(pal);
+      const pr = pal.getBoundingClientRect();
+      if (pr.right > window.innerWidth - 8) {
+        pal.style.left = (window.innerWidth - pr.width - 8) + 'px';
+      }
+      const closer = (ev) => {
+        if (!pal.contains(ev.target)) {
+          pal.remove();
+          document.removeEventListener('mousedown', closer, true);
+        }
+      };
+      setTimeout(() => document.addEventListener('mousedown', closer, true), 0);
+    };
+
     const makeNode = (n) => {
       const canvas = cols[n.column] || cols.m;
       const el = document.createElement('div');
@@ -1141,6 +1240,7 @@
       el.style.left = (n.x || 10) + 'px';
       el.style.top  = (n.y || 10) + 'px';
       el.textContent = n.t || '메모';
+      if (n.color) applyNodeColor(el, n.color);
       const del = document.createElement('div');
       del.className = 'pk-mm-del';
       del.textContent = 'X';
@@ -1154,6 +1254,25 @@
         renderEdges();
       });
       el.appendChild(del);
+
+      /* 색상 버튼 — 클릭 시 팔레트 표시 */
+      const colorBtn = document.createElement('div');
+      colorBtn.className = 'pk-mm-color';
+      colorBtn.textContent = '🎨';
+      colorBtn.title = '색상 변경';
+      colorBtn.addEventListener('mousedown', e => { e.stopPropagation(); });
+      colorBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        openPalette(n, el);
+      });
+      el.appendChild(colorBtn);
+
+      /* 우클릭으로도 팔레트 */
+      el.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        openPalette(n, el);
+      });
 
       el.addEventListener('dblclick', e => {
         e.stopPropagation();
@@ -1182,21 +1301,22 @@
         let txt = '';
         el.childNodes.forEach(c => {
           if (c.nodeType === 3) txt += c.nodeValue;
-          else if (c.nodeType === 1 && !c.classList.contains('pk-mm-del')) txt += c.textContent;
+          else if (c.nodeType === 1 && !c.classList.contains('pk-mm-del') && !c.classList.contains('pk-mm-color')) txt += c.textContent;
         });
         txt = txt.trim();
+        const delBtn = el.querySelector('.pk-mm-del');
+        const colBtn = el.querySelector('.pk-mm-color');
         /* 데이터 손실 가드: 이전에 내용이 있었는데 빈 문자열로 저장하려 하면 무시 */
         if (!txt && (n.t || '').trim()) {
-          /* DOM 복원만 (저장 안 함) */
-          const delBtn = el.querySelector('.pk-mm-del');
           el.textContent = n.t;
           if (delBtn) el.appendChild(delBtn);
+          if (colBtn) el.appendChild(colBtn);
           return;
         }
-        /* 인라인 스타일/자식 정리 — del만 남기고 plain text 재구성 */
-        const delBtn = el.querySelector('.pk-mm-del');
+        /* 인라인 스타일/자식 정리 — 버튼만 남기고 plain text 재구성 */
         el.textContent = txt;
         if (delBtn) el.appendChild(delBtn);
+        if (colBtn) el.appendChild(colBtn);
         n.t = txt;
         save();
       });

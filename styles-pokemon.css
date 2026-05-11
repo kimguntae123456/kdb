@@ -469,6 +469,49 @@ body .ia-para-body strong, body strong {
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
 }
+.pk-mm-node .pk-mm-color {
+  position: absolute; top: -10px; left: -10px;
+  width: 22px; height: 22px;
+  background: #fff; border: 2px solid #1c2040;
+  font-size: 12px; line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  user-select: none;
+}
+.pk-mm-palette {
+  background: #fff8d8;
+  border: 2.5px solid #1c2040;
+  box-shadow: 3px 3px 0 #1c2040;
+  padding: 6px;
+  display: flex; gap: 4px; flex-wrap: wrap;
+  max-width: 240px;
+  z-index: 10001;
+}
+.pk-mm-palette .pk-mm-swatch {
+  width: 26px; height: 26px;
+  border: 2px solid #1c2040;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+}
+.pk-mm-palette .pk-mm-swatch.selected {
+  outline: 2px solid #d42b2b;
+  outline-offset: 1px;
+}
+.pk-mm-palette .pk-mm-swatch-reset {
+  background: #fff; color: #1c2040;
+  font-family: var(--read-font) !important;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.pk-cards-coltitle {
+  cursor: pointer;
+}
+.pk-cards-coltitle[contenteditable="true"] {
+  background: #2a3060;
+  outline: 2px solid #d42b2b;
+  cursor: text;
+}
 .pk-mm-hint {
   position: absolute; bottom: 8px; left: 12px;
   font-family: var(--pk-font) !important;
