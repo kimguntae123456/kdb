@@ -1561,15 +1561,19 @@
     state.nodes.forEach(makeNode);
     requestAnimationFrame(renderEdges);
 
-    // 컬럼 캔버스 더블클릭 → 새 노드
-    Object.entries(cols).forEach(([key, canvas]) => {
-      canvas.addEventListener('dblclick', e => {
-        if (e.target !== canvas) return;
+    // 컬럼 더블클릭 → 새 노드 (canvas + col 전체 영역, 노드/제목/버튼은 제외)
+    Object.entries(colEls).forEach(([key, colEl]) => {
+      colEl.addEventListener('dblclick', e => {
+        /* 노드/제목/버튼 위 dblclick은 무시 */
+        if (e.target.closest('.pk-mm-node')) return;
+        if (e.target.closest('.pk-cards-coltitle')) return;
+        if (e.target.closest('button')) return;
+        const canvas = cols[key];
         const c = canvas.getBoundingClientRect();
         const n = {
           id: 'n' + Date.now() + Math.floor(Math.random() * 999),
-          x: e.clientX - c.left - 40,
-          y: e.clientY - c.top  - 14,
+          x: Math.max(0, e.clientX - c.left - 40),
+          y: Math.max(0, e.clientY - c.top  - 14),
           t: '메모',
           column: key,
         };
