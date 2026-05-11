@@ -1082,7 +1082,17 @@
     if (migrated) try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (_) {}
 
     const save = () => {
-      try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (_) {}
+      try {
+        localStorage.setItem(storeKey, JSON.stringify(state));
+      } catch (err) {
+        /* localStorage 한도 초과 등 — 사용자에게 즉시 알림 */
+        if (window._pkSaveWarned) return;
+        window._pkSaveWarned = true;
+        console.error('[핵심카드 저장 실패]', err);
+        alert('핵심카드 저장 실패: 저장 공간이 부족하거나 차단됨.\n' +
+              '브라우저 콘솔에서 다음을 실행해 백업 받으세요:\n' +
+              'copy(JSON.stringify(localStorage))');
+      }
     };
 
     let selectedForEdge = null;
@@ -1168,9 +1178,22 @@
       });
       el.addEventListener('blur', () => {
         el.removeAttribute('contenteditable');
-        /* 혹시 들어온 인라인 style/태그 정리 — textContent만 남김 */
-        const txt = el.textContent.replace(/X$/, '').trim();
-        el.querySelectorAll('*:not(.pk-mm-del)').forEach(c => c.remove());
+        /* 텍스트 추출: del 버튼 텍스트("X") 제외 */
+        let txt = '';
+        el.childNodes.forEach(c => {
+          if (c.nodeType === 3) txt += c.nodeValue;
+          else if (c.nodeType === 1 && !c.classList.contains('pk-mm-del')) txt += c.textContent;
+        });
+        txt = txt.trim();
+        /* 데이터 손실 가드: 이전에 내용이 있었는데 빈 문자열로 저장하려 하면 무시 */
+        if (!txt && (n.t || '').trim()) {
+          /* DOM 복원만 (저장 안 함) */
+          const delBtn = el.querySelector('.pk-mm-del');
+          el.textContent = n.t;
+          if (delBtn) el.appendChild(delBtn);
+          return;
+        }
+        /* 인라인 스타일/자식 정리 — del만 남기고 plain text 재구성 */
         const delBtn = el.querySelector('.pk-mm-del');
         el.textContent = txt;
         if (delBtn) el.appendChild(delBtn);
