@@ -843,10 +843,11 @@
       <div class="pk-mindmap-header">
         <span>📌 핵심카드</span>
         <span>
-          <button class="pk-mm-fs-down" title="글자 작게">A-</button>
-          <button class="pk-mm-fs-up" title="글자 크게">A+</button>
-          <button class="pk-mm-add">+ 노드</button>
-          <button class="pk-mm-clear">초기화</button>
+          <button class="pk-mm-fs-down" title="글자 작게 (-)">A-</button>
+          <span class="pk-mm-fs-label">100%</span>
+          <button class="pk-mm-fs-up" title="글자 크게 (+)">A+</button>
+          <button class="pk-mm-add" title="노드 추가">+ 노드</button>
+          <button class="pk-mm-clear" title="모두 지우기">초기화</button>
         </span>
       </div>
       <div class="pk-cards-cols">
@@ -1027,24 +1028,38 @@
 
       // 글자 크기 조절 (panel 내부 전용)
       const FS_KEY = 'pk-mindmap-fs-v1';
+      const fsLabel = map.querySelector('.pk-mm-fs-label');
       const applyFs = (scale) => {
         map.style.setProperty('--pk-fs', scale);
+        if (fsLabel) fsLabel.textContent = Math.round(scale * 100) + '%';
       };
       let curFs = parseFloat(localStorage.getItem(FS_KEY) || '1');
       if (!isFinite(curFs) || curFs < 0.6) curFs = 1;
       applyFs(curFs);
-      map.querySelector('.pk-mm-fs-up').addEventListener('click', e => {
-        e.stopPropagation();
-        curFs = Math.min(2.4, +(curFs + 0.1).toFixed(2));
+      const setFs = (next) => {
+        curFs = Math.max(0.7, Math.min(2.4, +next.toFixed(2)));
         applyFs(curFs);
         localStorage.setItem(FS_KEY, String(curFs));
+      };
+      map.querySelector('.pk-mm-fs-up').addEventListener('click', e => {
+        e.stopPropagation(); e.preventDefault();
+        setFs(curFs + 0.1);
       });
       map.querySelector('.pk-mm-fs-down').addEventListener('click', e => {
-        e.stopPropagation();
-        curFs = Math.max(0.7, +(curFs - 0.1).toFixed(2));
-        applyFs(curFs);
-        localStorage.setItem(FS_KEY, String(curFs));
+        e.stopPropagation(); e.preventDefault();
+        setFs(curFs - 0.1);
       });
+      /* 라벨 클릭 → 100%로 리셋 */
+      if (fsLabel) fsLabel.addEventListener('click', e => {
+        e.stopPropagation(); e.preventDefault();
+        setFs(1);
+      });
+      /* Ctrl/Cmd + 휠 → 글자 크기 조정 */
+      map.addEventListener('wheel', e => {
+        if (!(e.ctrlKey || e.metaKey)) return;
+        e.preventDefault();
+        setFs(curFs + (e.deltaY < 0 ? 0.1 : -0.1));
+      }, { passive: false });
 
     const cols = {
       s: map.querySelector('.pk-cards-col[data-col="s"] .pk-cards-canvas'),

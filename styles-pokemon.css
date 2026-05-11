@@ -1483,11 +1483,27 @@ p.row-excerpt:empty { display: none !important; }
 
 /* 핵심카드 panel 자체 폰트 스케일 (--pk-fs) */
 body .pk-mindmap.pk-floating { --pk-fs: 1; }
-body .pk-mindmap.pk-floating .pk-mindmap-header { font-size: calc(.34rem * var(--pk-fs)); }
-body .pk-mindmap.pk-floating .pk-mindmap-header button { font-size: calc(.26rem * var(--pk-fs)); }
-body .pk-mindmap.pk-floating .pk-cards-coltitle { font-size: calc(.28rem * var(--pk-fs)); }
-body .pk-mindmap.pk-floating .pk-mm-node { font-size: calc(.85rem * var(--pk-fs)); }
-body .pk-mindmap.pk-floating .pk-mm-hint { font-size: calc(.7rem * var(--pk-fs)); }
+body .pk-mindmap.pk-floating .pk-mindmap-header { font-size: calc(.74rem * var(--pk-fs)); }
+body .pk-mindmap.pk-floating .pk-mindmap-header button {
+  font-size: calc(.78rem * var(--pk-fs)) !important;
+  padding: 4px 9px !important;
+  min-width: 28px;
+  font-family: var(--read-font, system-ui) !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2;
+}
+body .pk-mindmap.pk-floating .pk-mm-fs-label {
+  font-size: calc(.72rem * var(--pk-fs));
+  font-family: var(--read-font, system-ui) !important;
+  color: #f0c000;
+  margin: 0 4px;
+  min-width: 32px;
+  display: inline-block;
+  text-align: center;
+}
+body .pk-mindmap.pk-floating .pk-cards-coltitle { font-size: calc(.78rem * var(--pk-fs)); }
+body .pk-mindmap.pk-floating .pk-mm-node { font-size: calc(.92rem * var(--pk-fs)); }
+body .pk-mindmap.pk-floating .pk-mm-hint { font-size: calc(.72rem * var(--pk-fs)); }
 
 /* ══════════════════════════════════════
    최종 오버라이드 — 행 레이아웃 강제 (높이 클램프)
