@@ -7,6 +7,24 @@
 (function () {
   'use strict';
 
+  /* ── 자동 마이그레이션: 옛 패널 위치/크기 잔재 정리 (v202605110300) ── */
+  (function migratePanelState() {
+    var MIG_KEY = 'kdb_mig_v202605110300';
+    if (localStorage.getItem(MIG_KEY)) return;
+    try { localStorage.removeItem('pk-mindmap-floating-v2'); } catch (_) {}
+    try {
+      var raw = localStorage.getItem('pk-mindmap-floating-v3');
+      if (raw) {
+        var p = JSON.parse(raw);
+        var bad = (p.left != null || p.top != null)
+               || (p.w != null && p.w < 320)
+               || (p.h != null && p.h < 280);
+        if (bad) localStorage.removeItem('pk-mindmap-floating-v3');
+      }
+    } catch (_) { localStorage.removeItem('pk-mindmap-floating-v3'); }
+    localStorage.setItem(MIG_KEY, '1');
+  })();
+
   const SP = n => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${n}.png`;
   const SP_SH = n => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${n}.png`;
 
