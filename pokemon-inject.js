@@ -1151,9 +1151,29 @@
         el.focus();
         document.getSelection().selectAllChildren(el);
       });
+      /* 붙여넣기 — 서식·인라인 폰트 제거하고 plain text만 삽입 */
+      el.addEventListener('paste', e => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+        if (!text) return;
+        if (document.queryCommandSupported && document.queryCommandSupported('insertText')) {
+          document.execCommand('insertText', false, text);
+        } else {
+          const sel = document.getSelection();
+          if (!sel.rangeCount) return;
+          sel.deleteFromDocument();
+          sel.getRangeAt(0).insertNode(document.createTextNode(text));
+          sel.collapseToEnd();
+        }
+      });
       el.addEventListener('blur', () => {
         el.removeAttribute('contenteditable');
+        /* 혹시 들어온 인라인 style/태그 정리 — textContent만 남김 */
         const txt = el.textContent.replace(/X$/, '').trim();
+        el.querySelectorAll('*:not(.pk-mm-del)').forEach(c => c.remove());
+        const delBtn = el.querySelector('.pk-mm-del');
+        el.textContent = txt;
+        if (delBtn) el.appendChild(delBtn);
         n.t = txt;
         save();
       });
@@ -2196,21 +2216,92 @@
         </ul>
       </div>
     `).join('');
+
+    /* pagePath → storeKey 의 pageKey 변환 (pokemon-inject pageKey() 와 동일 규칙) */
+    const pathToPk = (p) => {
+      try { return decodeURIComponent(p || '').replace(/\/+/g, '_').replace(/^_|_$/g, '') || 'root'; }
+      catch (_) { return ''; }
+    };
+    /* 태그가 달린 글들의 핵심카드 노드 모으기 */
+    const collectCardsFor = (its) => {
+      const out = []; // {sector, title, pagePath, rowId, nodes:[{t,column}]}
+      its.forEach(it => {
+        const pk = pathToPk(it.pagePath);
+        if (!pk || !it.rowId) return;
+        try {
+          const raw = localStorage.getItem(`pk-mm::${pk}::${it.rowId}`);
+          if (!raw) return;
+          const st = JSON.parse(raw);
+          if (!st || !Array.isArray(st.nodes) || !st.nodes.length) return;
+          out.push({
+            sector: it.sector || '(섹터 없음)',
+            title: it.title || '(제목 없음)',
+            pagePath: it.pagePath, rowId: it.rowId,
+            nodes: st.nodes
+          });
+        } catch (_) {}
+      });
+      return out;
+    };
+    const cardArticles = collectCardsFor(items);
+    const cardTotal = cardArticles.reduce((s, a) => s + a.nodes.length, 0);
+    const COL_LABEL = { s: '서론', m: '본론', c: '결론' };
+    const cardsByCol = (nodes) => {
+      const g = { s: [], m: [], c: [] };
+      nodes.forEach(n => (g[n.column] || g.m).push(n));
+      return g;
+    };
+    const cardsHTML = cardArticles.length ? cardArticles.map(a => {
+      const g = cardsByCol(a.nodes);
+      const url = a.pagePath ? (a.pagePath + '#' + a.rowId) : '#';
+      const colBlock = (k) => g[k].length ? `
+        <div class="pk-tv-cardcol">
+          <div class="pk-tv-cardcol-h">${COL_LABEL[k]}</div>
+          <ul>${g[k].map(n => `<li>${escHtml(n.t || '')}</li>`).join('')}</ul>
+        </div>` : '';
+      return `
+        <div class="pk-tv-cardgroup">
+          <a href="${escHtml(url)}" class="pk-tv-cardtitle">
+            <span class="pk-tv-cardsector">${escHtml(a.sector)}</span>
+            <span class="pk-tv-cardtitletxt">${escHtml(a.title)}</span>
+            <span class="pk-tv-cardcount">${a.nodes.length}장</span>
+          </a>
+          <div class="pk-tv-cardcols">${colBlock('s')}${colBlock('m')}${colBlock('c')}</div>
+        </div>`;
+    }).join('') : '<div class="pk-tv-empty">이 태그의 핵심카드가 없어요. 글에서 핵심카드를 작성해 보세요.</div>';
+
     dlg.innerHTML = `
       <div class="pk-tv-backdrop"></div>
       <div class="pk-tv-modal">
         <div class="pk-tv-head">
           <span>🏷️ #${escHtml(tag)} <span class="pk-tv-total">${items.length}편</span></span>
+          <div class="pk-tv-tabs">
+            <button type="button" class="pk-tv-tab active" data-tab="articles">글 (${items.length})</button>
+            <button type="button" class="pk-tv-tab" data-tab="cards">핵심카드 (${cardTotal})</button>
+          </div>
           <button class="pk-tv-x" type="button">✕</button>
         </div>
-        <div class="pk-tv-body">
+        <div class="pk-tv-body" data-tab-pane="articles">
           ${items.length ? groups : '<div class="pk-tv-empty">이 태그의 글이 없습니다.</div>'}
+        </div>
+        <div class="pk-tv-body" data-tab-pane="cards" hidden>
+          ${cardsHTML}
         </div>
       </div>`;
     document.body.appendChild(dlg);
     const close = () => dlg.remove();
     dlg.querySelector('.pk-tv-x').addEventListener('click', close);
     dlg.querySelector('.pk-tv-backdrop').addEventListener('click', close);
+    /* 탭 전환 */
+    dlg.querySelectorAll('.pk-tv-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        dlg.querySelectorAll('.pk-tv-tab').forEach(b => b.classList.toggle('active', b === btn));
+        const tab = btn.dataset.tab;
+        dlg.querySelectorAll('[data-tab-pane]').forEach(p => {
+          p.hidden = (p.dataset.tabPane !== tab);
+        });
+      });
+    });
   }
 
   function injectAddBar(){
