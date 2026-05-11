@@ -850,9 +850,14 @@
     map._sourceRow = article.previousElementSibling;
     if (!window._pkFloatingPanels) window._pkFloatingPanels = [];
     window._pkFloatingPanels.push(map);
-    const POS_KEY = 'pk-mindmap-floating-v2';
-    /* 저장된 좌표는 "visible viewport 기준" — visualViewport.offsetLeft/Top 을
-       더해서 layout viewport(=position:fixed 기준)로 변환해 적용한다. */
+    const POS_KEY = 'pk-mindmap-floating-v3';
+    /* 좌표 모델:
+       - offX: 본문(.inline-article) 오른쪽 가장자리에서 패널 좌상단까지 가로 오프셋
+         (본문이 줌/리사이즈로 움직이면 패널도 같이 따라감 — 항상 본문 옆 유지)
+       - vy:   패널 좌상단의 visible viewport 기준 세로 좌표 (스크롤 시 화면 고정)
+       - w, h: 사용자 리사이즈 크기 */
+    const DEFAULT_OFFX = 16;
+    const DEFAULT_VY = 80;
     const readSavedPos = () => {
       try { return JSON.parse(localStorage.getItem(POS_KEY) || 'null'); } catch (_) { return null; }
     };
@@ -865,42 +870,30 @@
         h: vv ? vv.height : window.innerHeight,
       };
     };
-    /* 본문 우측 옆 기본 위치 — saved가 없을 때만 사용 */
-    const defaultPosNextToArticle = (panel) => {
-      const v = vvOffset();
-      const art = panel._sourceArticle;
-      const pw = panel.offsetWidth  || 380;
-      const ph = panel.offsetHeight || 480;
-      let vx, vy;  // visible viewport 좌표
-      if (art) {
-        const r = art.getBoundingClientRect();
-        vx = r.right + 16;
-        vy = Math.max(8, r.top + 8);
-        if (vx + pw > v.w - 8) vx = v.w - pw - 16;  // 화면 우측 초과 시 폴백
-      } else {
-        vx = v.w - pw - 24;
-        vy = (v.h - ph) / 2;
-      }
-      vx = Math.max(8, Math.min(v.w - 80, vx));
-      vy = Math.max(8, Math.min(v.h - 40, vy));
-      return { left: vx, top: vy };
-    };
     const positionPanel = (panel) => {
       const v = vvOffset();
-      const saved = readSavedPos();
+      const art = panel._sourceArticle;
+      const saved = readSavedPos() || {};
+      if (saved.w != null) panel.style.width  = saved.w + 'px';
+      if (saved.h != null) panel.style.height = saved.h + 'px';
       panel.style.transform = 'none';
       panel.style.right = 'auto';
-      let vl, vt;
-      if (saved && saved.left != null && saved.top != null) {
-        vl = saved.left; vt = saved.top;
-        if (saved.w != null) panel.style.width  = saved.w + 'px';
-        if (saved.h != null) panel.style.height = saved.h + 'px';
+      const offX = saved.offX != null ? saved.offX : DEFAULT_OFFX;
+      const vy   = saved.vy   != null ? saved.vy   : DEFAULT_VY;
+      const pw = panel.offsetWidth  || 380;
+      const ph = panel.offsetHeight || 480;
+      let vx;
+      if (art && art.getBoundingClientRect) {
+        const r = art.getBoundingClientRect();
+        vx = r.right + offX;  // 본문 오른쪽에 붙음 (offX만큼)
       } else {
-        const d = defaultPosNextToArticle(panel);
-        vl = d.left; vt = d.top;
+        vx = v.w - pw - 24;
       }
-      panel.style.left = (vl + v.l) + 'px';
-      panel.style.top  = (vt + v.t) + 'px';
+      // 화면 밖으로 완전히 나가지 않게 clamp (최소 80×40 노출)
+      vx = Math.max(8 - pw + 80, Math.min(v.w - 80, vx));
+      const vyC = Math.max(8, Math.min(v.h - 40, vy));
+      panel.style.left = (vx + v.l) + 'px';
+      panel.style.top  = (vyC + v.t) + 'px';
     };
 
     if (!window._pkFloatingUpdate) {
@@ -921,15 +914,9 @@
         });
         panels.forEach(p => {
           const show = (p === best);
-          const wasShown = p.style.display === 'flex';
           p.style.display = show ? 'flex' : 'none';
-          if (show) {
-            // 처음 보일 때(또는 매 표시 시) visible viewport 기준으로 재배치
-            if (!p._pkPositioned || !wasShown) {
-              positionPanel(p);
-              p._pkPositioned = true;
-            }
-          }
+          // 표시 중이면 매번 재배치 — 본문 위치 변화(리사이즈/줌/레이아웃)에 즉시 따라감
+          if (show) positionPanel(p);
         });
       };
       window.addEventListener('scroll', window._pkFloatingUpdate, { passive: true });
@@ -984,9 +971,12 @@
         if (!dragging) return;
         dragging = false;
         const r = map.getBoundingClientRect();
+        const art = map._sourceArticle;
+        const artR = art && art.getBoundingClientRect ? art.getBoundingClientRect() : null;
         try {
           const cur = JSON.parse(localStorage.getItem(POS_KEY) || '{}');
-          cur.left = r.left; cur.top = r.top;  // visible viewport 좌표로 저장
+          cur.offX = artR ? (r.left - artR.right) : 0;  // 본문 오른쪽 기준 가로 오프셋
+          cur.vy   = r.top;                              // visible viewport 기준 세로
           localStorage.setItem(POS_KEY, JSON.stringify(cur));
         } catch (_) {}
       });
