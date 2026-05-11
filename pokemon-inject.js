@@ -850,11 +850,65 @@
     map._sourceRow = article.previousElementSibling;
     if (!window._pkFloatingPanels) window._pkFloatingPanels = [];
     window._pkFloatingPanels.push(map);
+    const POS_KEY = 'pk-mindmap-floating-v2';
+    /* 저장된 좌표는 "visible viewport 기준" — visualViewport.offsetLeft/Top 을
+       더해서 layout viewport(=position:fixed 기준)로 변환해 적용한다. */
+    const readSavedPos = () => {
+      try { return JSON.parse(localStorage.getItem(POS_KEY) || 'null'); } catch (_) { return null; }
+    };
+    const vvOffset = () => {
+      const vv = window.visualViewport;
+      return {
+        l: vv ? vv.offsetLeft : 0,
+        t: vv ? vv.offsetTop  : 0,
+        w: vv ? vv.width  : window.innerWidth,
+        h: vv ? vv.height : window.innerHeight,
+      };
+    };
+    /* 본문 우측 옆 기본 위치 — saved가 없을 때만 사용 */
+    const defaultPosNextToArticle = (panel) => {
+      const v = vvOffset();
+      const art = panel._sourceArticle;
+      const pw = panel.offsetWidth  || 380;
+      const ph = panel.offsetHeight || 480;
+      let vx, vy;  // visible viewport 좌표
+      if (art) {
+        const r = art.getBoundingClientRect();
+        vx = r.right + 16;
+        vy = Math.max(8, r.top + 8);
+        if (vx + pw > v.w - 8) vx = v.w - pw - 16;  // 화면 우측 초과 시 폴백
+      } else {
+        vx = v.w - pw - 24;
+        vy = (v.h - ph) / 2;
+      }
+      vx = Math.max(8, Math.min(v.w - 80, vx));
+      vy = Math.max(8, Math.min(v.h - 40, vy));
+      return { left: vx, top: vy };
+    };
+    const positionPanel = (panel) => {
+      const v = vvOffset();
+      const saved = readSavedPos();
+      panel.style.transform = 'none';
+      panel.style.right = 'auto';
+      let vl, vt;
+      if (saved && saved.left != null && saved.top != null) {
+        vl = saved.left; vt = saved.top;
+        if (saved.w != null) panel.style.width  = saved.w + 'px';
+        if (saved.h != null) panel.style.height = saved.h + 'px';
+      } else {
+        const d = defaultPosNextToArticle(panel);
+        vl = d.left; vt = d.top;
+      }
+      panel.style.left = (vl + v.l) + 'px';
+      panel.style.top  = (vt + v.t) + 'px';
+    };
+
     if (!window._pkFloatingUpdate) {
       window._pkFloatingUpdate = () => {
         const panels = window._pkFloatingPanels || [];
-        const center = window.innerHeight / 2;
-        // expanded row 중 article center가 viewport center에 가장 가까운 1개
+        const v = vvOffset();
+        const center = v.t + v.h / 2;
+        // expanded row 중 article center가 visible viewport center에 가장 가까운 1개
         let best = null, bestDist = Infinity;
         panels.forEach(p => {
           const row = p._sourceRow;
@@ -865,23 +919,29 @@
           const d = Math.abs(c - center);
           if (d < bestDist) { bestDist = d; best = p; }
         });
-        panels.forEach(p => { p.style.display = (p === best) ? 'flex' : 'none'; });
+        panels.forEach(p => {
+          const show = (p === best);
+          const wasShown = p.style.display === 'flex';
+          p.style.display = show ? 'flex' : 'none';
+          if (show) {
+            // 처음 보일 때(또는 매 표시 시) visible viewport 기준으로 재배치
+            if (!p._pkPositioned || !wasShown) {
+              positionPanel(p);
+              p._pkPositioned = true;
+            }
+          }
+        });
       };
       window.addEventListener('scroll', window._pkFloatingUpdate, { passive: true });
       window.addEventListener('resize', window._pkFloatingUpdate);
-      // 핀치/Ctrl 줌 대응 — visualViewport 변화 시 panel 위치 보정
+      // 핀치/Ctrl 줌 대응 — visualViewport 변화 시 모든 표시 패널의
+      // visible-viewport 좌표를 유지하도록 layout-viewport 좌표 재계산
       if (window.visualViewport) {
         const syncToVisualVP = () => {
-          const vv = window.visualViewport;
           const panels = window._pkFloatingPanels || [];
           panels.forEach(p => {
             if (p.style.display === 'none') return;
-            // 사용자가 드래그한 적 있으면 transform 해제 상태 — vv 보정 X
-            if (p.style.transform === 'none') return;
-            // 기본(중앙) 모드: visualViewport 기준 정중앙 좌표로 강제
-            p.style.top  = (vv.offsetTop  + vv.height / 2) + 'px';
-            p.style.left = (vv.offsetLeft + vv.width  - 24 - p.offsetWidth) + 'px';
-            p.style.right = 'auto';
+            positionPanel(p);
           });
         };
         window.visualViewport.addEventListener('scroll', syncToVisualVP);
@@ -893,44 +953,31 @@
       new MutationObserver(window._pkFloatingUpdate).observe(map._sourceRow, { attributes: true, attributeFilter: ['class'] });
     }
     requestAnimationFrame(window._pkFloatingUpdate);
-      const POS_KEY = 'pk-mindmap-floating-v2';
-      const applyPos = () => {
-        try {
-          const saved = JSON.parse(localStorage.getItem(POS_KEY) || 'null');
-          if (saved) {
-            // 저장된 위치가 있으면 중앙정렬 transform 해제
-            if (saved.left != null || saved.top != null) {
-              map.style.transform = 'none';
-            }
-            if (saved.left != null) { map.style.left = saved.left + 'px'; map.style.right = 'auto'; }
-            if (saved.top  != null) { map.style.top  = saved.top  + 'px'; }
-            if (saved.w    != null) { map.style.width  = saved.w + 'px'; }
-            if (saved.h    != null) { map.style.height = saved.h + 'px'; }
-          }
-        } catch (_) {}
-      };
+      const applyPos = () => positionPanel(map);
       applyPos();
 
       const header = map.querySelector('.pk-mindmap-header');
       let dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+      /* ox/oy/nx/ny 는 visible viewport 좌표 — style.left 적용 시 vv.offsetLeft 보정 */
       header.addEventListener('mousedown', e => {
         if (e.target.tagName === 'BUTTON') return;
         dragging = true;
         const r = map.getBoundingClientRect();
+        const v = vvOffset();
         sx = e.clientX; sy = e.clientY; ox = r.left; oy = r.top;
-        // 드래그 시작 시 중앙정렬 transform 해제 — 좌상단 좌표 기준 이동
         map.style.transform = 'none';
-        map.style.left = r.left + 'px';
-        map.style.top  = r.top  + 'px';
+        map.style.left = (r.left + v.l) + 'px';
+        map.style.top  = (r.top  + v.t) + 'px';
         map.style.right = 'auto';
         e.preventDefault();
       });
       window.addEventListener('mousemove', e => {
         if (!dragging) return;
-        const nx = Math.max(0, Math.min(window.innerWidth  - 80, ox + (e.clientX - sx)));
-        const ny = Math.max(0, Math.min(window.innerHeight - 40, oy + (e.clientY - sy)));
-        map.style.left = nx + 'px';
-        map.style.top  = ny + 'px';
+        const v = vvOffset();
+        const nx = Math.max(0, Math.min(v.w - 80, ox + (e.clientX - sx)));
+        const ny = Math.max(0, Math.min(v.h - 40, oy + (e.clientY - sy)));
+        map.style.left = (nx + v.l) + 'px';
+        map.style.top  = (ny + v.t) + 'px';
         map.style.right = 'auto';
       });
       window.addEventListener('mouseup', () => {
@@ -939,7 +986,7 @@
         const r = map.getBoundingClientRect();
         try {
           const cur = JSON.parse(localStorage.getItem(POS_KEY) || '{}');
-          cur.left = r.left; cur.top = r.top;
+          cur.left = r.left; cur.top = r.top;  // visible viewport 좌표로 저장
           localStorage.setItem(POS_KEY, JSON.stringify(cur));
         } catch (_) {}
       });
