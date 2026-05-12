@@ -1362,13 +1362,73 @@
       setTimeout(() => document.addEventListener('mousedown', closer, true), 0);
     };
 
+    /* 노드 중요도(별점) */
+    const renderStars = (el, rating) => {
+      let bar = el.querySelector('.pk-mm-stars');
+      if (!rating) { if (bar) bar.remove(); return; }
+      if (!bar) {
+        bar = document.createElement('div');
+        bar.className = 'pk-mm-stars';
+        el.appendChild(bar);
+      }
+      bar.textContent = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+    };
+    const openRatingPicker = (n, el) => {
+      document.querySelectorAll('.pk-mm-rating-picker').forEach(p => p.remove());
+      const pick = document.createElement('div');
+      pick.className = 'pk-mm-palette pk-mm-rating-picker';
+      for (let i = 1; i <= 5; i++) {
+        const b = document.createElement('button');
+        b.className = 'pk-mm-swatch pk-mm-star-pick';
+        b.textContent = '★'.repeat(i);
+        b.title = i + '점';
+        if ((n.rating || 0) === i) b.classList.add('selected');
+        b.addEventListener('click', ev => {
+          ev.stopPropagation();
+          n.rating = i;
+          renderStars(el, i);
+          save();
+          pick.remove();
+        });
+        pick.appendChild(b);
+      }
+      const rst = document.createElement('button');
+      rst.className = 'pk-mm-swatch pk-mm-swatch-reset';
+      rst.textContent = '↺';
+      rst.title = '초기화';
+      rst.addEventListener('click', ev => {
+        ev.stopPropagation();
+        delete n.rating;
+        renderStars(el, 0);
+        save();
+        pick.remove();
+      });
+      pick.appendChild(rst);
+      const r = el.getBoundingClientRect();
+      pick.style.position = 'fixed';
+      pick.style.left = r.left + 'px';
+      pick.style.top  = (r.bottom + 6) + 'px';
+      document.body.appendChild(pick);
+      const pr = pick.getBoundingClientRect();
+      if (pr.right > window.innerWidth - 8) {
+        pick.style.left = (window.innerWidth - pr.width - 8) + 'px';
+      }
+      const closer = (ev) => {
+        if (!pick.contains(ev.target)) {
+          pick.remove();
+          document.removeEventListener('mousedown', closer, true);
+        }
+      };
+      setTimeout(() => document.addEventListener('mousedown', closer, true), 0);
+    };
+
     /* 허용 태그: 볼드/이탤릭/밑줄/줄바꿈만 통과 */
     const ALLOWED_TAGS = new Set(['B','STRONG','I','EM','U','BR']);
     const sanitizeNode = (root) => {
       const walk = (node) => {
         [...node.childNodes].forEach(c => {
           if (c.nodeType === 1) {
-            if (c.classList && (c.classList.contains('pk-mm-del') || c.classList.contains('pk-mm-color'))) return;
+            if (c.classList && (c.classList.contains('pk-mm-del') || c.classList.contains('pk-mm-color') || c.classList.contains('pk-mm-rate') || c.classList.contains('pk-mm-stars'))) return;
             if (ALLOWED_TAGS.has(c.tagName)) {
               [...c.attributes].forEach(a => c.removeAttribute(a.name));
               walk(c);
@@ -1427,6 +1487,19 @@
         openPalette(n, el);
       });
 
+      /* 중요도(별점) 버튼 */
+      const rateBtn = document.createElement('div');
+      rateBtn.className = 'pk-mm-rate';
+      rateBtn.textContent = '★';
+      rateBtn.title = '중요도';
+      rateBtn.addEventListener('mousedown', e => { e.stopPropagation(); });
+      rateBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        openRatingPicker(n, el);
+      });
+      el.appendChild(rateBtn);
+      if (n.rating) renderStars(el, n.rating);
+
       el.addEventListener('dblclick', e => {
         e.stopPropagation();
         el.setAttribute('contenteditable', 'true');
@@ -1452,22 +1525,30 @@
         el.removeAttribute('contenteditable');
         const delBtn = el.querySelector('.pk-mm-del');
         const colBtn = el.querySelector('.pk-mm-color');
+        const rtBtn  = el.querySelector('.pk-mm-rate');
+        const stars  = el.querySelector('.pk-mm-stars');
         /* 버튼 분리 → sanitize → innerHTML 추출 */
         if (delBtn) delBtn.remove();
         if (colBtn) colBtn.remove();
+        if (rtBtn)  rtBtn.remove();
+        if (stars)  stars.remove();
         sanitizeNode(el);
         const html = el.innerHTML;
         const plain = (el.textContent || '').trim();
+        const reattach = () => {
+          if (delBtn) el.appendChild(delBtn);
+          if (colBtn) el.appendChild(colBtn);
+          if (rtBtn)  el.appendChild(rtBtn);
+          if (n.rating) renderStars(el, n.rating);
+        };
         /* 데이터 손실 가드: 이전에 내용이 있었는데 빈 문자열로 저장하려 하면 무시 */
         if (!plain && (n.t || '').replace(/<[^>]+>/g, '').trim()) {
           el.innerHTML = n.t;
-          if (delBtn) el.appendChild(delBtn);
-          if (colBtn) el.appendChild(colBtn);
+          reattach();
           return;
         }
         el.innerHTML = html;
-        if (delBtn) el.appendChild(delBtn);
-        if (colBtn) el.appendChild(colBtn);
+        reattach();
         n.t = html;
         save();
       });

@@ -488,6 +488,25 @@ body .ia-para-body strong, body strong {
   display: flex; align-items: center; justify-content: center;
   user-select: none;
 }
+.pk-mm-node .pk-mm-rate {
+  position: absolute; top: -10px; left: 16px;
+  width: 22px; height: 22px;
+  background: #fff8d8; border: 2px solid #1c2040;
+  color: #d42b2b;
+  font-size: 14px; line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  user-select: none;
+}
+.pk-mm-node .pk-mm-stars {
+  position: absolute; bottom: 2px; right: 6px;
+  font-family: var(--read-font) !important;
+  font-size: 11px;
+  color: #d42b2b;
+  letter-spacing: 1px;
+  pointer-events: none;
+  user-select: none;
+}
 .pk-mm-palette {
   background: #fff8d8;
   border: 2.5px solid #1c2040;
@@ -496,6 +515,25 @@ body .ia-para-body strong, body strong {
   display: flex; gap: 4px; flex-wrap: wrap;
   max-width: 240px;
   z-index: 10001;
+}
+.pk-mm-rating-picker {
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 160px;
+}
+.pk-mm-rating-picker .pk-mm-star-pick {
+  width: auto;
+  height: auto;
+  padding: 4px 8px;
+  background: #fff;
+  color: #d42b2b;
+  font-family: var(--read-font) !important;
+  font-size: 14px;
+  text-align: left;
+  letter-spacing: 2px;
+}
+.pk-mm-rating-picker .pk-mm-star-pick.selected {
+  background: #fff2a8;
 }
 .pk-mm-palette .pk-mm-swatch {
   width: 26px; height: 26px;
