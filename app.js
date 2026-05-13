@@ -778,6 +778,38 @@ function initInlineEditing() {
     });
   }
 
+  function makeEditableHTML(el, saveKey, field) {
+    el.classList.add('ns-editable-body');
+    el.addEventListener('dblclick', function(e) {
+      e.stopPropagation();
+      if (this.contentEditable === 'true') return;
+      const prevHTML = this.innerHTML;
+      this.contentEditable = 'true';
+      this.focus();
+      const done = () => {
+        this.contentEditable = 'false';
+        const newHTML = this.innerHTML;
+        if (newHTML === prevHTML) return;
+        const plain = (this.textContent || '').trim();
+        /* 데이터 손실 가드: 이전에 내용이 있었는데 빈 문자열로 저장하려 하면 무시 */
+        if (!plain && (prevHTML || '').replace(/<[^>]+>/g, '').trim()) {
+          this.innerHTML = prevHTML;
+          return;
+        }
+        if (!edits[saveKey]) edits[saveKey] = {};
+        edits[saveKey][field] = newHTML;
+        localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
+        syncPush();
+      };
+      this.addEventListener('blur', done, {once: true});
+      this.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape') { ev.preventDefault(); this.blur(); }
+      });
+    });
+  }
+
+  const BODY_EDITABLE = '.ia-section-h, .ia-para-title, .ia-sub-title, .ia-tag-title, .ia-para-body, .ia-source, .qa-q, .qa-a, .term-name, .term-def';
+
   const PAGE_NS = decodeURIComponent(location.pathname).replace(/\/+/g, '_').replace(/^_|_$/g, '') || 'root';
   document.querySelectorAll('.card-row').forEach((row, i) => {
     const id = PAGE_NS + '::card-' + i;
@@ -787,6 +819,17 @@ function initInlineEditing() {
     const iaTitle = row.querySelector('.ia-title');
     if (rowTitle) makeEditable(rowTitle, id, 'title');
     if (iaTitle) makeEditable(iaTitle, id, 'title');
+
+    /* 보고서 본문(MD 변환 결과) 인라인 편집 */
+    const article = row.nextElementSibling;
+    if (article && article.classList.contains('inline-article')) {
+      const items = article.querySelectorAll(BODY_EDITABLE);
+      items.forEach((el, j) => {
+        const field = 'body-' + j;
+        if (edits[id]?.[field] != null) el.innerHTML = edits[id][field];
+        makeEditableHTML(el, id, field);
+      });
+    }
     /* 신규 키 우선, 없으면 기존 글로벌 키는 무시 (다른 페이지 오염 방지) */
     if (edits[id]?.title) {
       if (rowTitle) rowTitle.textContent = edits[id].title;

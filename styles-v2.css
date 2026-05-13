@@ -499,6 +499,19 @@ html, body {
 .article-content {
   max-width: var(--measure);
 }
+/* ── 보고서 본문 인라인 편집 (더블클릭 편집, Esc로 종료) ── */
+.ns-editable-body { cursor: text; transition: background 150ms; }
+.ns-editable-body:hover {
+  background: color-mix(in oklab, var(--accent-soft, #ffe6c4) 40%, transparent);
+  border-radius: 4px;
+}
+.ns-editable-body[contenteditable="true"] {
+  outline: 2px solid var(--accent, #d42b2b) !important;
+  border-radius: 4px;
+  padding: 4px 8px;
+  background: var(--card, #fff);
+}
+
 .article-content p,
 .inline-article .ia-para-body {
   font-family: 'Pretendard', sans-serif !important;
