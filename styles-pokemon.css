@@ -2061,26 +2061,75 @@ html body .timeline .row::after { content: none !important; display: none !impor
 
 /* ── 태그뷰 PDF 인쇄 모드 ── */
 @media print {
+  body.pk-print-on { background: #fff !important; }
   body.pk-print-on > *:not(#pk-tag-view) { display: none !important; }
-  #pk-tag-view .pk-tv-backdrop { display: none !important; }
-  #pk-tag-view .pk-tv-modal {
+  body.pk-print-on #pk-tag-view {
+    position: static !important; inset: auto !important;
+    background: #fff !important; z-index: auto !important;
+  }
+  body.pk-print-on #pk-tag-view .pk-tv-backdrop { display: none !important; }
+  body.pk-print-on #pk-tag-view .pk-tv-modal {
     position: static !important;
     width: 100% !important; max-width: 100% !important; height: auto !important;
     max-height: none !important;
     box-shadow: none !important; border: none !important;
     padding: 0 !important; margin: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+    transform: none !important;
+    top: auto !important; left: auto !important;
   }
-  #pk-tag-view .pk-tv-head .pk-tv-tabs,
-  #pk-tag-view .pk-tv-x,
-  #pk-tag-view .pk-tv-print { display: none !important; }
-  #pk-tag-view .pk-tv-body[data-tab-pane="articles"] { display: none !important; }
-  #pk-tag-view .pk-tv-body[data-tab-pane="cards"] {
+  body.pk-print-on #pk-tag-view .pk-tv-head .pk-tv-tabs,
+  body.pk-print-on #pk-tag-view .pk-tv-x,
+  body.pk-print-on #pk-tag-view .pk-tv-print,
+  body.pk-print-on .pk-tv-bar { display: none !important; }
+  body.pk-print-on #pk-tag-view .pk-tv-body[data-tab-pane="articles"] { display: none !important; }
+  body.pk-print-on #pk-tag-view .pk-tv-body[data-tab-pane="cards"] {
     display: block !important;
     overflow: visible !important;
     max-height: none !important;
     padding: 0 !important;
   }
+  body.pk-print-on #pk-tag-view .pk-tv-cardgroup {
+    page-break-inside: avoid; break-inside: avoid;
+    margin-bottom: 8px; padding: 6px 8px;
+    border: 1px solid #1c2040; box-shadow: none !important;
+    background: #fff !important;
+  }
+  body.pk-print-on #pk-tag-view .pk-tv-cardli {
+    font-size: 10.5px; padding: 3px 5px;
+    box-shadow: none !important; border: 1px solid #1c2040;
+    line-height: 1.3;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  @page { margin: 10mm; size: A4; }
 }
+
+/* ── 태그뷰 인라인 편집 토바 ── */
+.pk-tv-bar {
+  background: #fff8d8;
+  border: 2.5px solid #1c2040;
+  box-shadow: 3px 3px 0 #1c2040;
+  padding: 4px;
+  display: flex; gap: 3px; flex-wrap: wrap;
+  align-items: center;
+  max-width: 360px;
+}
+.pk-tv-bbtn {
+  background: #fff; color: #1c2040;
+  border: 1.5px solid #1c2040;
+  font-family: var(--read-font) !important;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 6px;
+  cursor: pointer;
+  line-height: 1;
+}
+.pk-tv-bbtn:hover { background: #fff2a8; }
+.pk-tv-bbtn.pk-tv-bold { font-weight: 900; padding: 3px 8px; }
+.pk-tv-bbtn.pk-tv-star { color: #d42b2b; letter-spacing: 1px; padding: 3px 4px; }
+.pk-tv-bbtn.pk-tv-swatch { width: 18px; height: 18px; padding: 0; }
+.pk-tv-bbtn.pk-tv-reset, .pk-tv-bbtn.pk-tv-close { background: #fff; }
 #pk-tag-view.pk-tv-print-mode {
   position: fixed; inset: 0; z-index: 9999999;
   background: #fff;

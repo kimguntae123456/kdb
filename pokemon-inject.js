@@ -2912,16 +2912,139 @@
       });
     });
 
+    /* 드래그-볼드 + 별점 + 색상 토바 (li 내부 선택 또는 클릭 시) */
+    let tvBar = null;
+    const removeTvBar = () => { if (tvBar) { tvBar.remove(); tvBar = null; } };
+    const buildTvBar = (li, anchorRect) => {
+      removeTvBar();
+      tvBar = document.createElement('div');
+      tvBar.className = 'pk-tv-bar';
+      const mkBtn = (cls, label, title, on) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'pk-tv-bbtn ' + cls;
+        b.textContent = label;
+        b.title = title;
+        b.addEventListener('mousedown', e => e.preventDefault()); /* 선택 유지 */
+        b.addEventListener('click', e => { e.stopPropagation(); on(e); });
+        return b;
+      };
+      const applyBoldToSelection = () => {
+        const sel = window.getSelection();
+        if (!sel.rangeCount || sel.isCollapsed) return;
+        const range = sel.getRangeAt(0);
+        if (!li.contains(range.commonAncestorContainer)) return;
+        const star = li.querySelector('.pk-tv-stars');
+        if (star) star.remove();
+        li.setAttribute('contenteditable', 'true');
+        const newSel = window.getSelection();
+        newSel.removeAllRanges();
+        newSel.addRange(range);
+        document.execCommand('bold', false, null);
+        const cleaned = tvSanitize(li.innerHTML);
+        li.innerHTML = cleaned;
+        li.removeAttribute('contenteditable');
+        tvUpdateNode(li, n => { n.t = cleaned; });
+        let color = '', rating = 0;
+        tvUpdateNode(li, n => { color = n.color || ''; rating = n.rating || 0; });
+        tvApplyLiVisual(li, color, rating);
+      };
+      tvBar.appendChild(mkBtn('pk-tv-bold', 'B', '볼드 (드래그한 텍스트)', applyBoldToSelection));
+      /* 별점 */
+      [1,2,3,4,5].forEach(i => {
+        const sb = mkBtn('pk-tv-star', '★'.repeat(i), i + '점', () => {
+          tvUpdateNode(li, n => { n.rating = (n.rating === i) ? 0 : i; if (!n.rating) delete n.rating; });
+          let color = '', rating = 0;
+          tvUpdateNode(li, n => { color = n.color || ''; rating = n.rating || 0; });
+          tvApplyLiVisual(li, color, rating);
+        });
+        tvBar.appendChild(sb);
+      });
+      /* 색상 swatch */
+      TV_PALETTE.forEach(c => {
+        const cb = document.createElement('button');
+        cb.type = 'button';
+        cb.className = 'pk-tv-bbtn pk-tv-swatch';
+        cb.style.background = c;
+        cb.title = c;
+        cb.addEventListener('mousedown', e => e.preventDefault());
+        cb.addEventListener('click', e => {
+          e.stopPropagation();
+          tvUpdateNode(li, n => { n.color = c; });
+          let rating = 0;
+          tvUpdateNode(li, n => { rating = n.rating || 0; });
+          tvApplyLiVisual(li, c, rating);
+        });
+        tvBar.appendChild(cb);
+      });
+      tvBar.appendChild(mkBtn('pk-tv-reset', '↺', '초기화', () => {
+        tvUpdateNode(li, n => { delete n.color; delete n.rating; });
+        tvApplyLiVisual(li, '', 0);
+        removeTvBar();
+      }));
+      tvBar.appendChild(mkBtn('pk-tv-close', '✕', '닫기', () => removeTvBar()));
+      tvBar.style.position = 'fixed';
+      tvBar.style.zIndex = '10020';
+      document.body.appendChild(tvBar);
+      const br = tvBar.getBoundingClientRect();
+      let left = Math.max(8, anchorRect.left);
+      if (left + br.width > window.innerWidth - 8) left = window.innerWidth - br.width - 8;
+      let top = anchorRect.bottom + 6;
+      if (top + br.height > window.innerHeight - 8) top = anchorRect.top - br.height - 6;
+      tvBar.style.left = left + 'px';
+      tvBar.style.top  = top  + 'px';
+    };
+
+    dlg.querySelectorAll('.pk-tv-cardli').forEach(li => {
+      li.addEventListener('click', e => {
+        if (li.getAttribute('contenteditable') === 'true') return;
+        if (e.target.closest('a')) return;
+        e.stopPropagation();
+        buildTvBar(li, li.getBoundingClientRect());
+      });
+    });
+    /* 드래그 선택 시 토바를 선택 위치 근처로 재배치 */
+    const onSelChange = () => {
+      const sel = window.getSelection();
+      if (!sel || !sel.rangeCount || sel.isCollapsed) return;
+      const r = sel.getRangeAt(0);
+      let node = r.commonAncestorContainer;
+      if (node.nodeType === 3) node = node.parentElement;
+      const li = node && node.closest && node.closest('.pk-tv-cardli');
+      if (!li || !dlg.contains(li)) return;
+      const rect = r.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) return;
+      buildTvBar(li, rect);
+    };
+    document.addEventListener('selectionchange', onSelChange);
+    document.addEventListener('mousedown', (ev) => {
+      if (tvBar && !tvBar.contains(ev.target) && !ev.target.closest('.pk-tv-cardli')) removeTvBar();
+    }, true);
+
     /* PDF 출력 — 인쇄용 화면 */
     dlg.querySelector('.pk-tv-print').addEventListener('click', () => {
+      removeTvBar();
+      document.body.classList.add('pk-print-on');
       dlg.classList.add('pk-tv-print-mode');
       const restore = () => {
+        document.body.classList.remove('pk-print-on');
         dlg.classList.remove('pk-tv-print-mode');
         window.removeEventListener('afterprint', restore);
       };
       window.addEventListener('afterprint', restore);
-      setTimeout(() => window.print(), 50);
+      setTimeout(() => window.print(), 80);
     });
+
+    /* dlg 제거시 listener 정리 */
+    const cleanup = () => {
+      document.removeEventListener('selectionchange', onSelChange);
+      removeTvBar();
+    };
+    const origClose = close;
+    dlg.querySelector('.pk-tv-x').replaceWith(dlg.querySelector('.pk-tv-x').cloneNode(true));
+    dlg.querySelector('.pk-tv-x').addEventListener('click', () => { cleanup(); origClose(); });
+    dlg.querySelector('.pk-tv-backdrop').replaceWith(dlg.querySelector('.pk-tv-backdrop').cloneNode(true));
+    dlg.querySelector('.pk-tv-backdrop').addEventListener('click', () => { cleanup(); origClose(); });
   }
 
   function injectAddBar(){
