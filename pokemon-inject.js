@@ -3021,18 +3021,44 @@
       if (tvBar && !tvBar.contains(ev.target) && !ev.target.closest('.pk-tv-cardli')) removeTvBar();
     }, true);
 
-    /* PDF 출력 — 인쇄용 화면 */
+    /* PDF 출력 — 새 창에 인쇄 전용 화면 (CSS 우선순위 충돌 회피) */
     dlg.querySelector('.pk-tv-print').addEventListener('click', () => {
       removeTvBar();
-      document.body.classList.add('pk-print-on');
-      dlg.classList.add('pk-tv-print-mode');
-      const restore = () => {
-        document.body.classList.remove('pk-print-on');
-        dlg.classList.remove('pk-tv-print-mode');
-        window.removeEventListener('afterprint', restore);
-      };
-      window.addEventListener('afterprint', restore);
-      setTimeout(() => window.print(), 80);
+      const cardsClone = dlg.querySelector('[data-tab-pane="cards"]').cloneNode(true);
+      /* 별점 span은 보존, 토바·편집상태 제거 */
+      cardsClone.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+      const liStyleSnapshot = [];
+      dlg.querySelectorAll('.pk-tv-cardli').forEach(li => {
+        liStyleSnapshot.push(li.getAttribute('style') || '');
+      });
+      cardsClone.querySelectorAll('.pk-tv-cardli').forEach((li, i) => {
+        li.setAttribute('style', liStyleSnapshot[i] || '');
+      });
+      const css = `
+        * { box-sizing: border-box; }
+        body { margin: 12mm; font-family: 'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif; color: #1c2040; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        h1 { font-size: 16px; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid #1c2040; }
+        h1 small { font-weight: 400; font-size: 11px; color: #6a7090; margin-left: 8px; }
+        .pk-tv-cardgroup { page-break-inside: avoid; break-inside: avoid; margin-bottom: 8px; padding: 6px 8px; border: 1px solid #1c2040; background: #fff; }
+        .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 8px; padding: 4px 6px; background: #1c2040; color: #fff8d8; font-size: 11.5px; margin-bottom: 6px; text-decoration: none; }
+        .pk-tv-cardsector { font-size: 9px; padding: 1px 5px; background: #d42b2b; color: #fff; }
+        .pk-tv-cardtitletxt { font-weight: 800; flex: 1; }
+        .pk-tv-cardcount { font-size: 9px; opacity: .7; }
+        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+        .pk-tv-cardcol-h { font-size: 9px; font-weight: 800; color: #8892b0; margin-bottom: 2px; letter-spacing: 1px; }
+        .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 3px; }
+        .pk-tv-cardli { font-size: 10.5px; padding: 3px 5px; border: 1px solid #1c2040; line-height: 1.32; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; position: relative; }
+        .pk-tv-cardli b, .pk-tv-cardli strong { font-weight: 800; }
+        .pk-tv-stars { display: inline-block; margin-left: 4px; font-size: 9px; letter-spacing: 1px; color: #d42b2b; }
+        .pk-tv-empty { padding: 20px; text-align: center; color: #888; }
+        @page { margin: 10mm; size: A4; }
+      `;
+      const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>#${escHtml(tag)} 핵심카드 요점</title><style>${css}</style></head><body><h1>🏷️ #${escHtml(tag)} <small>${cardArticles.length}편 · 카드 ${cardTotal}장</small></h1>${cardsClone.innerHTML}<script>window.addEventListener('load',function(){setTimeout(function(){window.focus();window.print();},250);});<\/script></body></html>`;
+      const w = window.open('', '_blank', 'width=900,height=1100');
+      if (!w) { alert('팝업이 차단됐어요. 팝업을 허용하고 다시 시도해주세요.'); return; }
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
     });
 
     /* dlg 제거시 listener 정리 */
