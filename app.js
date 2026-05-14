@@ -804,6 +804,10 @@ function initInlineEditing() {
       this.addEventListener('blur', done, {once: true});
       this.addEventListener('keydown', (ev) => {
         if (ev.key === 'Escape') { ev.preventDefault(); this.blur(); }
+        if (ev.key === 'Enter' && !ev.shiftKey) {
+          ev.preventDefault();
+          document.execCommand('insertLineBreak');
+        }
       });
     });
   }

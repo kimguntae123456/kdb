@@ -1506,6 +1506,13 @@
         el.focus();
         document.getSelection().selectAllChildren(el);
       });
+      /* Enter → <br> 삽입 (기본 <div>는 sanitize에서 제거돼 줄바꿈 소실됨) */
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey && el.getAttribute('contenteditable') === 'true') {
+          e.preventDefault();
+          document.execCommand('insertLineBreak');
+        }
+      });
       /* 붙여넣기 — 서식·인라인 폰트 제거하고 plain text만 삽입 */
       el.addEventListener('paste', e => {
         e.preventDefault();
@@ -2878,6 +2885,10 @@
       });
       li.addEventListener('keydown', e => {
         if (e.key === 'Escape') { e.preventDefault(); li.blur(); }
+        if (e.key === 'Enter' && !e.shiftKey && li.getAttribute('contenteditable') === 'true') {
+          e.preventDefault();
+          document.execCommand('insertLineBreak');
+        }
         if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
           e.preventDefault();
           document.execCommand('bold', false, null);
