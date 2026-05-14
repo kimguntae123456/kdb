@@ -2686,16 +2686,48 @@
       nodes.forEach(n => (g[n.column] || g.m).push(n));
       return g;
     };
+    /* 노드 t(innerHTML)에서 허용 태그만 통과 */
+    const TV_ALLOWED = new Set(['B','STRONG','I','EM','U','BR']);
+    const tvSanitize = (html) => {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html || '';
+      const walk = (node) => {
+        [...node.childNodes].forEach(c => {
+          if (c.nodeType === 1) {
+            if (TV_ALLOWED.has(c.tagName)) {
+              [...c.attributes].forEach(a => c.removeAttribute(a.name));
+              walk(c);
+            } else {
+              const parent = c.parentNode;
+              walk(c);
+              while (c.firstChild) parent.insertBefore(c.firstChild, c);
+              parent.removeChild(c);
+            }
+          }
+        });
+      };
+      walk(tmp);
+      return tmp.innerHTML;
+    };
+    const TV_PALETTE = ['#fff8d8','#ffd6d6','#ffe6c4','#fff2a8','#d8f3dc','#cfe8ff','#e6d6ff','#1c2040'];
+    const tvLiStyle = (color) => {
+      if (!color) return '';
+      const fg = (color === '#1c2040') ? '#fff8d8' : '#1c2040';
+      return `background:${color};color:${fg};`;
+    };
+    const tvStars = (r) => r ? `<span class="pk-tv-stars">${'★'.repeat(r)}${'☆'.repeat(5-r)}</span>` : '';
+
     const cardsHTML = cardArticles.length ? cardArticles.map(a => {
       const g = cardsByCol(a.nodes);
       const url = a.pagePath ? (a.pagePath + '#' + a.rowId) : '#';
+      const pk = pathToPk(a.pagePath);
       const colBlock = (k) => g[k].length ? `
         <div class="pk-tv-cardcol">
           <div class="pk-tv-cardcol-h">${COL_LABEL[k]}</div>
-          <ul>${g[k].map(n => `<li>${escHtml(n.t || '')}</li>`).join('')}</ul>
+          <ul>${g[k].map(n => `<li class="pk-tv-cardli" data-pk="${escHtml(pk)}" data-rowid="${escHtml(a.rowId)}" data-nid="${escHtml(n.id)}" style="${tvLiStyle(n.color)}">${tvSanitize(n.t || '')}${tvStars(n.rating)}</li>`).join('')}</ul>
         </div>` : '';
       return `
-        <div class="pk-tv-cardgroup">
+        <div class="pk-tv-cardgroup" data-pk="${escHtml(pk)}" data-rowid="${escHtml(a.rowId)}">
           <a href="${escHtml(url)}" class="pk-tv-cardtitle">
             <span class="pk-tv-cardsector">${escHtml(a.sector)}</span>
             <span class="pk-tv-cardtitletxt">${escHtml(a.title)}</span>
@@ -2714,6 +2746,7 @@
             <button type="button" class="pk-tv-tab active" data-tab="articles">글 (${items.length})</button>
             <button type="button" class="pk-tv-tab" data-tab="cards">핵심카드 (${cardTotal})</button>
           </div>
+          <button class="pk-tv-print" type="button" title="요점 PDF 출력">🖨️ PDF</button>
           <button class="pk-tv-x" type="button">✕</button>
         </div>
         <div class="pk-tv-body" data-tab-pane="articles">
@@ -2736,6 +2769,158 @@
           p.hidden = (p.dataset.tabPane !== tab);
         });
       });
+    });
+
+    /* 핵심카드 li → 색상 변경 + 인라인 편집 + 저장 */
+    const tvUpdateNode = (li, mutate) => {
+      const pk = li.dataset.pk, rowId = li.dataset.rowid, nid = li.dataset.nid;
+      if (!pk || !rowId || !nid) return;
+      const key = `pk-mm::${pk}::${rowId}`;
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return;
+        const st = JSON.parse(raw);
+        const n = (st.nodes || []).find(x => String(x.id) === String(nid));
+        if (!n) return;
+        mutate(n);
+        localStorage.setItem(key, JSON.stringify(st));
+      } catch (_) {}
+    };
+    const tvApplyLiVisual = (li, color, rating) => {
+      const fg = (color === '#1c2040') ? '#fff8d8' : '#1c2040';
+      li.style.background = color || '';
+      li.style.color = color ? fg : '';
+      const oldStar = li.querySelector('.pk-tv-stars');
+      if (oldStar) oldStar.remove();
+      if (rating) {
+        const span = document.createElement('span');
+        span.className = 'pk-tv-stars';
+        span.textContent = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        li.appendChild(span);
+      }
+    };
+    const tvOpenPalette = (li) => {
+      document.querySelectorAll('.pk-mm-palette').forEach(p => p.remove());
+      const pal = document.createElement('div');
+      pal.className = 'pk-mm-palette';
+      pal.style.zIndex = 10010;
+      TV_PALETTE.forEach(c => {
+        const sw = document.createElement('button');
+        sw.className = 'pk-mm-swatch'; sw.style.background = c; sw.title = c;
+        sw.addEventListener('click', ev => {
+          ev.stopPropagation();
+          tvUpdateNode(li, n => { n.color = c; });
+          let rating = 0;
+          tvUpdateNode(li, n => { rating = n.rating || 0; });
+          tvApplyLiVisual(li, c, rating);
+          pal.remove();
+        });
+        pal.appendChild(sw);
+      });
+      const ratePick = document.createElement('div');
+      ratePick.style.cssText = 'display:flex;gap:2px;width:100%;margin-top:6px;';
+      [1,2,3,4,5].forEach(i => {
+        const sb = document.createElement('button');
+        sb.className = 'pk-mm-swatch';
+        sb.textContent = '★'.repeat(i);
+        sb.style.cssText = 'background:#fff;color:#d42b2b;font-size:11px;letter-spacing:1px;width:auto;padding:2px 4px;';
+        sb.addEventListener('click', ev => {
+          ev.stopPropagation();
+          tvUpdateNode(li, n => { n.rating = i; });
+          let color = '';
+          tvUpdateNode(li, n => { color = n.color || ''; });
+          tvApplyLiVisual(li, color, i);
+          pal.remove();
+        });
+        ratePick.appendChild(sb);
+      });
+      pal.appendChild(ratePick);
+      const rst = document.createElement('button');
+      rst.className = 'pk-mm-swatch pk-mm-swatch-reset';
+      rst.textContent = '↺'; rst.title = '초기화';
+      rst.addEventListener('click', ev => {
+        ev.stopPropagation();
+        tvUpdateNode(li, n => { delete n.color; delete n.rating; });
+        tvApplyLiVisual(li, '', 0);
+        pal.remove();
+      });
+      pal.appendChild(rst);
+      const r = li.getBoundingClientRect();
+      pal.style.position = 'fixed';
+      pal.style.left = r.left + 'px';
+      pal.style.top  = (r.bottom + 6) + 'px';
+      document.body.appendChild(pal);
+      const pr = pal.getBoundingClientRect();
+      if (pr.right > window.innerWidth - 8) pal.style.left = (window.innerWidth - pr.width - 8) + 'px';
+      const closer = (ev) => {
+        if (!pal.contains(ev.target)) { pal.remove(); document.removeEventListener('mousedown', closer, true); }
+      };
+      setTimeout(() => document.addEventListener('mousedown', closer, true), 0);
+    };
+
+    dlg.querySelectorAll('.pk-tv-cardli').forEach(li => {
+      li.addEventListener('dblclick', e => {
+        e.stopPropagation();
+        const star = li.querySelector('.pk-tv-stars');
+        if (star) star.remove();
+        li.setAttribute('contenteditable', 'true');
+        li.focus();
+        document.getSelection().selectAllChildren(li);
+      });
+      li.addEventListener('paste', e => {
+        if (li.getAttribute('contenteditable') !== 'true') return;
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+        if (!text) return;
+        if (document.queryCommandSupported && document.queryCommandSupported('insertText')) {
+          document.execCommand('insertText', false, text);
+        }
+      });
+      li.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { e.preventDefault(); li.blur(); }
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+          e.preventDefault();
+          document.execCommand('bold', false, null);
+        }
+      });
+      li.addEventListener('blur', () => {
+        if (li.getAttribute('contenteditable') !== 'true') return;
+        li.removeAttribute('contenteditable');
+        const cleaned = tvSanitize(li.innerHTML);
+        const plain = (li.textContent || '').trim();
+        let prev = '';
+        tvUpdateNode(li, n => { prev = n.t || ''; });
+        if (!plain && (prev || '').replace(/<[^>]+>/g, '').trim()) {
+          li.innerHTML = tvSanitize(prev);
+        } else {
+          li.innerHTML = cleaned;
+          tvUpdateNode(li, n => { n.t = cleaned; });
+        }
+        let color = '', rating = 0;
+        tvUpdateNode(li, n => { color = n.color || ''; rating = n.rating || 0; });
+        if (rating) {
+          const span = document.createElement('span');
+          span.className = 'pk-tv-stars';
+          span.textContent = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+          li.appendChild(span);
+        }
+      });
+      li.addEventListener('contextmenu', e => {
+        if (li.getAttribute('contenteditable') === 'true') return;
+        e.preventDefault(); e.stopPropagation();
+        tvOpenPalette(li);
+      });
+    });
+
+    /* PDF 출력 — 인쇄용 화면 */
+    dlg.querySelector('.pk-tv-print').addEventListener('click', () => {
+      dlg.classList.add('pk-tv-print-mode');
+      const restore = () => {
+        dlg.classList.remove('pk-tv-print-mode');
+        window.removeEventListener('afterprint', restore);
+      };
+      window.addEventListener('afterprint', restore);
+      setTimeout(() => window.print(), 50);
     });
   }
 
