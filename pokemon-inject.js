@@ -3047,35 +3047,35 @@
       });
       const css = `
         * { box-sizing: border-box; }
-        @page { margin: 4mm; size: A4 portrait; }
+        @page { margin: 0; size: A4 portrait; }
         html, body { margin: 0; padding: 0; }
-        body { font-family: 'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif; color: #1c2040; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        body { font-family: 'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif; color: #1c2040; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 1.5mm; }
         h1 { display:none; }
         .print-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          grid-auto-rows: calc((297mm - 8mm) / 3);
-          gap: 2mm;
+          grid-auto-rows: calc((297mm - 3mm) / 3 - 0.7mm);
+          gap: 1mm;
           width: 100%;
         }
         .pk-tv-cardgroup {
           page-break-inside: avoid; break-inside: avoid;
-          margin: 0; padding: 2mm 2.5mm;
-          border: 1px solid #1c2040; background: #fff;
+          margin: 0; padding: 1mm 1.2mm;
+          border: 0.5px solid #1c2040; background: #fff;
           overflow: hidden;
           display: flex; flex-direction: column;
           min-height: 0;
         }
         .pk-tv-cardgroup:nth-child(6n) { page-break-after: always; break-after: page; }
-        .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 4mm; padding: 1mm 2mm; background: #1c2040; color: #fff8d8; font-size: 9pt; margin-bottom: 1.5mm; text-decoration: none; flex-shrink:0; }
-        .pk-tv-cardsector { font-size: 7pt; padding: 0.3mm 1.5mm; background: #d42b2b; color: #fff; }
+        .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 2mm; padding: 0.5mm 1mm; background: #1c2040; color: #fff8d8; font-size: 9pt; margin-bottom: 0.8mm; text-decoration: none; flex-shrink:0; }
+        .pk-tv-cardsector { font-size: 7pt; padding: 0.2mm 1mm; background: #d42b2b; color: #fff; }
         .pk-tv-cardtitletxt { font-weight: 800; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .pk-tv-cardcount { font-size: 7pt; opacity: .7; }
-        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2mm; flex:1; min-height:0; overflow:hidden; }
+        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7mm; flex:1; min-height:0; overflow:hidden; }
         .pk-tv-cardcol { display:flex; flex-direction:column; min-height:0; overflow:hidden; }
-        .pk-tv-cardcol-h { font-size: 6.5pt; font-weight: 800; color: #8892b0; margin-bottom: 0.5mm; letter-spacing: 0.5px; flex-shrink:0; }
-        .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8mm; min-height:0; overflow:hidden; }
-        .pk-tv-cardli { font-size: 8pt; padding: 1mm 1.5mm; border: 1px solid #1c2040; line-height: 1.25; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; position: relative; }
+        .pk-tv-cardcol-h { font-size: 6.5pt; font-weight: 800; color: #8892b0; margin-bottom: 0.3mm; letter-spacing: 0.3px; flex-shrink:0; }
+        .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5mm; min-height:0; overflow:hidden; }
+        .pk-tv-cardli { font-size: 8pt; padding: 0.7mm 1mm; border: 0.5px solid #1c2040; line-height: 1.22; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; position: relative; }
         .pk-tv-cardli b, .pk-tv-cardli strong { font-weight: 800; }
         .pk-tv-stars { display: inline-block; margin-left: 2px; font-size: 6.5pt; letter-spacing: 0.5px; color: #d42b2b; }
         .pk-tv-empty { padding: 20px; text-align: center; color: #888; }
