@@ -3057,8 +3057,8 @@
           margin: 0 auto;
           page-break-after: always; break-after: page;
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          grid-template-rows: repeat(3, 1fr);
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-rows: repeat(3, minmax(0, 1fr));
           gap: 1mm;
           overflow: hidden;
         }
@@ -3075,7 +3075,7 @@
         .pk-tv-cardsector { font-size: 7pt; padding: 0.2mm 1mm; background: #d42b2b; color: #fff; }
         .pk-tv-cardtitletxt { font-weight: 800; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .pk-tv-cardcount { font-size: 7pt; opacity: .7; }
-        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7mm; flex:1; min-height:0; overflow:hidden; }
+        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7mm; flex:1; min-height:0; overflow:hidden; }
         .pk-tv-cardcol { display:flex; flex-direction:column; min-height:0; overflow:hidden; }
         .pk-tv-cardcol-h { font-size: 6.5pt; font-weight: 800; color: #8892b0; margin-bottom: 0.3mm; letter-spacing: 0.3px; flex-shrink:0; }
         .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5mm; min-height:0; overflow:hidden; }
