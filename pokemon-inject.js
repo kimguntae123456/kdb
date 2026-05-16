@@ -3052,8 +3052,9 @@
         body { font-family: 'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif; color: #1c2040; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         h1 { display:none; }
         .print-page {
-          width: 210mm; height: 297mm;
-          padding: 1.5mm;
+          width: 200mm; height: 285mm;
+          padding: 0;
+          margin: 0 auto;
           page-break-after: always; break-after: page;
           display: grid;
           grid-template-columns: 1fr 1fr;
