@@ -3075,11 +3075,18 @@
         .pk-tv-cardsector { font-size: 5pt; padding: 0.3mm 1mm; background: #d42b2b; color: #fff; }
         .pk-tv-cardtitletxt { font-weight: 800; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .pk-tv-cardcount { font-size: 5pt; opacity: .7; }
-        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7mm; flex:1; min-height:0; overflow:hidden; }
-        .pk-tv-cardcol { display:flex; flex-direction:column; min-height:0; overflow:hidden; }
-        .pk-tv-cardcol-h { font-size: 5pt; font-weight: 800; color: #8892b0; margin-bottom: 0.3mm; letter-spacing: 0.2px; flex-shrink:0; }
-        .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4mm; min-height:0; overflow:hidden; }
-        .pk-tv-cardli { font-size: 5pt; padding: 0.5mm 0.8mm; border: 0.5px solid #1c2040; line-height: 1.2; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; position: relative; }
+        .pk-tv-cardcols {
+          display: block;
+          column-count: 3;
+          column-gap: 1mm;
+          column-fill: auto;
+          flex: 1; min-height: 0;
+          overflow: hidden;
+        }
+        .pk-tv-cardcol { display: block; margin-bottom: 1mm; overflow: visible; break-inside: auto; }
+        .pk-tv-cardcol-h { font-size: 6pt; font-weight: 800; color: #8892b0; margin-bottom: 0.4mm; letter-spacing: 0.2px; break-after: avoid; }
+        .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: block; }
+        .pk-tv-cardli { font-size: 6pt; padding: 0.5mm 0.8mm; border: 0.5px solid #1c2040; line-height: 1.22; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; position: relative; margin-bottom: 0.5mm; break-inside: avoid; }
         .pk-tv-cardli b, .pk-tv-cardli strong { font-weight: 800; }
         .pk-tv-stars { display: inline-block; margin-left: 2px; font-size: 6.5pt; letter-spacing: 0.5px; color: #d42b2b; }
         .pk-tv-empty { padding: 20px; text-align: center; color: #888; }
