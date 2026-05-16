@@ -2619,6 +2619,9 @@
     }
     panel.innerHTML = `
       <div class="nav-section-title">🏷️ 해시태그 (${tags.length})</div>
+      <button type="button" id="pk-tag-bulk-pdf" class="nav-item" style="cursor:pointer;width:100%;text-align:left;background:#1c2040;color:#fff8d8;font-weight:700;border:0;padding:6px 10px;margin:2px 0 4px;border-radius:4px;display:flex;justify-content:space-between;align-items:center;">
+        <span>🖨️ 전체 일괄 PDF</span><span style="font-size:0.7em;opacity:.7;">모든 태그</span>
+      </button>
       ${tags.map(([t, arr]) =>
         `<a href="#" class="nav-item pk-tag-link" data-tag="${escHtml(t)}">
            <span>#${escHtml(t)}</span><span class="count">${arr.length}</span>
@@ -2629,6 +2632,8 @@
         openHashtagView(a.dataset.tag);
       });
     });
+    const bulkBtn = panel.querySelector('#pk-tag-bulk-pdf');
+    if (bulkBtn) bulkBtn.addEventListener('click', () => bulkExportAllTagCards());
   }
   function openHashtagView(tag){
     const map = collectAllTags();
@@ -3118,6 +3123,130 @@
     dlg.querySelector('.pk-tv-x').addEventListener('click', () => { cleanup(); origClose(); });
     dlg.querySelector('.pk-tv-backdrop').replaceWith(dlg.querySelector('.pk-tv-backdrop').cloneNode(true));
     dlg.querySelector('.pk-tv-backdrop').addEventListener('click', () => { cleanup(); origClose(); });
+  }
+
+  /* === 전체 해시태그 일괄 PDF 출력 === */
+  function bulkExportAllTagCards(){
+    const map = collectAllTags();
+    if (!map.size) { alert('태그가 없어요.'); return; }
+    const sortedTags = [...map.entries()].sort((a,b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+
+    const pathToPk = (p) => { try { return decodeURIComponent(p||'').replace(/\/+/g,'_').replace(/^_|_$/g,'') || 'root'; } catch(_) { return ''; } };
+    const TV_ALLOWED = new Set(['B','STRONG','I','EM','U','BR']);
+    const tvSanitize = (html) => {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html || '';
+      const walk = (node) => {
+        [...node.childNodes].forEach(c => {
+          if (c.nodeType === 1) {
+            if (TV_ALLOWED.has(c.tagName)) {
+              [...c.attributes].forEach(a => c.removeAttribute(a.name));
+              walk(c);
+            } else {
+              const parent = c.parentNode;
+              walk(c);
+              while (c.firstChild) parent.insertBefore(c.firstChild, c);
+              parent.removeChild(c);
+            }
+          }
+        });
+      };
+      walk(tmp);
+      return tmp.innerHTML;
+    };
+    const tvLiStyle = (color) => {
+      if (!color) return '';
+      const fg = (color === '#1c2040') ? '#fff8d8' : '#1c2040';
+      return `background:${color};color:${fg};`;
+    };
+    const tvStars = (r) => r ? `<span class="pk-tv-stars">${'★'.repeat(r)}${'☆'.repeat(5-r)}</span>` : '';
+    const COL_LABEL = { s:'서론', m:'본론', c:'결론' };
+    const cardsByCol = (nodes) => { const g={s:[],m:[],c:[]}; nodes.forEach(n => (g[n.column]||g.m).push(n)); return g; };
+
+    let pagesHtml = '';
+    let totalCards = 0;
+    let tagsWithCards = 0;
+
+    sortedTags.forEach(([tag, items]) => {
+      const cardArticles = [];
+      items.forEach(it => {
+        const pk = pathToPk(it.pagePath);
+        if (!pk || !it.rowId) return;
+        try {
+          const raw = localStorage.getItem(`pk-mm::${pk}::${it.rowId}`);
+          if (!raw) return;
+          const st = JSON.parse(raw);
+          if (!st || !Array.isArray(st.nodes) || !st.nodes.length) return;
+          cardArticles.push({ sector: it.sector||'(섹터 없음)', title: it.title||'(제목 없음)', nodes: st.nodes });
+        } catch(_) {}
+      });
+      if (!cardArticles.length) return;
+      tagsWithCards++;
+      totalCards += cardArticles.reduce((s,a) => s+a.nodes.length, 0);
+
+      const cardHTMLs = cardArticles.map(a => {
+        const g = cardsByCol(a.nodes);
+        const colBlock = (k) => g[k].length ? `
+          <div class="pk-tv-cardcol">
+            <div class="pk-tv-cardcol-h">${COL_LABEL[k]}</div>
+            <ul>${g[k].map(n => `<li class="pk-tv-cardli" style="${tvLiStyle(n.color)}">${tvSanitize(n.t||'')}${tvStars(n.rating)}</li>`).join('')}</ul>
+          </div>` : '';
+        return `
+          <div class="pk-tv-cardgroup">
+            <div class="pk-tv-cardtitle">
+              <span class="pk-tv-cardsector">${escHtml(a.sector)}</span>
+              <span class="pk-tv-tagchip">#${escHtml(tag)}</span>
+              <span class="pk-tv-cardtitletxt">${escHtml(a.title)}</span>
+              <span class="pk-tv-cardcount">${a.nodes.length}장</span>
+            </div>
+            <div class="pk-tv-cardcols">${colBlock('s')}${colBlock('m')}${colBlock('c')}</div>
+          </div>`;
+      });
+
+      for (let i = 0; i < cardHTMLs.length; i += 4) {
+        pagesHtml += '<div class="print-page">' + cardHTMLs.slice(i, i+4).join('') + '</div>';
+      }
+    });
+
+    if (!pagesHtml) { alert('출력할 핵심카드가 없어요.'); return; }
+
+    const css = `
+      * { box-sizing: border-box; }
+      @page { margin: 0; size: A4 portrait; }
+      html, body { margin: 0; padding: 0; }
+      body { font-family: 'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif; color: #1c2040; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-page {
+        width: 200mm; height: 285mm;
+        margin: 0 auto;
+        page-break-after: always; break-after: page;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        gap: 1.5mm;
+        overflow: hidden;
+      }
+      .print-page:last-child { page-break-after: auto; break-after: auto; }
+      .pk-tv-cardgroup { page-break-inside: avoid; break-inside: avoid; margin: 0; padding: 1.5mm 2mm; border: 0.5px solid #1c2040; background: #fff; overflow: hidden; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+      .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 2mm; padding: 0.6mm 1mm; background: #1c2040; color: #fff8d8; font-size: 7pt; margin-bottom: 0.8mm; flex-shrink: 0; }
+      .pk-tv-cardsector { font-size: 5pt; padding: 0.3mm 1mm; background: #d42b2b; color: #fff; }
+      .pk-tv-tagchip { font-size: 5pt; padding: 0.3mm 1mm; background: #ffd96b; color: #1c2040; font-weight: 800; }
+      .pk-tv-cardtitletxt { font-weight: 800; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .pk-tv-cardcount { font-size: 5pt; opacity: .7; }
+      .pk-tv-cardcols { display: block; column-count: 3; column-gap: 1mm; column-fill: auto; flex: 1; min-height: 0; overflow: hidden; }
+      .pk-tv-cardcol { display: block; margin-bottom: 1mm; overflow: visible; break-inside: auto; }
+      .pk-tv-cardcol-h { font-size: 6pt; font-weight: 800; color: #8892b0; margin-bottom: 0.4mm; break-after: avoid; }
+      .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: block; }
+      .pk-tv-cardli { font-size: 6pt; padding: 0.5mm 0.8mm; border: 0.5px solid #1c2040; line-height: 1.22; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; margin-bottom: 0.5mm; break-inside: avoid; }
+      .pk-tv-cardli b, .pk-tv-cardli strong { font-weight: 800; }
+      .pk-tv-stars { display: inline-block; margin-left: 2px; font-size: 6.5pt; color: #d42b2b; }
+    `;
+    const title = `전체 해시태그 핵심카드 (${tagsWithCards}태그 · ${totalCards}장)`;
+    const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>${title}</title><style>${css}</style></head><body>${pagesHtml}<script>window.addEventListener('load',function(){setTimeout(function(){window.focus();window.print();},400);});<\/script></body></html>`;
+    const w = window.open('', '_blank', 'width=900,height=1100');
+    if (!w) { alert('팝업이 차단됐어요. 팝업을 허용하고 다시 시도해주세요.'); return; }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
   }
 
   function injectAddBar(){
