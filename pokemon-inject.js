@@ -3058,28 +3058,28 @@
           page-break-after: always; break-after: page;
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          grid-template-rows: repeat(3, minmax(0, 1fr));
-          gap: 1mm;
+          grid-template-rows: repeat(2, minmax(0, 1fr));
+          gap: 1.5mm;
           overflow: hidden;
         }
         .print-page:last-child { page-break-after: auto; break-after: auto; }
         .pk-tv-cardgroup {
           page-break-inside: avoid; break-inside: avoid;
-          margin: 0; padding: 1mm 1.2mm;
+          margin: 0; padding: 1.5mm 2mm;
           border: 0.5px solid #1c2040; background: #fff;
           overflow: hidden;
           display: flex; flex-direction: column;
           min-height: 0; min-width: 0;
         }
-        .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 2mm; padding: 0.5mm 1mm; background: #1c2040; color: #fff8d8; font-size: 9pt; margin-bottom: 0.8mm; text-decoration: none; flex-shrink:0; }
-        .pk-tv-cardsector { font-size: 7pt; padding: 0.2mm 1mm; background: #d42b2b; color: #fff; }
+        .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 2.5mm; padding: 1mm 1.5mm; background: #1c2040; color: #fff8d8; font-size: 11pt; margin-bottom: 1.2mm; text-decoration: none; flex-shrink:0; }
+        .pk-tv-cardsector { font-size: 8pt; padding: 0.4mm 1.5mm; background: #d42b2b; color: #fff; }
         .pk-tv-cardtitletxt { font-weight: 800; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pk-tv-cardcount { font-size: 7pt; opacity: .7; }
-        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7mm; flex:1; min-height:0; overflow:hidden; }
+        .pk-tv-cardcount { font-size: 8pt; opacity: .7; }
+        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1mm; flex:1; min-height:0; overflow:hidden; }
         .pk-tv-cardcol { display:flex; flex-direction:column; min-height:0; overflow:hidden; }
-        .pk-tv-cardcol-h { font-size: 6.5pt; font-weight: 800; color: #8892b0; margin-bottom: 0.3mm; letter-spacing: 0.3px; flex-shrink:0; }
-        .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5mm; min-height:0; overflow:hidden; }
-        .pk-tv-cardli { font-size: 8pt; padding: 0.7mm 1mm; border: 0.5px solid #1c2040; line-height: 1.22; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; position: relative; }
+        .pk-tv-cardcol-h { font-size: 8pt; font-weight: 800; color: #8892b0; margin-bottom: 0.5mm; letter-spacing: 0.3px; flex-shrink:0; }
+        .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.7mm; min-height:0; overflow:hidden; }
+        .pk-tv-cardli { font-size: 9.5pt; padding: 0.9mm 1.3mm; border: 0.5px solid #1c2040; line-height: 1.28; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; position: relative; }
         .pk-tv-cardli b, .pk-tv-cardli strong { font-weight: 800; }
         .pk-tv-stars { display: inline-block; margin-left: 2px; font-size: 6.5pt; letter-spacing: 0.5px; color: #d42b2b; }
         .pk-tv-empty { padding: 20px; text-align: center; color: #888; }
@@ -3089,8 +3089,8 @@
       if (cardEls.length === 0) {
         pagesHtml = `<div class="print-page">${cardsClone.innerHTML}</div>`;
       } else {
-        for (let i = 0; i < cardEls.length; i += 6) {
-          pagesHtml += '<div class="print-page">' + cardEls.slice(i, i + 6).map(e => e.outerHTML).join('') + '</div>';
+        for (let i = 0; i < cardEls.length; i += 4) {
+          pagesHtml += '<div class="print-page">' + cardEls.slice(i, i + 4).map(e => e.outerHTML).join('') + '</div>';
         }
       }
       const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>#${escHtml(tag)} 핵심카드 요점</title><style>${css}</style></head><body>${pagesHtml}<script>window.addEventListener('load',function(){setTimeout(function(){window.focus();window.print();},250);});<\/script></body></html>`;
