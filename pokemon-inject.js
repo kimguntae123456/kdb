@@ -3054,7 +3054,7 @@
         .print-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          grid-auto-rows: calc((297mm - 3mm) / 3 - 0.7mm);
+          grid-auto-rows: calc((297mm - 6mm) / 3 - 1mm);
           gap: 1mm;
           width: 100%;
         }
