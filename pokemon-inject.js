@@ -3129,6 +3129,10 @@
   function bulkExportAllTagCards(){
     const map = collectAllTags();
     if (!map.size) { alert('태그가 없어요.'); return; }
+    const ppRaw = prompt('페이지당 카드 수 (4 / 6 / 8):', '6');
+    if (ppRaw === null) return;
+    const pp = ({'4':4,'6':6,'8':8})[String(ppRaw).trim()] || 6;
+    const layout = pp === 4 ? {cols:2, rows:2} : pp === 6 ? {cols:2, rows:3} : {cols:2, rows:4};
     const sortedTags = [...map.entries()].sort((a,b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
 
     const pathToPk = (p) => { try { return decodeURIComponent(p||'').replace(/\/+/g,'_').replace(/^_|_$/g,'') || 'root'; } catch(_) { return ''; } };
@@ -3203,45 +3207,50 @@
           </div>`;
       });
 
-      for (let i = 0; i < cardHTMLs.length; i += 4) {
-        pagesHtml += '<div class="print-page">' + cardHTMLs.slice(i, i+4).join('') + '</div>';
+      for (let i = 0; i < cardHTMLs.length; i += pp) {
+        pagesHtml += '<div class="print-page">' + cardHTMLs.slice(i, i+pp).join('') + '</div>';
       }
     });
 
     if (!pagesHtml) { alert('출력할 핵심카드가 없어요.'); return; }
 
+    const liFs = pp === 4 ? '6.5pt' : pp === 6 ? '6pt' : '5pt';
+    const colHFs = pp === 4 ? '6.5pt' : pp === 6 ? '6pt' : '5pt';
+    const titleFs = pp === 4 ? '8pt' : pp === 6 ? '7pt' : '6pt';
     const css = `
       * { box-sizing: border-box; }
       @page { margin: 0; size: A4 portrait; }
       html, body { margin: 0; padding: 0; }
       body { font-family: 'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif; color: #1c2040; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      b, strong { font-weight: 800 !important; }
       .print-page {
-        width: 200mm; height: 285mm;
+        width: 205mm; height: 290mm;
         margin: 0 auto;
         page-break-after: always; break-after: page;
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: repeat(2, minmax(0, 1fr));
-        gap: 1.5mm;
+        grid-template-columns: repeat(${layout.cols}, minmax(0, 1fr));
+        grid-template-rows: repeat(${layout.rows}, minmax(0, 1fr));
+        gap: 1mm;
         overflow: hidden;
       }
       .print-page:last-child { page-break-after: auto; break-after: auto; }
-      .pk-tv-cardgroup { page-break-inside: avoid; break-inside: avoid; margin: 0; padding: 1.5mm 2mm; border: 0.5px solid #1c2040; background: #fff; overflow: hidden; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
-      .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 2mm; padding: 0.6mm 1mm; background: #1c2040; color: #fff8d8; font-size: 7pt; margin-bottom: 0.8mm; flex-shrink: 0; }
-      .pk-tv-cardsector { font-size: 5pt; padding: 0.3mm 1mm; background: #d42b2b; color: #fff; }
-      .pk-tv-tagchip { font-size: 5pt; padding: 0.3mm 1mm; background: #ffd96b; color: #1c2040; font-weight: 800; }
+      .pk-tv-cardgroup { page-break-inside: avoid; break-inside: avoid; margin: 0; padding: 1mm 1.2mm; border: 0.5px solid #1c2040; background: #fff; overflow: hidden; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+      .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 1.5mm; padding: 0.5mm 1mm; background: #1c2040; color: #fff8d8; font-size: ${titleFs}; margin-bottom: 0.6mm; flex-shrink: 0; font-weight: 800; }
+      .pk-tv-cardsector { font-size: 5pt; padding: 0.2mm 1mm; background: #d42b2b; color: #fff; font-weight: 700; }
+      .pk-tv-tagchip { font-size: 5pt; padding: 0.2mm 1mm; background: #ffd96b; color: #1c2040; font-weight: 800; }
       .pk-tv-cardtitletxt { font-weight: 800; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .pk-tv-cardcount { font-size: 5pt; opacity: .7; }
-      .pk-tv-cardcols { display: block; column-count: 3; column-gap: 1mm; column-fill: auto; flex: 1; min-height: 0; overflow: hidden; }
-      .pk-tv-cardcol { display: block; margin-bottom: 1mm; overflow: visible; break-inside: auto; }
-      .pk-tv-cardcol-h { font-size: 6pt; font-weight: 800; color: #8892b0; margin-bottom: 0.4mm; break-after: avoid; }
+      .pk-tv-cardcount { font-size: 5pt; opacity: .7; font-weight: 600; }
+      .pk-tv-cardcols { display: block; column-count: 3; column-gap: 0.8mm; column-fill: auto; flex: 1; min-height: 0; overflow: hidden; }
+      .pk-tv-cardcol { display: block; margin-bottom: 0.8mm; overflow: visible; break-inside: auto; }
+      .pk-tv-cardcol-h { font-size: ${colHFs}; font-weight: 800; color: #8892b0; margin-bottom: 0.3mm; break-after: avoid; }
       .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: block; }
-      .pk-tv-cardli { font-size: 6pt; padding: 0.5mm 0.8mm; border: 0.5px solid #1c2040; line-height: 1.22; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; margin-bottom: 0.5mm; break-inside: avoid; }
+      .pk-tv-cardli { font-size: ${liFs}; padding: 0.4mm 0.7mm; border: 0.5px solid #1c2040; line-height: 1.2; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; margin-bottom: 0.4mm; break-inside: avoid; }
       .pk-tv-cardli b, .pk-tv-cardli strong { font-weight: 800; }
-      .pk-tv-stars { display: inline-block; margin-left: 2px; font-size: 6.5pt; color: #d42b2b; }
+      .pk-tv-stars { display: inline-block; margin-left: 2px; font-size: ${liFs}; color: #d42b2b; }
     `;
-    const title = `전체 해시태그 핵심카드 (${tagsWithCards}태그 · ${totalCards}장)`;
-    const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>${title}</title><style>${css}</style></head><body>${pagesHtml}<script>window.addEventListener('load',function(){setTimeout(function(){window.focus();window.print();},400);});<\/script></body></html>`;
+    const title = `전체 해시태그 핵심카드 (${tagsWithCards}태그 · ${totalCards}장 · 페이지당 ${pp}장)`;
+    const fontLinks = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">`;
+    const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>${title}</title>${fontLinks}<style>${css}</style></head><body>${pagesHtml}<script>window.addEventListener('load',function(){setTimeout(function(){window.focus();window.print();},900);});<\/script></body></html>`;
     const w = window.open('', '_blank', 'width=900,height=1100');
     if (!w) { alert('팝업이 차단됐어요. 팝업을 허용하고 다시 시도해주세요.'); return; }
     w.document.open();
