@@ -3071,15 +3071,15 @@
           display: flex; flex-direction: column;
           min-height: 0; min-width: 0;
         }
-        .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 2.5mm; padding: 1mm 1.5mm; background: #1c2040; color: #fff8d8; font-size: 11pt; margin-bottom: 1.2mm; text-decoration: none; flex-shrink:0; }
-        .pk-tv-cardsector { font-size: 8pt; padding: 0.4mm 1.5mm; background: #d42b2b; color: #fff; }
+        .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 2mm; padding: 0.6mm 1mm; background: #1c2040; color: #fff8d8; font-size: 7pt; margin-bottom: 0.8mm; text-decoration: none; flex-shrink:0; }
+        .pk-tv-cardsector { font-size: 5pt; padding: 0.3mm 1mm; background: #d42b2b; color: #fff; }
         .pk-tv-cardtitletxt { font-weight: 800; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pk-tv-cardcount { font-size: 8pt; opacity: .7; }
-        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1mm; flex:1; min-height:0; overflow:hidden; }
+        .pk-tv-cardcount { font-size: 5pt; opacity: .7; }
+        .pk-tv-cardcols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7mm; flex:1; min-height:0; overflow:hidden; }
         .pk-tv-cardcol { display:flex; flex-direction:column; min-height:0; overflow:hidden; }
-        .pk-tv-cardcol-h { font-size: 8pt; font-weight: 800; color: #8892b0; margin-bottom: 0.5mm; letter-spacing: 0.3px; flex-shrink:0; }
-        .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.7mm; min-height:0; overflow:hidden; }
-        .pk-tv-cardli { font-size: 9.5pt; padding: 0.9mm 1.3mm; border: 0.5px solid #1c2040; line-height: 1.28; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; position: relative; }
+        .pk-tv-cardcol-h { font-size: 5pt; font-weight: 800; color: #8892b0; margin-bottom: 0.3mm; letter-spacing: 0.2px; flex-shrink:0; }
+        .pk-tv-cardcol ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4mm; min-height:0; overflow:hidden; }
+        .pk-tv-cardli { font-size: 5pt; padding: 0.5mm 0.8mm; border: 0.5px solid #1c2040; line-height: 1.2; background: #fff8d8; color: #1c2040; word-break: break-word; white-space: pre-wrap; position: relative; }
         .pk-tv-cardli b, .pk-tv-cardli strong { font-weight: 800; }
         .pk-tv-stars { display: inline-block; margin-left: 2px; font-size: 6.5pt; letter-spacing: 0.5px; color: #d42b2b; }
         .pk-tv-empty { padding: 20px; text-align: center; color: #888; }
