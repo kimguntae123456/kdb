@@ -3049,24 +3049,27 @@
         * { box-sizing: border-box; }
         @page { margin: 0; size: A4 portrait; }
         html, body { margin: 0; padding: 0; }
-        body { font-family: 'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif; color: #1c2040; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 1.5mm; }
+        body { font-family: 'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif; color: #1c2040; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         h1 { display:none; }
-        .print-grid {
+        .print-page {
+          width: 210mm; height: 297mm;
+          padding: 1.5mm;
+          page-break-after: always; break-after: page;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          grid-auto-rows: calc((297mm - 6mm) / 3 - 1mm);
+          grid-template-rows: repeat(3, 1fr);
           gap: 1mm;
-          width: 100%;
+          overflow: hidden;
         }
+        .print-page:last-child { page-break-after: auto; break-after: auto; }
         .pk-tv-cardgroup {
           page-break-inside: avoid; break-inside: avoid;
           margin: 0; padding: 1mm 1.2mm;
           border: 0.5px solid #1c2040; background: #fff;
           overflow: hidden;
           display: flex; flex-direction: column;
-          min-height: 0;
+          min-height: 0; min-width: 0;
         }
-        .pk-tv-cardgroup:nth-child(6n) { page-break-after: always; break-after: page; }
         .pk-tv-cardtitle { display: flex; align-items: baseline; gap: 2mm; padding: 0.5mm 1mm; background: #1c2040; color: #fff8d8; font-size: 9pt; margin-bottom: 0.8mm; text-decoration: none; flex-shrink:0; }
         .pk-tv-cardsector { font-size: 7pt; padding: 0.2mm 1mm; background: #d42b2b; color: #fff; }
         .pk-tv-cardtitletxt { font-weight: 800; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -3080,7 +3083,16 @@
         .pk-tv-stars { display: inline-block; margin-left: 2px; font-size: 6.5pt; letter-spacing: 0.5px; color: #d42b2b; }
         .pk-tv-empty { padding: 20px; text-align: center; color: #888; }
       `;
-      const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>#${escHtml(tag)} 핵심카드 요점</title><style>${css}</style></head><body><div class="print-grid">${cardsClone.innerHTML}</div><script>window.addEventListener('load',function(){setTimeout(function(){window.focus();window.print();},250);});<\/script></body></html>`;
+      const cardEls = Array.from(cardsClone.querySelectorAll('.pk-tv-cardgroup'));
+      let pagesHtml = '';
+      if (cardEls.length === 0) {
+        pagesHtml = `<div class="print-page">${cardsClone.innerHTML}</div>`;
+      } else {
+        for (let i = 0; i < cardEls.length; i += 6) {
+          pagesHtml += '<div class="print-page">' + cardEls.slice(i, i + 6).map(e => e.outerHTML).join('') + '</div>';
+        }
+      }
+      const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>#${escHtml(tag)} 핵심카드 요점</title><style>${css}</style></head><body>${pagesHtml}<script>window.addEventListener('load',function(){setTimeout(function(){window.focus();window.print();},250);});<\/script></body></html>`;
       const w = window.open('', '_blank', 'width=900,height=1100');
       if (!w) { alert('팝업이 차단됐어요. 팝업을 허용하고 다시 시도해주세요.'); return; }
       w.document.open();
